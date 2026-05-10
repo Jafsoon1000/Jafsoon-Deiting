@@ -4,10 +4,13 @@
             --surface-hover: rgba(255, 255, 255, 0.08);
             --primary: #10b981;
             --primary-hover: #059669;
+            --secondary: #38bdf8;
+            --accent: #fbbf24;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: rgba(255, 255, 255, 0.1);
             --glass-blur: blur(12px);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         * {
@@ -413,6 +416,142 @@
             font-size: 36px;
             font-weight: 700;
             color: var(--primary);
+        }
+
+        /* Macro Visualization Enhancements */
+        .macro-visuals {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+            text-align: left;
+        }
+
+        .macro-bar-container {
+            width: 100%;
+        }
+
+        .macro-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+        }
+
+        .macro-bar-bg {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .macro-bar-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 4px;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Meal Suggestions Styles */
+        .meal-suggestions {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .meal-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: left;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .meal-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .meal-card:hover {
+            background: var(--surface-hover);
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .meal-tag {
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .meal-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .meal-stats {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Water Tracker Styles */
+        .water-tracker {
+            margin-top: 60px;
+            text-align: center;
+            padding: 40px;
+            background: rgba(56, 189, 248, 0.03);
+            border-radius: 30px;
+            border: 1px solid rgba(56, 189, 248, 0.1);
+        }
+
+        .water-grid {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .water-drop {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid rgba(56, 189, 248, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 20px;
+            background: transparent;
+        }
+
+        .water-drop.active {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+            transform: scale(1.1);
+        }
+
+        .water-drop:hover {
+            border-color: var(--secondary);
         }
 
         /* Footer */

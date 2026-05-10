@@ -118,12 +118,64 @@
                 
                 <div class="macro-breakdown" id="macroBreakdown" style="display: none; margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
                     <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 10px;">Recommended Daily Macros</p>
-                    <div style="display: flex; justify-content: space-around; font-size: 14px;">
-                        <div><strong style="color: #38bdf8;">Carbs</strong><br><span id="carbsValue">0g</span></div>
-                        <div><strong style="color: #10b981;">Protein</strong><br><span id="proteinValue">0g</span></div>
-                        <div><strong style="color: #fbbf24;">Fat</strong><br><span id="fatValue">0g</span></div>
+                    
+                    <div class="macro-visuals">
+                        <div class="macro-bar-container">
+                            <div class="macro-label">
+                                <span>Carbohydrates</span>
+                                <span id="carbsValue">0g</span>
+                            </div>
+                            <div class="macro-bar-bg">
+                                <div id="carbsBar" class="macro-bar-fill" style="background: var(--secondary);"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="macro-bar-container">
+                            <div class="macro-label">
+                                <span>Protein</span>
+                                <span id="proteinValue">0g</span>
+                            </div>
+                            <div class="macro-bar-bg">
+                                <div id="proteinBar" class="macro-bar-fill" style="background: var(--primary);"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="macro-bar-container">
+                            <div class="macro-label">
+                                <span>Fats</span>
+                                <span id="fatValue">0g</span>
+                            </div>
+                            <div class="macro-bar-bg">
+                                <div id="fatBar" class="macro-bar-fill" style="background: var(--accent);"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- New Meal Suggestions Section -->
+            <div id="mealSection" style="display: none; margin-top: 50px;">
+                <h3 style="text-align: center; margin-bottom: 20px;">Your Sample Meal Plan</h3>
+                <div class="meal-suggestions" id="mealGrid">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+
+            <!-- Water Tracker Section -->
+            <div class="water-tracker">
+                <h3>Daily Hydration Tracker</h3>
+                <p style="color: var(--text-muted); font-size: 14px;">Goal: 8 Glasses (2L)</p>
+                <div class="water-grid" id="waterGrid">
+                    <button class="water-drop" onclick="toggleWater(0)">💧</button>
+                    <button class="water-drop" onclick="toggleWater(1)">💧</button>
+                    <button class="water-drop" onclick="toggleWater(2)">💧</button>
+                    <button class="water-drop" onclick="toggleWater(3)">💧</button>
+                    <button class="water-drop" onclick="toggleWater(4)">💧</button>
+                    <button class="water-drop" onclick="toggleWater(5)">💧</button>
+                    <button class="water-drop" onclick="toggleWater(6)">💧</button>
+                    <button class="water-drop" onclick="toggleWater(7)">💧</button>
+                </div>
+                <p id="waterStatus" style="font-size: 13px; color: var(--secondary); font-weight: 600;">0 / 8 glasses logged</p>
             </div>
         </div>
     </section>
@@ -174,12 +226,79 @@
             document.getElementById('carbsValue').innerText = carbs + 'g';
             document.getElementById('proteinValue').innerText = protein + 'g';
             document.getElementById('fatValue').innerText = fat + 'g';
-            document.getElementById('macroBreakdown').style.display = 'block';
+            
+            // Animate Bars
+            setTimeout(() => {
+                document.getElementById('carbsBar').style.width = '40%';
+                document.getElementById('proteinBar').style.width = '30%';
+                document.getElementById('fatBar').style.width = '30%';
+            }, 100);
 
+            document.getElementById('macroBreakdown').style.display = 'block';
             resultBox.classList.add('active');
+
+            // Generate Meal Suggestions
+            generateMealPlan(tdee);
 
             // Ensure result is visible on smaller screens
             resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Meal Suggestion Engine
+        function generateMealPlan(calories) {
+            const mealGrid = document.getElementById('mealGrid');
+            const mealSection = document.getElementById('mealSection');
+            mealGrid.innerHTML = '';
+            mealSection.style.display = 'block';
+
+            const meals = [
+                { tag: 'Breakfast', name: 'Oatmeal with Berries & Nuts', cals: Math.round(calories * 0.25), macros: '45C / 15P / 12F' },
+                { tag: 'Lunch', name: 'Grilled Chicken Quinoa Bowl', cals: Math.round(calories * 0.35), macros: '50C / 40P / 15F' },
+                { tag: 'Dinner', name: 'Baked Salmon with Asparagus', cals: Math.round(calories * 0.30), macros: '10C / 35P / 20F' },
+                { tag: 'Snack', name: 'Greek Yogurt with Honey', cals: Math.round(calories * 0.10), macros: '15C / 12P / 5F' }
+            ];
+
+            meals.forEach((meal, index) => {
+                const card = document.createElement('div');
+                card.className = 'meal-card';
+                card.innerHTML = `
+                    <span class="meal-tag">${meal.tag}</span>
+                    <h4 class="meal-name">${meal.name}</h4>
+                    <div class="meal-stats">
+                        <span>🔥 ${meal.cals} kcal</span>
+                        <span>📊 ${meal.macros}</span>
+                    </div>
+                `;
+                mealGrid.appendChild(card);
+                
+                // Staggered animation
+                setTimeout(() => {
+                    card.classList.add('visible');
+                }, index * 150);
+            });
+        }
+
+        // Water Tracker Logic
+        let loggedWater = 0;
+        function toggleWater(index) {
+            const drops = document.querySelectorAll('.water-drop');
+            const status = document.getElementById('waterStatus');
+            
+            if (drops[index].classList.contains('active')) {
+                drops[index].classList.remove('active');
+                loggedWater--;
+            } else {
+                drops[index].classList.add('active');
+                loggedWater++;
+            }
+            
+            status.innerText = `${loggedWater} / 8 glasses logged`;
+            if (loggedWater === 8) {
+                status.innerText = "Goal Reached! 💧 Stay hydrated!";
+                status.style.color = "var(--primary)";
+            } else {
+                status.style.color = "var(--secondary)";
+            }
         }
     </script>
 </body>
