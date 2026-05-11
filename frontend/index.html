@@ -29,6 +29,7 @@
             <li><a href="#tracker">Tracker</a></li>
         </ul>
         <div class="nav-actions">
+            <button id="theme-toggle" class="btn btn-outline" style="padding: 10px; font-size: 18px; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">🌓</button>
             <button class="btn btn-outline" style="padding: 10px 20px; font-size: 14px;">Sign In</button>
             <button class="btn btn-primary" style="padding: 10px 20px; font-size: 14px;">Sign Up</button>
         </div>
@@ -188,6 +189,22 @@
     </footer>
 
     <script>
+        // Theme Toggle Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Check for saved theme
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'light') {
+            body.classList.add('light-mode');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            const theme = body.classList.contains('light-mode') ? 'light' : 'dark';
+            localStorage.setItem('theme', theme);
+        });
+
         // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
