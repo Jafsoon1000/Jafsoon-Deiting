@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="hero-image-wrapper">
-            <img src="./assets/jafsoon_dieting_banner.png" alt="Jafsoon Dieting Interface" class="hero-image" onerror="this.src='https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=800&q=80'; this.style.objectFit='cover'; this.style.height='450px';">
+            <img id="hero-img" src="./assets/jafsoon_dieting_banner.png" alt="Jafsoon Dieting Interface" class="hero-image" onerror="this.src='https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=800&q=80'; this.style.objectFit='cover'; this.style.height='450px';">
             <div class="stat-card">
                 <div class="stat-icon">🔥</div>
                 <div class="stat-info">
@@ -192,17 +192,28 @@
         // Theme Toggle Logic
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
+        const heroImg = document.getElementById('hero-img');
+
+        function updateHeroImage(isLight) {
+            if (heroImg) {
+                heroImg.src = isLight 
+                    ? './assets/jafsoon_dieting_banner_light.png' 
+                    : './assets/jafsoon_dieting_banner.png';
+            }
+        }
 
         // Check for saved theme
         const currentTheme = localStorage.getItem('theme');
         if (currentTheme === 'light') {
             body.classList.add('light-mode');
+            updateHeroImage(true);
         }
 
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('light-mode');
-            const theme = body.classList.contains('light-mode') ? 'light' : 'dark';
-            localStorage.setItem('theme', theme);
+            const isLight = body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateHeroImage(isLight);
         });
 
         // Navbar scroll effect
