@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./frontend/assets/jafsoon_dieting_banner.png" alt="Jafsoon Dieting Interface" width="100%" />
+  <img src="./docs/assets/dashboard_preview.png" alt="Jafsoon Dashboard Preview" width="100%" />
   <br />
   <br />
   <h1>Jafsoon</h1>
