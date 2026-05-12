@@ -1,0 +1,47 @@
+.water-tracker {
+    margin-top: 60px;
+    text-align: center;
+    padding: 40px;
+    background: rgba(56, 189, 248, 0.03);
+    border-radius: 30px;
+    border: 1px solid rgba(56, 189, 248, 0.1);
+}
+
+.water-grid {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 25px 0;
+    flex-wrap: wrap;
+}
+
+.water-drop {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(56, 189, 248, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 20px;
+    background: transparent;
+}
+
+.water-drop.active {
+    background: var(--secondary);
+    border-color: var(--secondary);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    transform: scale(1.1);
+}
+
+.water-drop:hover {
+    border-color: var(--secondary);
+}
+
+#waterStatus {
+    font-size: 13px;
+    color: var(--secondary);
+    font-weight: 600;
+}
