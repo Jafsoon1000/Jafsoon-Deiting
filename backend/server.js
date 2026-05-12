@@ -4,9 +4,25 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve static files from the frontend directory
+// Middleware
+app.use(express.json());
 const frontendPath = path.join(__dirname, '../frontend');
 app.use(express.static(frontendPath));
+
+// Auth API Endpoints (Mock)
+app.post('/api/auth/signup', (req, res) => {
+    const { name, email, password } = req.body;
+    console.log('Signup Attempt:', { name, email });
+    // Mock success
+    res.json({ status: 'success', message: 'Account created successfully!' });
+});
+
+app.post('/api/auth/signin', (req, res) => {
+    const { email, password } = req.body;
+    console.log('Signin Attempt:', { email });
+    // Mock success
+    res.json({ status: 'success', message: 'Signed in successfully!', user: { name: 'Jafsoon User', email } });
+});
 
 // Basic API endpoint
 app.get('/api/health', (req, res) => {
