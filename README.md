@@ -1,5 +1,14 @@
 <div align="center">
-  <img src="./docs/assets/dashboard_preview.png" alt="Jafsoon Dashboard Preview" width="100%" />
+  <table>
+    <tr>
+      <td><img src="./docs/assets/dashboard_preview.png" alt="Dark Mode" width="100%" /></td>
+      <td><img src="./docs/assets/dashboard_preview_light.png" alt="Light Mode" width="100%" /></td>
+    </tr>
+    <tr>
+      <td align="center"><b>Dark Mode</b></td>
+      <td align="center"><b>Light Mode</b></td>
+    </tr>
+  </table>
   <br />
   <br />
   <h1>Jafsoon</h1>
