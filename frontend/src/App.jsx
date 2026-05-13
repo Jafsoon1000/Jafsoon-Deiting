@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Plans from './pages/Plans';
+import ScrollToTop from './components/ScrollToTop';
 import AuthModal from './components/AuthModal';
 import './styles/Global.css';
 
@@ -32,6 +33,7 @@ function App() {
 
     return (
         <Router>
+            <ScrollToTop />
             <div className="app-container">
                 <div className="ambient-glow"></div>
                 <div className="ambient-glow right"></div>
