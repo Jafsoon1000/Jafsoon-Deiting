@@ -1,7 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Hero.css';
 
 const Hero = ({ theme }) => {
+    const navigate = useNavigate();
+
     return (
         <section className="hero" id="home">
             <div className="hero-content">
@@ -10,7 +13,12 @@ const Hero = ({ theme }) => {
                 <p>Achieve your wellness goals with smart meal plans, detailed macro tracking, and an intuitive dashboard designed for your lifestyle.</p>
                 <div className="hero-actions">
                     <button className="btn btn-primary">Start Your Journey</button>
-                    <button className="btn btn-outline">Explore Plans</button>
+                    <button 
+                        className="btn btn-outline" 
+                        onClick={() => navigate('/plans')}
+                    >
+                        Explore Plans
+                    </button>
                 </div>
             </div>
             <div className="hero-image-wrapper">

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Features from './components/Features';
-import TDEECalculator from './components/TDEECalculator';
-import WaterTracker from './components/WaterTracker';
+import Home from './pages/Home';
+import Plans from './pages/Plans';
 import AuthModal from './components/AuthModal';
 import './styles/Global.css';
 
@@ -32,37 +31,35 @@ function App() {
     };
 
     return (
-        <div className="app-container">
-            <div className="ambient-glow"></div>
-            <div className="ambient-glow right"></div>
+        <Router>
+            <div className="app-container">
+                <div className="ambient-glow"></div>
+                <div className="ambient-glow right"></div>
 
-            <Navbar 
-                theme={theme} 
-                onToggleTheme={toggleTheme} 
-                onOpenAuth={openAuth} 
-                userEmail={userEmail}
-            />
+                <Navbar 
+                    theme={theme} 
+                    onToggleTheme={toggleTheme} 
+                    onOpenAuth={openAuth} 
+                    userEmail={userEmail}
+                />
 
-            <main>
-                <Hero theme={theme} />
-                <Features />
-                <section className="demo-section" id="tracker">
-                    <TDEECalculator />
-                    <WaterTracker />
-                </section>
-            </main>
+                <Routes>
+                    <Route path="/" element={<Home theme={theme} />} />
+                    <Route path="/plans" element={<Plans />} />
+                </Routes>
 
-            <footer>
-                <p>&copy; 2026 Jafsoon Platform. Built with ❤️ by Jafsoon.</p>
-            </footer>
+                <footer>
+                    <p>&copy; 2026 Jafsoon Platform. Built with ❤️ by Jafsoon.</p>
+                </footer>
 
-            <AuthModal 
-                isOpen={isAuthOpen} 
-                onClose={() => setIsAuthOpen(false)} 
-                initialMode={authMode}
-                onAuthSuccess={handleAuthSuccess}
-            />
-        </div>
+                <AuthModal 
+                    isOpen={isAuthOpen} 
+                    onClose={() => setIsAuthOpen(false)} 
+                    initialMode={authMode}
+                    onAuthSuccess={handleAuthSuccess}
+                />
+            </div>
+        </Router>
     );
 }
 

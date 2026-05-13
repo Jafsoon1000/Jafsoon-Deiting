@@ -6,6 +6,8 @@
     --primary-hover: #059669;
     --secondary: #38bdf8;
     --accent: #fbbf24;
+    --primary-glow: #6c5ce7;
+    --accent-glow: #a29bfe;
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
     --border-color: rgba(255, 255, 255, 0.1);
@@ -19,6 +21,8 @@ body.light-mode {
     --bg-color: #f8fafc;
     --surface-color: rgba(0, 0, 0, 0.03);
     --surface-hover: rgba(0, 0, 0, 0.06);
+    --primary-glow: #4834d4;
+    --accent-glow: #686de0;
     --text-main: #0f172a;
     --text-muted: #64748b;
     --border-color: rgba(0, 0, 0, 0.1);

@@ -1,0 +1,125 @@
+.plans-page {
+    padding: 120px 5% 80px;
+    min-height: 80vh;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.plans-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.plans-header h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.plans-header p {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    perspective: 1000px;
+}
+
+.plan-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(10px);
+}
+
+.plan-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--primary-glow);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(108, 92, 231, 0.2);
+}
+
+.plan-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(108, 92, 231, 0.15);
+    color: var(--primary-glow);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 1px solid rgba(108, 92, 231, 0.3);
+    backdrop-filter: blur(5px);
+}
+
+.plan-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+.plan-desc {
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+    margin-bottom: 30px;
+    flex-grow: 1;
+}
+
+.plan-features {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 40px;
+}
+
+.plan-features li {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+}
+
+.plan-features li span {
+    color: var(--primary-glow);
+    font-weight: bold;
+}
+
+.plan-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 25px;
+}
+
+.plan-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Light mode support */
+.light-mode .plan-card {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .plan-desc {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.light-mode .plan-header p {
+    color: rgba(0, 0, 0, 0.6);
+}
