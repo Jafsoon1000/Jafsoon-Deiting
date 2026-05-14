@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Plans from './pages/Plans';
 import ScrollToTop from './components/ScrollToTop';
 import AuthModal from './components/AuthModal';
+import Footer from './components/Footer';
 import './styles/Global.css';
 
 function App() {
@@ -50,9 +51,7 @@ function App() {
                     <Route path="/plans" element={<Plans />} />
                 </Routes>
 
-                <footer>
-                    <p>&copy; 2026 Jafsoon Platform. Built with ❤️ by Jafsoon.</p>
-                </footer>
+                <Footer />
 
                 <AuthModal 
                     isOpen={isAuthOpen} 
