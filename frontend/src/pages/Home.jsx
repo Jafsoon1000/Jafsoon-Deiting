@@ -9,8 +9,10 @@ const Home = ({ theme }) => {
         <main>
             <Hero theme={theme} />
             <Features />
-            <section className="demo-section" id="tracker">
+            <section className="demo-section" id="calculator">
                 <TDEECalculator />
+            </section>
+            <section className="demo-section" id="tracker">
                 <WaterTracker />
             </section>
         </main>
