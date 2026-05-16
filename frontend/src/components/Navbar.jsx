@@ -26,6 +26,7 @@ const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail }) => {
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/plans">Plans</Link></li>
                 <li><a href="/#features">Features</a></li>
+                <li><Link to="/contact">Contact</Link></li>
                 <li><a href="/#tracker">Tracker</a></li>
             </ul>
             <div className="nav-actions">
