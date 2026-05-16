@@ -7,6 +7,7 @@ import ScrollToTop from './components/ScrollToTop';
 import AuthModal from './components/AuthModal';
 import Footer from './components/Footer';
 import Contact from './pages/Contact';
+import About from './pages/About';
 import './styles/Global.css';
 
 function App() {
@@ -51,6 +52,7 @@ function App() {
                     <Route path="/" element={<Home theme={theme} />} />
                     <Route path="/plans" element={<Plans />} />
                     <Route path="/contact" element={<Contact />} />
+                    <Route path="/about" element={<About />} />
                 </Routes>
 
                 <Footer />
