@@ -130,6 +130,22 @@
     color: var(--text-main);
 }
 
+.language-selector {
+    background: var(--surface-hover);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.language-selector:hover {
+    border-color: var(--primary);
+}
+
 @media (max-width: 992px) {
     .footer-container {
         grid-template-columns: 1fr 1fr;

@@ -60,6 +60,10 @@ const Footer = () => {
             <div className="footer-bottom">
                 <p>&copy; 2026 Jafsoon Platform. Built with ❤️ for a healthier world.</p>
                 <div className="footer-legal">
+                    <select className="language-selector" aria-label="Select Language">
+                        <option value="en">English</option>
+                        <option value="de">Deutsch</option>
+                    </select>
                     <a href="#">Privacy Policy</a>
                     <a href="#">Terms of Service</a>
                     <a href="#">Cookie Policy</a>
