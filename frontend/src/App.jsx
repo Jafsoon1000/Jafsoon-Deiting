@@ -52,7 +52,7 @@ function App() {
                     <Route path="/" element={<Home theme={theme} onOpenAuth={openAuth} />} />
                     <Route path="/plans" element={<Plans />} />
                     <Route path="/contact" element={<Contact />} />
-                    <Route path="/about" element={<About />} />
+                    <Route path="/about" element={<About onOpenAuth={openAuth} />} />
                 </Routes>
 
                 <Footer />

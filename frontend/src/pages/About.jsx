@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/About.css';
 
-const About = () => {
+const About = ({ onOpenAuth }) => {
     return (
         <div className="about-page">
             <div className="about-hero">
@@ -61,7 +61,7 @@ const About = () => {
             <div className="cta-section">
                 <h2>Ready to join the revolution?</h2>
                 <p>Start your personalized nutrition plan today and feel the difference.</p>
-                <button className="btn btn-primary">Get Started Now</button>
+                <button className="btn btn-primary" onClick={() => onOpenAuth('signup')}>Get Started Now</button>
             </div>
         </div>
     );
