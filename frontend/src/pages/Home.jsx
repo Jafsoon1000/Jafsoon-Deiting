@@ -4,10 +4,10 @@ import Features from '../components/Features';
 import TDEECalculator from '../components/TDEECalculator';
 import WaterTracker from '../components/WaterTracker';
 
-const Home = ({ theme }) => {
+const Home = ({ theme, onOpenAuth }) => {
     return (
         <main>
-            <Hero theme={theme} />
+            <Hero theme={theme} onOpenAuth={onOpenAuth} />
             <Features />
             <section className="demo-section" id="calculator">
                 <TDEECalculator />

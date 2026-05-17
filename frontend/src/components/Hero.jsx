@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Hero.css';
 
-const Hero = ({ theme }) => {
+const Hero = ({ theme, onOpenAuth }) => {
     const navigate = useNavigate();
 
     return (
@@ -12,7 +12,7 @@ const Hero = ({ theme }) => {
                 <h1>Your Ultimate Personalized Dieting Platform</h1>
                 <p>Achieve your wellness goals with smart meal plans, detailed macro tracking, and an intuitive dashboard designed for your lifestyle.</p>
                 <div className="hero-actions">
-                    <button className="btn btn-primary">Start Your Journey</button>
+                    <button className="btn btn-primary" onClick={() => onOpenAuth('signup')}>Start Your Journey</button>
                     <button 
                         className="btn btn-outline" 
                         onClick={() => navigate('/plans')}
