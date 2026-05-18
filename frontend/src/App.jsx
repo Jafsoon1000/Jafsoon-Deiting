@@ -12,7 +12,7 @@ import Careers from './pages/Careers';
 import './styles/Global.css';
 
 function App() {
-    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const [authMode, setAuthMode] = useState('signin');
     const [userEmail, setUserEmail] = useState(null);
