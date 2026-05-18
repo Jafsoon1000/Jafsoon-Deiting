@@ -8,6 +8,7 @@ import AuthModal from './components/AuthModal';
 import Footer from './components/Footer';
 import Contact from './pages/Contact';
 import About from './pages/About';
+import Careers from './pages/Careers';
 import './styles/Global.css';
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
                     <Route path="/plans" element={<Plans />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/about" element={<About onOpenAuth={openAuth} />} />
+                    <Route path="/careers" element={<Careers />} />
                 </Routes>
 
                 <Footer />
