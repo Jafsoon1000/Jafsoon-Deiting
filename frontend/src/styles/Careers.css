@@ -15,7 +15,7 @@
     display: inline-block;
     padding: 6px 16px;
     background: rgba(16, 185, 129, 0.1);
-    color: var(--primary-color, #10b981);
+    color: var(--primary);
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 600;
@@ -26,12 +26,12 @@
     font-size: 3.5rem;
     margin-bottom: 20px;
     line-height: 1.2;
-    color: var(--text-primary, #ffffff);
+    color: var(--text-main);
 }
 
 .careers-header p {
     font-size: 1.2rem;
-    color: var(--text-secondary, #9ca3af);
+    color: var(--text-muted);
     line-height: 1.6;
 }
 
@@ -43,7 +43,7 @@
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 40px;
-    color: var(--text-primary, #ffffff);
+    color: var(--text-main);
 }
 
 .benefits-grid {
@@ -53,8 +53,8 @@
 }
 
 .benefit-card {
-    background: var(--card-bg, rgba(31, 41, 55, 0.4));
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 30px;
     text-align: center;
@@ -63,7 +63,7 @@
 
 .benefit-card:hover {
     transform: translateY(-5px);
-    border-color: var(--primary-color, #10b981);
+    border-color: var(--primary);
 }
 
 .benefit-icon {
@@ -74,11 +74,11 @@
 .benefit-card h3 {
     font-size: 1.2rem;
     margin-bottom: 10px;
-    color: var(--text-primary, #ffffff);
+    color: var(--text-main);
 }
 
 .benefit-card p {
-    color: var(--text-secondary, #9ca3af);
+    color: var(--text-muted);
     font-size: 0.95rem;
     line-height: 1.5;
 }
@@ -86,7 +86,7 @@
 .openings-section h2 {
     font-size: 2.5rem;
     margin-bottom: 40px;
-    color: var(--text-primary, #ffffff);
+    color: var(--text-main);
 }
 
 .jobs-list {
@@ -99,8 +99,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--card-bg, rgba(31, 41, 55, 0.4));
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 30px;
     transition: transform 0.3s ease, background-color 0.3s ease;
@@ -108,14 +108,14 @@
 
 .job-card:hover {
     transform: translateX(5px);
-    background: var(--card-bg-hover, rgba(31, 41, 55, 0.8));
-    border-color: var(--primary-color, #10b981);
+    background: var(--surface-hover);
+    border-color: var(--primary);
 }
 
 .job-info h3 {
     font-size: 1.4rem;
     margin-bottom: 10px;
-    color: var(--text-primary, #ffffff);
+    color: var(--text-main);
 }
 
 .job-meta {
@@ -126,14 +126,14 @@
 
 .job-meta span {
     font-size: 0.9rem;
-    color: var(--text-secondary, #9ca3af);
+    color: var(--text-muted);
     display: flex;
     align-items: center;
 }
 
 .job-department {
     background: rgba(16, 185, 129, 0.1);
-    color: var(--primary-color, #10b981) !important;
+    color: var(--primary) !important;
     padding: 4px 12px;
     border-radius: 12px;
     font-weight: 500;
