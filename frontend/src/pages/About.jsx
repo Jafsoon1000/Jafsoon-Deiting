@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/About.css';
+import nutritionInnovationImg from '../assets/nutrition_innovation.png';
 
 const About = ({ onOpenAuth }) => {
     return (
@@ -18,9 +19,7 @@ const About = ({ onOpenAuth }) => {
                         <p>Today, we're proud to help thousands of users achieve their dream physique through data-driven meal planning and community support.</p>
                     </div>
                     <div className="section-image">
-                        <div className="glass-card image-placeholder">
-                            <span>Innovation in Nutrition</span>
-                        </div>
+                        <img src={nutritionInnovationImg} alt="Innovation in Nutrition" className="about-illustration" style={{ width: '100%', height: 'auto', borderRadius: '15px', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }} />
                     </div>
                 </div>
 
