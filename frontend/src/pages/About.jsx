@@ -1,8 +1,9 @@
 import React from 'react';
 import '../styles/About.css';
 import nutritionInnovationImg from '../assets/nutrition_innovation.png';
+import nutritionInnovationLightImg from '../assets/nutrition_innovation_light.png';
 
-const About = ({ onOpenAuth }) => {
+const About = ({ theme, onOpenAuth }) => {
     return (
         <div className="about-page">
             <div className="about-hero">
@@ -19,7 +20,7 @@ const About = ({ onOpenAuth }) => {
                         <p>Today, we're proud to help thousands of users achieve their dream physique through data-driven meal planning and community support.</p>
                     </div>
                     <div className="section-image">
-                        <img src={nutritionInnovationImg} alt="Innovation in Nutrition" className="about-illustration" style={{ width: '100%', height: 'auto', borderRadius: '15px', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }} />
+                        <img src={theme === 'light' ? nutritionInnovationLightImg : nutritionInnovationImg} alt="Innovation in Nutrition" className="about-illustration" style={{ width: '100%', height: 'auto', borderRadius: '15px', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }} />
                     </div>
                 </div>
 
