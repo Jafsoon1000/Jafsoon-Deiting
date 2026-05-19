@@ -4,6 +4,7 @@ import '../styles/Navbar.css';
 
 const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail }) => {
     const [scrolled, setScrolled] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -22,13 +23,13 @@ const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail }) => {
                 </svg>
                 Jafsoon
             </Link>
-            <ul className="nav-links">
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/about">About</Link></li>
-                <li><Link to="/plans">Plans</Link></li>
-                <li><a href="/#features">Features</a></li>
-                <li><Link to="/contact">Contact</Link></li>
-                <li><a href="/#tracker">Tracker</a></li>
+            <ul className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
+                <li><Link to="/" onClick={() => setIsMobileMenuOpen(false)}>Home</Link></li>
+                <li><Link to="/about" onClick={() => setIsMobileMenuOpen(false)}>About</Link></li>
+                <li><Link to="/plans" onClick={() => setIsMobileMenuOpen(false)}>Plans</Link></li>
+                <li><a href="/#features" onClick={() => setIsMobileMenuOpen(false)}>Features</a></li>
+                <li><Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link></li>
+                <li><a href="/#tracker" onClick={() => setIsMobileMenuOpen(false)}>Tracker</a></li>
             </ul>
             <div className="nav-actions">
                 <button 
@@ -60,6 +61,9 @@ const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail }) => {
                     </>
                 )}
             </div>
+            <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                {isMobileMenuOpen ? '✕' : '☰'}
+            </button>
         </nav>
     );
 };
