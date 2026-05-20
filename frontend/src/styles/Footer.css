@@ -131,7 +131,7 @@
 }
 
 .language-selector {
-    background: var(--surface-hover);
+    background-color: var(--bg-color);
     color: var(--text-main);
     border: 1px solid var(--border-color);
     padding: 4px 8px;
@@ -139,11 +139,16 @@
     font-size: 14px;
     cursor: pointer;
     outline: none;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .language-selector:hover {
     border-color: var(--primary);
+}
+
+.language-selector option {
+    background-color: var(--bg-color);
+    color: var(--text-main);
 }
 
 @media (max-width: 992px) {
