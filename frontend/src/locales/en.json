@@ -112,6 +112,27 @@
       "goal": "Goal: 8 Glasses (2L)",
       "reached": "Goal Reached! 💧 Stay hydrated!",
       "logged": "{{count}} / 8 glasses logged"
+    },
+    "about": {
+      "badge": "Our Mission",
+      "titlePart1": "Empowering Your ",
+      "titlePart2": "Health Journey",
+      "subtitle": "We believe that nutrition should be personalized, accessible, and scientifically grounded. Jafsoon is here to bridge the gap between your goals and your daily habits.",
+      "ourStory": "Our Story",
+      "storyP1": "Founded in 2024, Jafsoon started as a simple idea: why is it so hard to track what we eat accurately? We set out to build a platform that doesn't just count calories, but understands the science of nutrition and the psychology of dieting.",
+      "storyP2": "Today, we're proud to help thousands of users achieve their dream physique through data-driven meal planning and community support.",
+      "science": "Science First",
+      "scienceDesc": "Every plan we generate is based on the latest nutritional research and metabolic science.",
+      "personalized": "Personalized",
+      "personalizedDesc": "No two bodies are the same. Our AI tailors every gram of your macros to your specific needs.",
+      "community": "Community",
+      "communityDesc": "We're more than an app; we're a supportive ecosystem dedicated to your long-term success.",
+      "activeUsers": "Active Users",
+      "mealsLogged": "Meals Logged",
+      "successRate": "Success Rate",
+      "ctaHeader": "Ready to join the revolution?",
+      "ctaSub": "Start your personalized nutrition plan today and feel the difference.",
+      "ctaBtn": "Get Started Now"
     }
   }
 }

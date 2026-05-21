@@ -112,6 +112,27 @@
       "goal": "Ziel: 8 Gläser (2L)",
       "reached": "Ziel erreicht! 💧 Bleib hydratisiert!",
       "logged": "{{count}} / 8 Gläser protokolliert"
+    },
+    "about": {
+      "badge": "Unsere Mission",
+      "titlePart1": "Stärkung Ihrer ",
+      "titlePart2": "Gesundheitsreise",
+      "subtitle": "Wir glauben, dass Ernährung personalisiert, zugänglich und wissenschaftlich fundiert sein sollte. Jafsoon ist hier, um die Lücke zwischen Ihren Zielen und Ihren täglichen Gewohnheiten zu schließen.",
+      "ourStory": "Unsere Geschichte",
+      "storyP1": "Gegründet im Jahr 2024, begann Jafsoon als eine einfache Idee: Warum ist es so schwer, genau zu verfolgen, was wir essen? Wir haben uns vorgenommen, eine Plattform aufzubauen, die nicht nur Kalorien zählt, sondern die Wissenschaft der Ernährung und die Psychologie des Diätens versteht.",
+      "storyP2": "Heute sind wir stolz darauf, Tausenden von Benutzern zu helfen, ihren Traumkörper durch datengesteuerte Essensplanung und Community-Unterstützung zu erreichen.",
+      "science": "Wissenschaft zuerst",
+      "scienceDesc": "Jeder von uns erstellte Plan basiert auf der neuesten Ernährungsforschung und Stoffwechselwissenschaft.",
+      "personalized": "Personalisiert",
+      "personalizedDesc": "Keine zwei Körper sind gleich. Unsere KI passt jedes Gramm Ihrer Makros an Ihre spezifischen Bedürfnisse an.",
+      "community": "Gemeinschaft",
+      "communityDesc": "Wir sind mehr als nur eine App; wir sind ein unterstützendes Ökosystem, das sich Ihrem langfristigen Erfolg widmet.",
+      "activeUsers": "Aktive Benutzer",
+      "mealsLogged": "Protokollierte Mahlzeiten",
+      "successRate": "Erfolgsrate",
+      "ctaHeader": "Bereit, sich der Revolution anzuschließen?",
+      "ctaSub": "Starten Sie noch heute Ihren personalisierten Ernährungsplan und spüren Sie den Unterschied.",
+      "ctaBtn": "Jetzt loslegen"
     }
   }
 }
