@@ -1,0 +1,42 @@
+{
+  "translation": {
+    "nav": {
+      "home": "Startseite",
+      "about": "Über uns",
+      "plans": "Pläne",
+      "features": "Funktionen",
+      "contact": "Kontakt",
+      "tracker": "Tracker",
+      "myProfile": "Mein Profil",
+      "signIn": "Anmelden",
+      "signUp": "Registrieren"
+    },
+    "footer": {
+      "brandDesc": "Ihre ultimative personalisierte Diät-Plattform. Wir helfen Ihnen, Ihre Gesundheitsziele mit intelligenten Ernährungsplänen und detailliertem Makro-Tracking zu erreichen.",
+      "product": "Produkt",
+      "home": "Startseite",
+      "pricingPlans": "Preispläne",
+      "keyFeatures": "Hauptfunktionen",
+      "waterTracker": "Wasser-Tracker",
+      "tdeeCalculator": "TDEE Rechner",
+      "company": "Unternehmen",
+      "aboutUs": "Über uns",
+      "careers": "Karriere",
+      "blog": "Blog",
+      "pressKit": "Pressemappe",
+      "contact": "Kontakt",
+      "resources": "Ressourcen",
+      "helpCenter": "Hilfezentrum",
+      "community": "Gemeinschaft",
+      "mealGuides": "Ernährungsratgeber",
+      "healthTips": "Gesundheitstipps",
+      "appSupport": "App-Support",
+      "copyright": "© 2026 Jafsoon Plattform. Mit ❤️ für eine gesündere Welt gebaut.",
+      "privacyPolicy": "Datenschutzrichtlinie",
+      "termsOfService": "Nutzungsbedingungen",
+      "cookiePolicy": "Cookie-Richtlinie",
+      "english": "Englisch",
+      "deutsch": "Deutsch"
+    }
+  }
+}

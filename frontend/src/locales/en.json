@@ -1,0 +1,42 @@
+{
+  "translation": {
+    "nav": {
+      "home": "Home",
+      "about": "About",
+      "plans": "Plans",
+      "features": "Features",
+      "contact": "Contact",
+      "tracker": "Tracker",
+      "myProfile": "My Profile",
+      "signIn": "Sign In",
+      "signUp": "Sign Up"
+    },
+    "footer": {
+      "brandDesc": "Your ultimate personalized dieting platform. We help you achieve your wellness goals with smart meal plans and detailed macro tracking.",
+      "product": "Product",
+      "home": "Home",
+      "pricingPlans": "Pricing Plans",
+      "keyFeatures": "Key Features",
+      "waterTracker": "Water Tracker",
+      "tdeeCalculator": "TDEE Calculator",
+      "company": "Company",
+      "aboutUs": "About Us",
+      "careers": "Careers",
+      "blog": "Blog",
+      "pressKit": "Press Kit",
+      "contact": "Contact",
+      "resources": "Resources",
+      "helpCenter": "Help Center",
+      "community": "Community",
+      "mealGuides": "Meal Guides",
+      "healthTips": "Health Tips",
+      "appSupport": "App Support",
+      "copyright": "© 2026 Jafsoon Platform. Built with ❤️ for a healthier world.",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "cookiePolicy": "Cookie Policy",
+      "english": "English",
+      "deutsch": "Deutsch"
+    }
+  }
+}

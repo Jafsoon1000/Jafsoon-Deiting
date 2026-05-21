@@ -1,8 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import '../styles/Footer.css';
 
 const Footer = () => {
+    const { t, i18n } = useTranslation();
+
+    const changeLanguage = (e) => {
+        i18n.changeLanguage(e.target.value);
+    };
+
     return (
         <footer className="footer">
             <div className="footer-container">
@@ -14,7 +21,7 @@ const Footer = () => {
                         </svg>
                         Jafsoon
                     </Link>
-                    <p>Your ultimate personalized dieting platform. We help you achieve your wellness goals with smart meal plans and detailed macro tracking.</p>
+                    <p>{t('footer.brandDesc')}</p>
                     <div className="social-links">
                         <a href="#" className="social-icon" aria-label="Twitter">𝕏</a>
                         <a href="#" className="social-icon" aria-label="Instagram">📸</a>
@@ -24,49 +31,49 @@ const Footer = () => {
                 </div>
 
                 <div className="footer-column">
-                    <h3>Product</h3>
+                    <h3>{t('footer.product')}</h3>
                     <ul className="footer-links">
-                        <li><Link to="/">Home</Link></li>
-                        <li><Link to="/plans">Pricing Plans</Link></li>
-                        <li><a href="/#features">Key Features</a></li>
-                        <li><a href="/#tracker">Water Tracker</a></li>
-                        <li><a href="/#calculator">TDEE Calculator</a></li>
+                        <li><Link to="/">{t('footer.home')}</Link></li>
+                        <li><Link to="/plans">{t('footer.pricingPlans')}</Link></li>
+                        <li><a href="/#features">{t('footer.keyFeatures')}</a></li>
+                        <li><a href="/#tracker">{t('footer.waterTracker')}</a></li>
+                        <li><a href="/#calculator">{t('footer.tdeeCalculator')}</a></li>
                     </ul>
                 </div>
 
                 <div className="footer-column">
-                    <h3>Company</h3>
+                    <h3>{t('footer.company')}</h3>
                     <ul className="footer-links">
-                        <li><Link to="/about">About Us</Link></li>
-                        <li><Link to="/careers">Careers</Link></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Press Kit</a></li>
-                        <li><Link to="/contact">Contact</Link></li>
+                        <li><Link to="/about">{t('footer.aboutUs')}</Link></li>
+                        <li><Link to="/careers">{t('footer.careers')}</Link></li>
+                        <li><a href="#">{t('footer.blog')}</a></li>
+                        <li><a href="#">{t('footer.pressKit')}</a></li>
+                        <li><Link to="/contact">{t('footer.contact')}</Link></li>
                     </ul>
                 </div>
 
                 <div className="footer-column">
-                    <h3>Resources</h3>
+                    <h3>{t('footer.resources')}</h3>
                     <ul className="footer-links">
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Community</a></li>
-                        <li><a href="#">Meal Guides</a></li>
-                        <li><Link to="/health-tips">Health Tips</Link></li>
-                        <li><a href="#">App Support</a></li>
+                        <li><a href="#">{t('footer.helpCenter')}</a></li>
+                        <li><a href="#">{t('footer.community')}</a></li>
+                        <li><a href="#">{t('footer.mealGuides')}</a></li>
+                        <li><Link to="/health-tips">{t('footer.healthTips')}</Link></li>
+                        <li><a href="#">{t('footer.appSupport')}</a></li>
                     </ul>
                 </div>
             </div>
 
             <div className="footer-bottom">
-                <p>&copy; 2026 Jafsoon Platform. Built with ❤️ for a healthier world.</p>
+                <p>{t('footer.copyright')}</p>
                 <div className="footer-legal">
-                    <select className="language-selector" aria-label="Select Language">
-                        <option value="en">English</option>
-                        <option value="de">Deutsch</option>
+                    <select className="language-selector" aria-label="Select Language" onChange={changeLanguage} value={i18n.language}>
+                        <option value="en">{t('footer.english')}</option>
+                        <option value="de">{t('footer.deutsch')}</option>
                     </select>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Cookie Policy</a>
+                    <a href="#">{t('footer.privacyPolicy')}</a>
+                    <a href="#">{t('footer.termsOfService')}</a>
+                    <a href="#">{t('footer.cookiePolicy')}</a>
                 </div>
             </div>
         </footer>

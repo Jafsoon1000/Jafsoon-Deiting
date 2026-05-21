@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import '../styles/Navbar.css';
 
 const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail }) => {
+    const { t } = useTranslation();
     const [scrolled, setScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -24,12 +26,12 @@ const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail }) => {
                 Jafsoon
             </Link>
             <ul className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
-                <li><Link to="/" onClick={() => setIsMobileMenuOpen(false)}>Home</Link></li>
-                <li><Link to="/about" onClick={() => setIsMobileMenuOpen(false)}>About</Link></li>
-                <li><Link to="/plans" onClick={() => setIsMobileMenuOpen(false)}>Plans</Link></li>
-                <li><a href="/#features" onClick={() => setIsMobileMenuOpen(false)}>Features</a></li>
-                <li><Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link></li>
-                <li><a href="/#tracker" onClick={() => setIsMobileMenuOpen(false)}>Tracker</a></li>
+                <li><Link to="/" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.home')}</Link></li>
+                <li><Link to="/about" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.about')}</Link></li>
+                <li><Link to="/plans" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.plans')}</Link></li>
+                <li><a href="/#features" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.features')}</a></li>
+                <li><Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.contact')}</Link></li>
+                <li><a href="/#tracker" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.tracker')}</a></li>
             </ul>
             <div className="nav-actions">
                 <button 
@@ -41,7 +43,7 @@ const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail }) => {
                     {theme === 'dark' ? '☀️' : '🌙'}
                 </button>
                 {userEmail ? (
-                    <button className="btn btn-outline" style={{ padding: '10px 20px', fontSize: '14px' }}>My Profile</button>
+                    <button className="btn btn-outline" style={{ padding: '10px 20px', fontSize: '14px' }}>{t('nav.myProfile')}</button>
                 ) : (
                     <>
                         <button 
@@ -49,14 +51,14 @@ const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail }) => {
                             style={{ padding: '10px 20px', fontSize: '14px' }}
                             onClick={() => onOpenAuth('signin')}
                         >
-                            Sign In
+                            {t('nav.signIn')}
                         </button>
                         <button 
                             className="btn btn-primary" 
                             style={{ padding: '10px 20px', fontSize: '14px' }}
                             onClick={() => onOpenAuth('signup')}
                         >
-                            Sign Up
+                            {t('nav.signUp')}
                         </button>
                     </>
                 )}
