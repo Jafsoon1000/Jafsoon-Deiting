@@ -56,6 +56,62 @@
       "accountCreated": "Konto erstellt!",
       "canTrack": "Sie können nun beginnen, Ihre Reise zu verfolgen.",
       "continue": "Weiter"
+    },
+    "hero": {
+      "badge": "v2.0 Beta Live",
+      "title": "Ihre ultimative personalisierte Diät-Plattform",
+      "subtitle": "Erreichen Sie Ihre Gesundheitsziele mit intelligenten Ernährungsplänen, detailliertem Makro-Tracking und einem intuitiven Dashboard, das für Ihren Lebensstil entwickelt wurde.",
+      "startBtn": "Beginnen Sie Ihre Reise",
+      "exploreBtn": "Pläne entdecken",
+      "calsToday": "Kalorien heute"
+    },
+    "features": {
+      "header": "Alles, was Sie für den Erfolg brauchen",
+      "subHeader": "Ob Ihr Ziel Gewichtsverlust, Muskelaufbau oder die Aufrechterhaltung eines ausgewogenen Lebensstils ist, Jafsoon bietet die Werkzeuge und Erkenntnisse.",
+      "f1Title": "Ernährungs-Tracking",
+      "f1Desc": "Protokollieren Sie Mahlzeiten mühelos und überwachen Sie Ihre tägliche Kalorien- und Makronährstoffaufnahme mit schönen, interaktiven visuellen Diagrammen.",
+      "f2Title": "Personalisierte Pläne",
+      "f2Desc": "Erstellen Sie maßgeschneiderte Ernährungsempfehlungen basierend auf Ihren individuellen Gesundheitszielen, Allergien und Geschmackspräferenzen.",
+      "f3Title": "Fortschrittsüberwachung",
+      "f3Desc": "Verfolgen Sie Ihr Gewicht, Ihre Körperwerte und Ihren allgemeinen Fortschritt im Laufe der Zeit mit unserer hochmodernen Analyse-Engine."
+    },
+    "calculator": {
+      "title": "Schneller TDEE-Schätzer",
+      "weight": "Gewicht (kg)",
+      "height": "Größe (cm)",
+      "gender": "Geschlecht",
+      "male": "Männlich",
+      "female": "Weiblich",
+      "age": "Alter",
+      "activity": "Aktivitätslevel",
+      "act1": "Sitzend (wenig bis kein Sport)",
+      "act2": "Leicht aktiv (1-3 Tage/Woche)",
+      "act3": "Mäßig aktiv (3-5 Tage/Woche)",
+      "act4": "Sehr aktiv (6-7 Tage/Woche)",
+      "act5": "Extra aktiv (körperliche Arbeit/Training)",
+      "calcBtn": "Kalorien berechnen",
+      "maintenance": "Ihre Erhaltungskalorien",
+      "kcalDay": "kcal / Tag",
+      "recMacros": "Empfohlene tägliche Makros",
+      "carbs": "Kohlenhydrate",
+      "protein": "Protein",
+      "fats": "Fette",
+      "errorMsg": "Bitte füllen Sie alle Details korrekt aus.",
+      "samplePlan": "Ihr Beispiel-Ernährungsplan",
+      "breakfast": "Frühstück",
+      "lunch": "Mittagessen",
+      "dinner": "Abendessen",
+      "snack": "Snack",
+      "meal1": "Haferflocken mit Beeren & Nüssen",
+      "meal2": "Gegrillte Hähnchen-Quinoa-Bowl",
+      "meal3": "Gebackener Lachs mit Spargel",
+      "meal4": "Griechischer Joghurt mit Honig"
+    },
+    "tracker": {
+      "title": "Täglicher Hydratations-Tracker",
+      "goal": "Ziel: 8 Gläser (2L)",
+      "reached": "Ziel erreicht! 💧 Bleib hydratisiert!",
+      "logged": "{{count}} / 8 Gläser protokolliert"
     }
   }
 }

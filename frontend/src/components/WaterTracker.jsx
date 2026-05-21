@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import '../styles/WaterTracker.css';
 
 const WaterTracker = () => {
+    const { t } = useTranslation();
     const [loggedWater, setLoggedWater] = useState(new Array(8).fill(false));
 
     const toggleWater = (index) => {
@@ -15,8 +17,8 @@ const WaterTracker = () => {
 
     return (
         <div className="water-tracker">
-            <h3>Daily Hydration Tracker</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Goal: 8 Glasses (2L)</p>
+            <h3>{t('tracker.title')}</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{t('tracker.goal')}</p>
             <div className="water-grid">
                 {loggedWater.map((active, i) => (
                     <button 
@@ -29,7 +31,7 @@ const WaterTracker = () => {
                 ))}
             </div>
             <p id="waterStatus" style={{ color: isGoalReached ? 'var(--primary)' : 'var(--secondary)' }}>
-                {isGoalReached ? "Goal Reached! 💧 Stay hydrated!" : `${count} / 8 glasses logged`}
+                {isGoalReached ? t('tracker.reached') : t('tracker.logged', { count })}
             </p>
         </div>
     );

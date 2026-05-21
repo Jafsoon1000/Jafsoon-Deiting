@@ -1,30 +1,32 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import '../styles/Features.css';
 
 const Features = () => {
+    const { t } = useTranslation();
     const features = [
         {
             icon: '📊',
-            title: 'Nutrition Tracking',
-            desc: 'Log meals effortlessly and monitor your daily caloric and macronutrient intake with beautiful, interactive visual charts.'
+            title: t('features.f1Title'),
+            desc: t('features.f1Desc')
         },
         {
             icon: '🥑',
-            title: 'Personalized Plans',
-            desc: 'Generate tailored dietary recommendations based on your unique health goals, allergies, and taste preferences.'
+            title: t('features.f2Title'),
+            desc: t('features.f2Desc')
         },
         {
             icon: '📈',
-            title: 'Progress Monitoring',
-            desc: 'Track your weight, body metrics, and overall progress over time with our state-of-the-art analytics engine.'
+            title: t('features.f3Title'),
+            desc: t('features.f3Desc')
         }
     ];
 
     return (
         <section className="features" id="features">
             <div className="section-header">
-                <h2>Everything you need to succeed</h2>
-                <p>Whether your goal is weight loss, muscle gain, or maintaining a balanced lifestyle, Jafsoon provides the tools and insights.</p>
+                <h2>{t('features.header')}</h2>
+                <p>{t('features.subHeader')}</p>
             </div>
             <div className="features-grid">
                 {features.map((f, i) => (

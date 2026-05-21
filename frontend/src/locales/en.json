@@ -56,6 +56,62 @@
       "accountCreated": "Account Created!",
       "canTrack": "You can now start tracking your journey.",
       "continue": "Continue"
+    },
+    "hero": {
+      "badge": "v2.0 Beta Live",
+      "title": "Your Ultimate Personalized Dieting Platform",
+      "subtitle": "Achieve your wellness goals with smart meal plans, detailed macro tracking, and an intuitive dashboard designed for your lifestyle.",
+      "startBtn": "Start Your Journey",
+      "exploreBtn": "Explore Plans",
+      "calsToday": "Calories Today"
+    },
+    "features": {
+      "header": "Everything you need to succeed",
+      "subHeader": "Whether your goal is weight loss, muscle gain, or maintaining a balanced lifestyle, Jafsoon provides the tools and insights.",
+      "f1Title": "Nutrition Tracking",
+      "f1Desc": "Log meals effortlessly and monitor your daily caloric and macronutrient intake with beautiful, interactive visual charts.",
+      "f2Title": "Personalized Plans",
+      "f2Desc": "Generate tailored dietary recommendations based on your unique health goals, allergies, and taste preferences.",
+      "f3Title": "Progress Monitoring",
+      "f3Desc": "Track your weight, body metrics, and overall progress over time with our state-of-the-art analytics engine."
+    },
+    "calculator": {
+      "title": "Quick TDEE Estimator",
+      "weight": "Weight (kg)",
+      "height": "Height (cm)",
+      "gender": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "age": "Age",
+      "activity": "Activity Level",
+      "act1": "Sedentary (little to no exercise)",
+      "act2": "Lightly active (1-3 days/week)",
+      "act3": "Moderately active (3-5 days/week)",
+      "act4": "Very active (6-7 days/week)",
+      "act5": "Extra active (physical job/training)",
+      "calcBtn": "Calculate Calories",
+      "maintenance": "Your Maintenance Calories",
+      "kcalDay": "kcal / day",
+      "recMacros": "Recommended Daily Macros",
+      "carbs": "Carbohydrates",
+      "protein": "Protein",
+      "fats": "Fats",
+      "errorMsg": "Please fill in all details correctly.",
+      "samplePlan": "Your Sample Meal Plan",
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner",
+      "snack": "Snack",
+      "meal1": "Oatmeal with Berries & Nuts",
+      "meal2": "Grilled Chicken Quinoa Bowl",
+      "meal3": "Baked Salmon with Asparagus",
+      "meal4": "Greek Yogurt with Honey"
+    },
+    "tracker": {
+      "title": "Daily Hydration Tracker",
+      "goal": "Goal: 8 Glasses (2L)",
+      "reached": "Goal Reached! 💧 Stay hydrated!",
+      "logged": "{{count}} / 8 glasses logged"
     }
   }
 }
