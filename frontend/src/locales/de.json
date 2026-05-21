@@ -37,6 +37,25 @@
       "cookiePolicy": "Cookie-Richtlinie",
       "english": "Englisch",
       "deutsch": "Deutsch"
+    },
+    "auth": {
+      "welcomeBack": "Willkommen zurück",
+      "createAccount": "Konto erstellen",
+      "enterDetails": "Bitte geben Sie Ihre Daten ein, um fortzufahren",
+      "joinJafsoon": "Treten Sie Jafsoon bei, um Ihre Reise zu beginnen",
+      "signIn": "Anmelden",
+      "signUp": "Registrieren",
+      "emailAddress": "E-Mail-Adresse",
+      "password": "Passwort",
+      "fullName": "Vollständiger Name",
+      "noAccount": "Noch kein Konto?",
+      "haveAccount": "Haben Sie bereits ein Konto?",
+      "authFailed": "Authentifizierung fehlgeschlagen.",
+      "signupFailed": "Registrierung fehlgeschlagen.",
+      "signedInAs": "Angemeldet als",
+      "accountCreated": "Konto erstellt!",
+      "canTrack": "Sie können nun beginnen, Ihre Reise zu verfolgen.",
+      "continue": "Weiter"
     }
   }
 }

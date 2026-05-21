@@ -37,6 +37,25 @@
       "cookiePolicy": "Cookie Policy",
       "english": "English",
       "deutsch": "Deutsch"
+    },
+    "auth": {
+      "welcomeBack": "Welcome Back",
+      "createAccount": "Create Account",
+      "enterDetails": "Please enter your details to continue",
+      "joinJafsoon": "Join Jafsoon to start your journey",
+      "signIn": "Sign In",
+      "signUp": "Sign Up",
+      "emailAddress": "Email Address",
+      "password": "Password",
+      "fullName": "Full Name",
+      "noAccount": "Don't have an account?",
+      "haveAccount": "Already have an account?",
+      "authFailed": "Authentication failed.",
+      "signupFailed": "Signup failed.",
+      "signedInAs": "Signed in as",
+      "accountCreated": "Account Created!",
+      "canTrack": "You can now start tracking your journey.",
+      "continue": "Continue"
     }
   }
 }

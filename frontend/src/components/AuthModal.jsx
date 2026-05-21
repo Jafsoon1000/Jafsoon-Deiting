@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import '../styles/AuthModal.css';
 
 const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSuccess }) => {
+    const { t } = useTranslation();
     const [mode, setMode] = useState(initialMode);
     const [success, setSuccess] = useState(null);
 
@@ -24,11 +26,11 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSuccess }) =
             });
             const data = await response.json();
             if (data.status === 'success') {
-                setSuccess({ title: 'Welcome Back!', message: `Signed in as ${signinEmail}` });
+                setSuccess({ title: t('auth.welcomeBack') + '!', message: `${t('auth.signedInAs')} ${signinEmail}` });
                 onAuthSuccess(signinEmail);
             }
         } catch (err) {
-            alert('Authentication failed.');
+            alert(t('auth.authFailed'));
         }
     };
 
@@ -42,10 +44,10 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSuccess }) =
             });
             const data = await response.json();
             if (data.status === 'success') {
-                setSuccess({ title: 'Account Created!', message: 'You can now start tracking your journey.' });
+                setSuccess({ title: t('auth.accountCreated'), message: t('auth.canTrack') });
             }
         } catch (err) {
-            alert('Signup failed.');
+            alert(t('auth.signupFailed'));
         }
     };
 
@@ -57,57 +59,57 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSuccess }) =
                 {!success ? (
                     <>
                         <div className="auth-header">
-                            <h2>{mode === 'signin' ? 'Welcome Back' : 'Create Account'}</h2>
-                            <p>{mode === 'signin' ? 'Please enter your details to continue' : 'Join Jafsoon to start your journey'}</p>
+                            <h2>{mode === 'signin' ? t('auth.welcomeBack') : t('auth.createAccount')}</h2>
+                            <p>{mode === 'signin' ? t('auth.enterDetails') : t('auth.joinJafsoon')}</p>
                         </div>
 
                         <div className="auth-tabs">
-                            <div className={`auth-tab ${mode === 'signin' ? 'active' : ''}`} onClick={() => setMode('signin')}>Sign In</div>
-                            <div className={`auth-tab ${mode === 'signup' ? 'active' : ''}`} onClick={() => setMode('signup')}>Sign Up</div>
+                            <div className={`auth-tab ${mode === 'signin' ? 'active' : ''}`} onClick={() => setMode('signin')}>{t('auth.signIn')}</div>
+                            <div className={`auth-tab ${mode === 'signup' ? 'active' : ''}`} onClick={() => setMode('signup')}>{t('auth.signUp')}</div>
                         </div>
 
                         {mode === 'signin' ? (
                             <form className="auth-form active" onSubmit={handleSignin}>
                                 <div className="form-group">
-                                    <label>Email Address</label>
+                                    <label>{t('auth.emailAddress')}</label>
                                     <div className="input-wrapper">
                                         <input type="email" value={signinEmail} onChange={(e) => setSigninEmail(e.target.value)} placeholder="name@company.com" required />
                                     </div>
                                 </div>
                                 <div className="form-group">
-                                    <label>Password</label>
+                                    <label>{t('auth.password')}</label>
                                     <div className="input-wrapper">
                                         <input type="password" value={signinPassword} onChange={(e) => setSigninPassword(e.target.value)} placeholder="••••••••" required />
                                     </div>
                                 </div>
-                                <button type="submit" className="btn btn-primary auth-btn">Sign In</button>
+                                <button type="submit" className="btn btn-primary auth-btn">{t('auth.signIn')}</button>
                                 <div className="auth-footer">
-                                    Don't have an account? <a onClick={() => setMode('signup')}>Sign up</a>
+                                    {t('auth.noAccount')} <a onClick={() => setMode('signup')}>{t('auth.signUp')}</a>
                                 </div>
                             </form>
                         ) : (
                             <form className="auth-form active" onSubmit={handleSignup}>
                                 <div className="form-group">
-                                    <label>Full Name</label>
+                                    <label>{t('auth.fullName')}</label>
                                     <div className="input-wrapper">
                                         <input type="text" value={signupName} onChange={(e) => setSignupName(e.target.value)} placeholder="John Doe" required />
                                     </div>
                                 </div>
                                 <div className="form-group">
-                                    <label>Email Address</label>
+                                    <label>{t('auth.emailAddress')}</label>
                                     <div className="input-wrapper">
                                         <input type="email" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} placeholder="name@company.com" required />
                                     </div>
                                 </div>
                                 <div className="form-group">
-                                    <label>Password</label>
+                                    <label>{t('auth.password')}</label>
                                     <div className="input-wrapper">
                                         <input type="password" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} placeholder="••••••••" required />
                                     </div>
                                 </div>
-                                <button type="submit" className="btn btn-primary auth-btn">Create Account</button>
+                                <button type="submit" className="btn btn-primary auth-btn">{t('auth.createAccount')}</button>
                                 <div className="auth-footer">
-                                    Already have an account? <a onClick={() => setMode('signin')}>Sign in</a>
+                                    {t('auth.haveAccount')} <a onClick={() => setMode('signin')}>{t('auth.signIn')}</a>
                                 </div>
                             </form>
                         )}
@@ -117,7 +119,7 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSuccess }) =
                         <div className="success-icon">✓</div>
                         <h2>{success.title}</h2>
                         <p>{success.message}</p>
-                        <button className="btn btn-primary" style={{ marginTop: '20px', width: '100%' }} onClick={onClose}>Continue</button>
+                        <button className="btn btn-primary" style={{ marginTop: '20px', width: '100%' }} onClick={onClose}>{t('auth.continue')}</button>
                     </div>
                 )}
             </div>
