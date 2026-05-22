@@ -2,11 +2,18 @@ import React from 'react';
 import '../styles/Dashboard.css';
 
 const Dashboard = ({ userEmail }) => {
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return 'Good morning';
+        if (hour < 18) return 'Good afternoon';
+        return 'Good evening';
+    };
+
     return (
         <div className="dashboard-container">
             <header className="dashboard-header">
                 <h1>User Dashboard</h1>
-                <p>Welcome back{userEmail ? `, ${userEmail}` : ''}!</p>
+                <p>{getGreeting()}{userEmail ? `, ${userEmail}` : ''}!</p>
             </header>
             
             <div className="dashboard-content">
