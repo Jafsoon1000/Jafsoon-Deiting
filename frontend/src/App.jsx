@@ -10,6 +10,7 @@ import Contact from './pages/Contact';
 import About from './pages/About';
 import Careers from './pages/Careers';
 import HealthTips from './pages/HealthTips';
+import Dashboard from './pages/Dashboard';
 import './styles/Global.css';
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
                     <Route path="/about" element={<About theme={theme} onOpenAuth={openAuth} />} />
                     <Route path="/careers" element={<Careers />} />
                     <Route path="/health-tips" element={<HealthTips />} />
+                    <Route path="/dashboard" element={<Dashboard userEmail={userEmail} />} />
                 </Routes>
 
                 <Footer />

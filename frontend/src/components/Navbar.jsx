@@ -43,7 +43,7 @@ const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail }) => {
                     {theme === 'dark' ? '☀️' : '🌙'}
                 </button>
                 {userEmail ? (
-                    <button className="btn btn-outline" style={{ padding: '10px 20px', fontSize: '14px' }}>{t('nav.myProfile')}</button>
+                    <Link to="/dashboard" className="btn btn-outline" style={{ padding: '10px 20px', fontSize: '14px', textDecoration: 'none', display: 'inline-block', textAlign: 'center' }}>{t('nav.myProfile')}</Link>
                 ) : (
                     <>
                         <button 
