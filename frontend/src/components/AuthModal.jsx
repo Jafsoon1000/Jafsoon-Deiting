@@ -26,8 +26,12 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSuccess }) =
             });
             const data = await response.json();
             if (data.status === 'success') {
+                localStorage.setItem('userToken', data.token);
+                localStorage.setItem('userEmail', data.user.email);
                 setSuccess({ title: t('auth.welcomeBack') + '!', message: `${t('auth.signedInAs')} ${signinEmail}` });
-                onAuthSuccess(signinEmail);
+                onAuthSuccess(data.user.email);
+            } else {
+                alert(data.message || t('auth.authFailed'));
             }
         } catch (err) {
             alert(t('auth.authFailed'));
@@ -44,7 +48,12 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSuccess }) =
             });
             const data = await response.json();
             if (data.status === 'success') {
+                localStorage.setItem('userToken', data.token);
+                localStorage.setItem('userEmail', data.user.email);
                 setSuccess({ title: t('auth.accountCreated'), message: t('auth.canTrack') });
+                onAuthSuccess(data.user.email);
+            } else {
+                alert(data.message || t('auth.signupFailed'));
             }
         } catch (err) {
             alert(t('auth.signupFailed'));

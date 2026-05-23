@@ -11,13 +11,14 @@ import About from './pages/About';
 import Careers from './pages/Careers';
 import HealthTips from './pages/HealthTips';
 import Dashboard from './pages/Dashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 import './styles/Global.css';
 
 function App() {
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const [authMode, setAuthMode] = useState('signin');
-    const [userEmail, setUserEmail] = useState(null);
+    const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || null);
 
     useEffect(() => {
         document.body.className = theme === 'light' ? 'light-mode' : '';
@@ -58,7 +59,14 @@ function App() {
                     <Route path="/about" element={<About theme={theme} onOpenAuth={openAuth} />} />
                     <Route path="/careers" element={<Careers />} />
                     <Route path="/health-tips" element={<HealthTips />} />
-                    <Route path="/dashboard" element={<Dashboard userEmail={userEmail} />} />
+                    <Route 
+                        path="/dashboard" 
+                        element={
+                            <ProtectedRoute userEmail={userEmail}>
+                                <Dashboard userEmail={userEmail} />
+                            </ProtectedRoute>
+                        } 
+                    />
                 </Routes>
 
                 <Footer />
