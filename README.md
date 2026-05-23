@@ -75,12 +75,12 @@ Ensure you have the following installed on your local machine:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Jafsoon1000/jafsoon.git
+   git clone https://github.com/Jafsoon1000/Jafsoon-Deiting.git
    ```
 
 2. **Navigate to the project directory:**
    ```bash
-   cd jafsoon
+   cd Jafsoon-Deiting
    ```
 
 3. **Install backend dependencies:**
@@ -89,7 +89,13 @@ Ensure you have the following installed on your local machine:
    npm install
    ```
 
-4. **Environment Variables:**
+4. **Install frontend dependencies:**
+   ```bash
+   cd ../frontend
+   npm install
+   ```
+
+5. **Environment Variables:**
    Create a `.env` file in the `backend` directory and configure your environment variables:
    ```env
    PORT=3000
@@ -114,6 +120,16 @@ npm install
 npm run dev
 ```
 The application will be accessible at `http://localhost:5173` (or the port Vite provides).
+
+---
+
+## 📡 API Endpoints
+
+Here are the primary API routes available in the backend:
+
+- `POST /api/auth/signup` - Register a new user (Requires: `name`, `email`, `password`)
+- `POST /api/auth/signin` - Authenticate an existing user (Requires: `email`, `password`)
+- `GET /api/health` - Check if the backend server is running
 
 ---
 
