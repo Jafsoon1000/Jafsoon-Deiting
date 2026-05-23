@@ -50,15 +50,15 @@ Jafsoon is engineered using a modern, scalable full-stack ecosystem:
 ### Backend
 - **Runtime Environment:** [Node.js](https://nodejs.org/)
 - **Framework:** [Express.js](https://expressjs.com/) for scalable API routing.
-- **Database:** [MongoDB](https://www.mongodb.com/) (Ideal for flexible nutrition and user profiles).
-- **Authentication:** [Firebase Auth](https://firebase.google.com/docs/auth) / JWT-based custom auth.
+- **Database:** [MongoDB](https://www.mongodb.com/) using Mongoose (Ideal for flexible nutrition and user profiles).
+- **Authentication:** Custom JWT-based authentication with `bcryptjs` for secure password hashing.
 
 ---
 
 ## 📂 Project Structure
 
-- `frontend/` - Contains the static files (HTML, CSS, assets) for the UI.
-- `backend/` - Contains the Node.js Express server to serve the frontend and handle API requests.
+- `frontend/` - A modern React application built with Vite. Contains the UI components, pages, and routing.
+- `backend/` - Contains the Node.js Express server to handle API requests, authentication, and database connections.
 
 ## 🚀 Getting Started
 
@@ -90,16 +90,30 @@ Ensure you have the following installed on your local machine:
    ```
 
 4. **Environment Variables:**
-   Create a `.env` file in the `backend` directory and configure your environment variables (e.g., Database URI, JWT Secrets, Firebase keys). *Refer to `.env.example` if available.*
+   Create a `.env` file in the `backend` directory and configure your environment variables:
+   ```env
+   PORT=3000
+   MONGODB_URI=your_mongodb_connection_string
+   JWT_SECRET=your_jwt_secret
+   ```
 
-### Running the Development Server
+### Running the Development Servers
 
-To start the backend server, which also serves the frontend UI:
+You will need two terminal windows to run both the frontend and backend simultaneously.
+
+**Terminal 1 (Backend):**
 ```bash
 cd backend
-npm start
+npm run dev
 ```
-The application will be accessible at `http://localhost:3000`.
+
+**Terminal 2 (Frontend):**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+The application will be accessible at `http://localhost:5173` (or the port Vite provides).
 
 ---
 
