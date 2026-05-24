@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../styles/Navbar.css';
 
-const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail }) => {
+const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail, onSignOut }) => {
     const { t } = useTranslation();
     const [scrolled, setScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -43,7 +43,16 @@ const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail }) => {
                     {theme === 'dark' ? '☀️' : '🌙'}
                 </button>
                 {userEmail ? (
-                    <Link to="/dashboard" className="btn btn-outline" style={{ padding: '10px 20px', fontSize: '14px', textDecoration: 'none', display: 'inline-block', textAlign: 'center' }}>{t('nav.myProfile')}</Link>
+                    <>
+                        <Link to="/dashboard" className="btn btn-outline" style={{ padding: '10px 20px', fontSize: '14px', textDecoration: 'none', display: 'inline-block', textAlign: 'center', marginRight: '10px' }}>{t('nav.myProfile')}</Link>
+                        <button 
+                            className="btn btn-primary" 
+                            style={{ padding: '10px 20px', fontSize: '14px' }}
+                            onClick={onSignOut}
+                        >
+                            Sign Out
+                        </button>
+                    </>
                 ) : (
                     <>
                         <button 

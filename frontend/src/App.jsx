@@ -38,6 +38,12 @@ function App() {
         setUserEmail(email);
     };
 
+    const handleSignOut = () => {
+        setUserEmail(null);
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userToken');
+    };
+
     return (
         <Router>
             <ScrollToTop />
@@ -50,6 +56,7 @@ function App() {
                     onToggleTheme={toggleTheme} 
                     onOpenAuth={openAuth} 
                     userEmail={userEmail}
+                    onSignOut={handleSignOut}
                 />
 
                 <Routes>
