@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Plans from './pages/Plans';
@@ -14,12 +14,15 @@ import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import './styles/Global.css';
 
-function App() {
+function AppContent() {
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const [authMode, setAuthMode] = useState('signin');
     const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || null);
     const [userName, setUserName] = useState(localStorage.getItem('userName') || null);
+    
+    const location = useLocation();
+    const isDashboard = location.pathname.includes('/dashboard');
 
     useEffect(() => {
         document.body.className = theme === 'light' ? 'light-mode' : '';
@@ -49,19 +52,19 @@ function App() {
     };
 
     return (
-        <Router>
+        <>
             <ScrollToTop />
             <div className="app-container">
-                <div className="ambient-glow"></div>
-                <div className="ambient-glow right"></div>
 
-                <Navbar 
-                    theme={theme} 
-                    onToggleTheme={toggleTheme} 
-                    onOpenAuth={openAuth} 
-                    userEmail={userEmail}
-                    onSignOut={handleSignOut}
-                />
+                {!isDashboard && (
+                    <Navbar 
+                        theme={theme} 
+                        onToggleTheme={toggleTheme} 
+                        onOpenAuth={openAuth} 
+                        userEmail={userEmail}
+                        onSignOut={handleSignOut}
+                    />
+                )}
 
                 <Routes>
                     <Route path="/" element={<Home theme={theme} onOpenAuth={openAuth} />} />
@@ -80,7 +83,7 @@ function App() {
                     />
                 </Routes>
 
-                <Footer />
+                {!isDashboard && <Footer />}
 
                 <AuthModal 
                     isOpen={isAuthOpen} 
@@ -89,6 +92,14 @@ function App() {
                     onAuthSuccess={handleAuthSuccess}
                 />
             </div>
+        </>
+    );
+}
+
+function App() {
+    return (
+        <Router>
+            <AppContent />
         </Router>
     );
 }

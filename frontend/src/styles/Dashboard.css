@@ -365,3 +365,10 @@
     .sidebar-logo { margin-bottom: 0; }
     .sidebar-nav, .sidebar-bottom { flex-direction: row; }
 }
+
+/* Force remove any stray blurs from the dashboard */
+.dashboard-wrapper, .dashboard-wrapper * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+}

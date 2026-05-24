@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../styles/AuthModal.css';
 
@@ -6,6 +7,7 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSuccess }) =
     const { t } = useTranslation();
     const [mode, setMode] = useState(initialMode);
     const [success, setSuccess] = useState(null);
+    const navigate = useNavigate();
 
     // Form states
     const [signinEmail, setSigninEmail] = useState('');
@@ -130,7 +132,10 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSuccess }) =
                         <div className="success-icon">✓</div>
                         <h2>{success.title}</h2>
                         <p>{success.message}</p>
-                        <button className="btn btn-primary" style={{ marginTop: '20px', width: '100%' }} onClick={onClose}>{t('auth.continue')}</button>
+                        <button className="btn btn-primary" style={{ marginTop: '20px', width: '100%' }} onClick={() => {
+                            onClose();
+                            navigate('/dashboard');
+                        }}>{t('auth.continue')}</button>
                     </div>
                 )}
             </div>
