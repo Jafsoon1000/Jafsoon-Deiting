@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/Dashboard.css';
 
-const Dashboard = ({ userEmail }) => {
+const Dashboard = ({ userEmail, userName }) => {
     const getGreeting = () => {
         const hour = new Date().getHours();
         if (hour < 12) return 'Good morning';
@@ -13,7 +13,7 @@ const Dashboard = ({ userEmail }) => {
         <div className="dashboard-container">
             <header className="dashboard-header">
                 <h1>User Dashboard</h1>
-                <p>{getGreeting()}{userEmail ? `, ${userEmail}` : ''}!</p>
+                <p>{getGreeting()}{userName ? `, ${userName}` : (userEmail ? `, ${userEmail}` : '')}!</p>
             </header>
             
             <div className="dashboard-content">

@@ -19,6 +19,7 @@ function App() {
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const [authMode, setAuthMode] = useState('signin');
     const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || null);
+    const [userName, setUserName] = useState(localStorage.getItem('userName') || null);
 
     useEffect(() => {
         document.body.className = theme === 'light' ? 'light-mode' : '';
@@ -34,13 +35,16 @@ function App() {
         setIsAuthOpen(true);
     };
 
-    const handleAuthSuccess = (email) => {
+    const handleAuthSuccess = (email, name) => {
         setUserEmail(email);
+        setUserName(name);
     };
 
     const handleSignOut = () => {
         setUserEmail(null);
+        setUserName(null);
         localStorage.removeItem('userEmail');
+        localStorage.removeItem('userName');
         localStorage.removeItem('userToken');
     };
 
@@ -70,7 +74,7 @@ function App() {
                         path="/dashboard" 
                         element={
                             <ProtectedRoute userEmail={userEmail}>
-                                <Dashboard userEmail={userEmail} />
+                                <Dashboard userEmail={userEmail} userName={userName} />
                             </ProtectedRoute>
                         } 
                     />

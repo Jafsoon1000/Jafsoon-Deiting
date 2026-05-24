@@ -28,8 +28,9 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSuccess }) =
             if (data.status === 'success') {
                 localStorage.setItem('userToken', data.token);
                 localStorage.setItem('userEmail', data.user.email);
-                setSuccess({ title: t('auth.welcomeBack') + '!', message: `${t('auth.signedInAs')} ${signinEmail}` });
-                onAuthSuccess(data.user.email);
+                localStorage.setItem('userName', data.user.name);
+                setSuccess({ title: t('auth.welcomeBack') + '!', message: `${t('auth.signedInAs')} ${data.user.name}` });
+                onAuthSuccess(data.user.email, data.user.name);
             } else {
                 alert(data.message || t('auth.authFailed'));
             }
@@ -50,8 +51,9 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'signin', onAuthSuccess }) =
             if (data.status === 'success') {
                 localStorage.setItem('userToken', data.token);
                 localStorage.setItem('userEmail', data.user.email);
+                localStorage.setItem('userName', data.user.name);
                 setSuccess({ title: t('auth.accountCreated'), message: t('auth.canTrack') });
-                onAuthSuccess(data.user.email);
+                onAuthSuccess(data.user.email, data.user.name);
             } else {
                 alert(data.message || t('auth.signupFailed'));
             }
