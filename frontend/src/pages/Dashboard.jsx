@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/Dashboard.css';
 
-const Dashboard = ({ userEmail, userName }) => {
+const Dashboard = ({ userEmail, userName, onSignOut }) => {
     return (
         <div className="dashboard-wrapper dark-theme-override">
             {/* Left Icon Sidebar */}
@@ -34,7 +34,8 @@ const Dashboard = ({ userEmail, userName }) => {
                     <div className="top-nav-profile">
                         <span>❓</span>
                         <span>🔔</span>
-                        <span>{userName || 'Max M.'} ⌄</span>
+                        <span>{userName || 'Max M.'}</span>
+                        <button onClick={onSignOut} className="btn-outline-small" style={{marginLeft: '15px'}}>Sign Out</button>
                     </div>
                 </header>
 

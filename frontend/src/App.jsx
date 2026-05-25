@@ -77,7 +77,7 @@ function AppContent() {
                         path="/dashboard" 
                         element={
                             <ProtectedRoute userEmail={userEmail}>
-                                <Dashboard userEmail={userEmail} userName={userName} />
+                                <Dashboard userEmail={userEmail} userName={userName} onSignOut={handleSignOut} />
                             </ProtectedRoute>
                         } 
                     />
