@@ -37,6 +37,9 @@
     flex-direction: column;
     gap: 30px;
     flex-shrink: 0;
+    width: 100%;
+    max-width: 60px;
+    align-items: center;
 }
 
 .sidebar-nav .icon, .sidebar-bottom .icon {
