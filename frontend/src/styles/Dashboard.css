@@ -18,6 +18,10 @@
     align-items: center;
     padding: 20px 0;
     border-right: 1px solid #2a2a2a;
+    flex-shrink: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: max-content;
 }
 
 .sidebar-logo {
@@ -25,13 +29,14 @@
     font-weight: bold;
     color: #10b981;
     margin-bottom: 40px;
+    flex-shrink: 0;
 }
 
 .sidebar-nav {
     display: flex;
     flex-direction: column;
     gap: 30px;
-    flex-grow: 1;
+    flex-shrink: 0;
 }
 
 .sidebar-nav .icon, .sidebar-bottom .icon {
@@ -50,6 +55,8 @@
     flex-direction: column;
     gap: 20px;
     align-items: center;
+    flex-shrink: 0;
+    margin-top: auto;
 }
 
 .profile-pic {
@@ -361,9 +368,9 @@
 @media (max-width: 1024px) {
     .dashboard-grid { grid-template-columns: 1fr; }
     .dashboard-wrapper.dark-theme-override { flex-direction: column; }
-    .dashboard-sidebar-icons { width: 100%; flex-direction: row; justify-content: space-around; padding: 10px; border-right: none; border-bottom: 1px solid #2a2a2a; }
-    .sidebar-logo { margin-bottom: 0; }
-    .sidebar-nav, .sidebar-bottom { flex-direction: row; }
+    .dashboard-sidebar-icons { width: 100%; flex-direction: row; justify-content: space-between; padding: 15px 20px; border-right: none; border-bottom: 1px solid #2a2a2a; overflow-x: auto; gap: 20px; }
+    .sidebar-logo { margin-bottom: 0; flex-shrink: 0; }
+    .sidebar-nav, .sidebar-bottom { flex-direction: row; flex-shrink: 0; gap: 15px; }
 }
 
 /* Force remove any stray blurs from the dashboard */
