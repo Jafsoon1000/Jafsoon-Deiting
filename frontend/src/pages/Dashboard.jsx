@@ -1,22 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../styles/Dashboard.css';
 
 const Dashboard = ({ userEmail, userName, onSignOut }) => {
+    const [activeTab, setActiveTab] = useState('Dashboard');
+
+    const handleTabClick = (tabName) => {
+        setActiveTab(tabName);
+    };
+
+    const handleActionClick = (actionName) => {
+        alert(`${actionName} feature coming soon!`);
+    };
     return (
         <div className="dashboard-wrapper dark-theme-override">
             {/* Left Icon Sidebar */}
             <aside className="dashboard-sidebar-icons">
                 <div className="sidebar-logo">J</div>
                 <nav className="sidebar-nav">
-                    <div className="icon active">📊</div>
-                    <div className="icon">✅</div>
-                    <div className="icon">🕒</div>
-                    <div className="icon">📈</div>
-                    <div className="icon">👥</div>
+                    <div className={`icon ${activeTab === 'Dashboard' ? 'active' : ''}`} onClick={() => handleTabClick('Dashboard')} title="Dashboard">📊</div>
+                    <div className={`icon ${activeTab === 'Ernährungsplan' ? 'active' : ''}`} onClick={() => handleTabClick('Ernährungsplan')} title="Ernährungsplan">✅</div>
+                    <div className={`icon ${activeTab === 'Fortschritt' ? 'active' : ''}`} onClick={() => handleTabClick('Fortschritt')} title="Fortschritt">🕒</div>
+                    <div className={`icon ${activeTab === 'Rezepte' ? 'active' : ''}`} onClick={() => handleTabClick('Rezepte')} title="Rezepte">📈</div>
+                    <div className={`icon ${activeTab === 'Community' ? 'active' : ''}`} onClick={() => handleTabClick('Community')} title="Community">👥</div>
                 </nav>
                 <div className="sidebar-bottom">
-                    <div className="icon">⚙️</div>
-                    <div className="profile-pic">👤</div>
+                    <div className={`icon ${activeTab === 'Settings' ? 'active' : ''}`} onClick={() => handleTabClick('Settings')} title="Settings">⚙️</div>
+                    <div className={`profile-pic ${activeTab === 'Profile' ? 'active' : ''}`} onClick={() => handleTabClick('Profile')} style={{cursor: 'pointer'}} title="Profile">👤</div>
                 </div>
             </aside>
 
@@ -25,11 +34,11 @@ const Dashboard = ({ userEmail, userName, onSignOut }) => {
                 {/* Top Navigation */}
                 <header className="dashboard-top-nav">
                     <div className="top-nav-links">
-                        <span className="active">Dashboard</span>
-                        <span>Ernährungsplan</span>
-                        <span>Fortschritt</span>
-                        <span>Rezepte</span>
-                        <span>Community</span>
+                        <span className={activeTab === 'Dashboard' ? 'active' : ''} onClick={() => handleTabClick('Dashboard')}>Dashboard</span>
+                        <span className={activeTab === 'Ernährungsplan' ? 'active' : ''} onClick={() => handleTabClick('Ernährungsplan')}>Ernährungsplan</span>
+                        <span className={activeTab === 'Fortschritt' ? 'active' : ''} onClick={() => handleTabClick('Fortschritt')}>Fortschritt</span>
+                        <span className={activeTab === 'Rezepte' ? 'active' : ''} onClick={() => handleTabClick('Rezepte')}>Rezepte</span>
+                        <span className={activeTab === 'Community' ? 'active' : ''} onClick={() => handleTabClick('Community')}>Community</span>
                     </div>
                     <div className="top-nav-profile">
                         <span>❓</span>
@@ -39,29 +48,31 @@ const Dashboard = ({ userEmail, userName, onSignOut }) => {
                     </div>
                 </header>
 
-                {/* Header Stats */}
-                <div className="dashboard-header-stats">
-                    <div>
-                        <h1>Ihr Fortschritt</h1>
-                        <p>Macro Tracking</p>
-                    </div>
-                    <div className="top-stats-right">
-                        <div className="stat-pill">
-                            <span className="icon">🔥</span>
+                {activeTab === 'Dashboard' ? (
+                    <>
+                        {/* Header Stats */}
+                        <div className="dashboard-header-stats">
                             <div>
-                                <strong>Kalorienziel</strong>
-                                <small>Tagesbedarf</small>
+                                <h1>Ihr Fortschritt</h1>
+                                <p>Macro Tracking</p>
+                            </div>
+                            <div className="top-stats-right">
+                                <div className="stat-pill">
+                                    <span className="icon">🔥</span>
+                                    <div>
+                                        <strong>Kalorienziel</strong>
+                                        <small>Tagesbedarf</small>
+                                    </div>
+                                </div>
+                                <div className="stat-pill">
+                                    <span className="icon">💧</span>
+                                    <div>
+                                        <strong>Wasseraufnahme:</strong> 2.1L / 2.5L
+                                        <div className="progress-mini"><div className="fill" style={{width: '80%'}}></div></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div className="stat-pill">
-                            <span className="icon">💧</span>
-                            <div>
-                                <strong>Wasseraufnahme:</strong> 2.1L / 2.5L
-                                <div className="progress-mini"><div className="fill" style={{width: '80%'}}></div></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 {/* 3-Column Grid */}
                 <div className="dashboard-grid">
@@ -123,14 +134,15 @@ const Dashboard = ({ userEmail, userName, onSignOut }) => {
                                     <p>Heute: Dienstag, 24. Oktober</p>
                                 </div>
                                 <div className="nav-arrows">
-                                    <span>&lt;</span><span>&gt;</span>
+                                    <span style={{cursor: 'pointer'}} onClick={() => handleActionClick('Previous Day')}>&lt;</span>
+                                    <span style={{cursor: 'pointer'}} onClick={() => handleActionClick('Next Day')}>&gt;</span>
                                 </div>
                             </div>
                             
                             <div className="meal-plan-filters">
-                                <span className="active">Heute</span>
-                                <span>Dienstag ⌄</span>
-                                <button className="btn-outline-small right">Rezepte entdecken</button>
+                                <span className="active" style={{cursor: 'pointer'}}>Heute</span>
+                                <span style={{cursor: 'pointer'}} onClick={() => handleActionClick('Select Day')}>Dienstag ⌄</span>
+                                <button className="btn-outline-small right" onClick={() => handleActionClick('Rezepte entdecken')}>Rezepte entdecken</button>
                             </div>
 
                             <div className="meals-list">
@@ -167,7 +179,7 @@ const Dashboard = ({ userEmail, userName, onSignOut }) => {
                                     </div>
                                 </div>
                                 
-                                <button className="btn-add-meal">Mahlzeit hinzufügen</button>
+                                <button className="btn-add-meal" onClick={() => handleActionClick('Mahlzeit hinzufügen')}>Mahlzeit hinzufügen</button>
                             </div>
                         </section>
                     </div>
@@ -200,12 +212,53 @@ const Dashboard = ({ userEmail, userName, onSignOut }) => {
                                 <div className="recipe-img placeholder-img">IMG</div>
                                 <h3>Veggie Burger</h3>
                                 <p>Veggie Burger entdecken...</p>
-                                <button className="btn-outline-small full-width">Rezepte entdecken</button>
+                                <button className="btn-outline-small full-width" onClick={() => handleActionClick('Rezepte entdecken')}>Rezepte entdecken</button>
                             </div>
                         </section>
                     </div>
 
                 </div>
+                </>
+                ) : activeTab === 'Profile' ? (
+                    <div style={{ padding: '40px', maxWidth: '600px', margin: '0 auto', width: '100%' }}>
+                        <h2 style={{ fontSize: '28px', marginBottom: '30px' }}>Mein Profil</h2>
+                        <section className="dash-card" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', paddingBottom: '20px', borderBottom: '1px solid #2a2a2a' }}>
+                                <div className="profile-pic" style={{ width: '80px', height: '80px', fontSize: '40px', backgroundColor: '#10b981', color: '#fff' }}>👤</div>
+                                <div>
+                                    <h3 style={{ margin: '0 0 5px 0', fontSize: '24px' }}>{userName || 'Max Mustermann'}</h3>
+                                    <p style={{ margin: 0, color: '#888' }}>Premium Mitglied</p>
+                                </div>
+                            </div>
+                            
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '15px', fontSize: '14px' }}>
+                                <strong style={{ color: '#aaa' }}>Name:</strong>
+                                <span>{userName || 'Max Mustermann'}</span>
+                                
+                                <strong style={{ color: '#aaa' }}>Email:</strong>
+                                <span>{userEmail || 'max.mustermann@example.com'}</span>
+                                
+                                <strong style={{ color: '#aaa' }}>Mitglied seit:</strong>
+                                <span>Oktober 2023</span>
+                                
+                                <strong style={{ color: '#aaa' }}>Aktuelles Ziel:</strong>
+                                <span>Muskelaufbau</span>
+                            </div>
+                            
+                            <div style={{ marginTop: '20px', display: 'flex', gap: '15px' }}>
+                                <button className="btn-outline-small" style={{ padding: '10px 20px' }} onClick={() => handleActionClick('Profil bearbeiten')}>Profil bearbeiten</button>
+                                <button className="btn-outline-small" style={{ padding: '10px 20px', borderColor: '#ef4444', color: '#ef4444' }} onClick={onSignOut}>Abmelden</button>
+                            </div>
+                        </section>
+                    </div>
+                ) : (
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1, height: '100%' }}>
+                        <div style={{ textAlign: 'center', color: '#888' }}>
+                            <h2 style={{ color: '#fff', marginBottom: '10px' }}>{activeTab}</h2>
+                            <p>This section is currently under development. Please check back later!</p>
+                        </div>
+                    </div>
+                )}
             </main>
         </div>
     );
