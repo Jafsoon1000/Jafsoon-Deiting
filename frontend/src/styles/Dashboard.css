@@ -382,3 +382,87 @@
     -webkit-backdrop-filter: none !important;
     filter: none !important;
 }
+
+/* Light Mode Overrides */
+body.light-mode .dashboard-wrapper.dark-theme-override {
+    background-color: #f9fafb;
+    color: #111827;
+}
+
+body.light-mode .dashboard-sidebar-icons {
+    background-color: #ffffff;
+    border-color: #e5e7eb;
+}
+
+body.light-mode .sidebar-nav .icon { color: #6b7280; }
+body.light-mode .sidebar-nav .icon:hover, 
+body.light-mode .sidebar-nav .icon.active { color: #10b981; }
+
+body.light-mode .profile-pic { background-color: #e5e7eb; color: #111827; }
+
+body.light-mode .dashboard-top-nav { border-color: #e5e7eb; }
+body.light-mode .top-nav-links span { color: #6b7280; }
+body.light-mode .top-nav-links span.active { color: #10b981; }
+body.light-mode .top-nav-profile { color: #374151; }
+
+body.light-mode .dashboard-header-stats p { color: #6b7280; }
+
+body.light-mode .stat-pill,
+body.light-mode .dash-card {
+    background-color: #ffffff;
+    border-color: #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .stat-pill small,
+body.light-mode .card-header span,
+body.light-mode .subtitle,
+body.light-mode .ring-inner small,
+body.light-mode .ring span,
+body.light-mode .meal-plan-filters span,
+body.light-mode .meal-info p,
+body.light-mode .meal-info small,
+body.light-mode .workout-card small,
+body.light-mode .recipe-card p {
+    color: #6b7280;
+}
+
+body.light-mode .progress-mini,
+body.light-mode .progress-bar-placeholder {
+    background-color: #e5e7eb;
+}
+
+body.light-mode .ring-inner {
+    border-bottom-color: #e5e7eb;
+    border-left-color: #e5e7eb;
+}
+
+body.light-mode .chart-placeholder,
+body.light-mode .meal-card,
+body.light-mode .btn-add-meal {
+    background-color: #f3f4f6;
+}
+
+body.light-mode .meal-plan-filters { border-color: #e5e7eb; }
+body.light-mode .meal-plan-filters .active { color: #111827; }
+
+body.light-mode .btn-small, 
+body.light-mode .btn-outline-small { 
+    border-color: #d1d5db; 
+    color: #374151; 
+}
+
+body.light-mode .placeholder-img { 
+    background-color: #e5e7eb; 
+    color: #9ca3af; 
+}
+
+body.light-mode .btn-add-meal {
+    border-color: #d1d5db;
+    color: #6b7280;
+}
+
+body.light-mode .top-nav-profile span,
+body.light-mode .top-nav-profile button {
+    color: #111827;
+}

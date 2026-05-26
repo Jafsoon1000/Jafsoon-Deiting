@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/Dashboard.css';
 
-const Dashboard = ({ userEmail, userName, onSignOut }) => {
+const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme }) => {
     const [activeTab, setActiveTab] = useState('Dashboard');
 
     const handleTabClick = (tabName) => {
@@ -41,6 +41,9 @@ const Dashboard = ({ userEmail, userName, onSignOut }) => {
                         <span className={activeTab === 'Community' ? 'active' : ''} onClick={() => handleTabClick('Community')}>Community</span>
                     </div>
                     <div className="top-nav-profile">
+                        <button onClick={onToggleTheme} title="Toggle Theme" style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '18px', padding: '0 5px', color: 'inherit' }}>
+                            {theme === 'dark' ? '☀️' : '🌙'}
+                        </button>
                         <span>❓</span>
                         <span>🔔</span>
                         <span>{userName || 'Max M.'}</span>
