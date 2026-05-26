@@ -32,6 +32,26 @@ const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail, onSignOut }) => {
                 <li><a href="/#features" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.features')}</a></li>
                 <li><Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.contact')}</Link></li>
                 <li><a href="/#tracker" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.tracker')}</a></li>
+                <li className="mobile-nav-actions">
+                    <button 
+                        className="btn btn-outline" 
+                        onClick={() => { onToggleTheme(); setIsMobileMenuOpen(false); }}
+                        style={{ width: '100%', marginBottom: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}
+                    >
+                        {theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
+                    </button>
+                    {userEmail ? (
+                        <>
+                            <Link to="/dashboard" className="btn btn-outline" style={{ display: 'block', width: '100%', marginBottom: '10px' }} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.myProfile')}</Link>
+                            <button className="btn btn-primary" style={{ width: '100%' }} onClick={() => { onSignOut(); setIsMobileMenuOpen(false); }}>Sign Out</button>
+                        </>
+                    ) : (
+                        <>
+                            <button className="btn btn-outline" style={{ width: '100%', marginBottom: '10px' }} onClick={() => { onOpenAuth('signin'); setIsMobileMenuOpen(false); }}>{t('nav.signIn')}</button>
+                            <button className="btn btn-primary" style={{ width: '100%' }} onClick={() => { onOpenAuth('signup'); setIsMobileMenuOpen(false); }}>{t('nav.signUp')}</button>
+                        </>
+                    )}
+                </li>
             </ul>
             <div className="nav-actions">
                 <button 

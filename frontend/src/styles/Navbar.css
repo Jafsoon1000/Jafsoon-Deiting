@@ -63,6 +63,10 @@ nav.scrolled {
     margin-left: 10px;
 }
 
+.mobile-nav-actions {
+    display: none;
+}
+
 @media (max-width: 968px) {
     .nav-links {
         display: none;
@@ -89,8 +93,14 @@ nav.scrolled {
         display: block;
     }
 
-    .nav-actions button {
-        padding: 8px 12px !important;
-        font-size: 13px !important;
+    .nav-actions {
+        display: none; /* Hide from top bar on mobile */
+    }
+
+    .mobile-nav-actions {
+        display: block;
+        margin-top: 10px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
     }
 }
