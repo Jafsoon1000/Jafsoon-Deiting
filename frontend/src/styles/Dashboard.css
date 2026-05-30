@@ -619,3 +619,18 @@ body.light-mode .water-btn:hover {
     color: #fff;
 }
 
+/* Interactive Weight Chart Styles */
+.chart-node-group circle {
+    transition: r 0.25s cubic-bezier(0.4, 0, 0.2, 1), fill 0.25s ease;
+}
+
+.chart-node-group:hover circle {
+    r: 6 !important;
+    fill: #059669 !important;
+}
+
+.chart-node-group:hover .chart-node-value {
+    opacity: 1 !important;
+}
+
+

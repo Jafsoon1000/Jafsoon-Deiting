@@ -35,6 +35,88 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
         });
     };
 
+    const [weightHistory, setWeightHistory] = useState(() => {
+        const stored = localStorage.getItem('userWeightHistory');
+        if (stored) {
+            try {
+                return JSON.parse(stored);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        return [
+            { date: '10.04', weight: 82.0 },
+            { date: '17.04', weight: 81.2 },
+            { date: '24.04', weight: 80.5 },
+            { date: '01.05', weight: 80.0 },
+            { date: '08.05', weight: 79.6 },
+            { date: '15.05', weight: 79.1 },
+            { date: '22.05', weight: 78.8 },
+            { date: '29.05', weight: 78.5 }
+        ];
+    });
+
+    const [newWeight, setNewWeight] = useState('');
+    const [newWeightDate, setNewWeightDate] = useState('');
+
+    const handleAddWeight = (e) => {
+        e?.preventDefault();
+        const parsedWeight = parseFloat(newWeight);
+        if (isNaN(parsedWeight) || parsedWeight <= 0) {
+            alert('Bitte ein gültiges Gewicht eingeben.');
+            return;
+        }
+        if (!newWeightDate.trim()) {
+            alert('Bitte ein Datum eingeben (z.B. 05.06).');
+            return;
+        }
+
+        const updatedHistory = [
+            ...weightHistory,
+            { date: newWeightDate, weight: parsedWeight }
+        ];
+        
+        if (updatedHistory.length > 10) {
+            updatedHistory.shift();
+        }
+
+        setWeightHistory(updatedHistory);
+        localStorage.setItem('userWeightHistory', JSON.stringify(updatedHistory));
+        setNewWeight('');
+        setNewWeightDate('');
+    };
+
+    const latestWeight = weightHistory.length > 0 ? weightHistory[weightHistory.length - 1].weight : 0;
+    const initialWeight = weightHistory.length > 0 ? weightHistory[0].weight : 0;
+    const netWeightChange = latestWeight - initialWeight;
+
+    // SVG coordinates setup
+    const svgWidth = 500;
+    const svgHeight = 120;
+    const paddingX = 35;
+    const paddingY = 15;
+    const chartWidth = svgWidth - paddingX * 2;
+    const chartHeight = svgHeight - paddingY * 2;
+
+    const weights = weightHistory.map(h => h.weight);
+    const minW = weights.length > 0 ? Math.min(...weights) - 0.5 : 0;
+    const maxW = weights.length > 0 ? Math.max(...weights) + 0.5 : 10;
+    const wRange = maxW - minW || 1;
+
+    const points = weightHistory.map((h, i) => {
+        const x = paddingX + (i / Math.max(1, weightHistory.length - 1)) * chartWidth;
+        const y = paddingY + chartHeight - ((h.weight - minW) / wRange) * chartHeight;
+        return { x, y, weight: h.weight, date: h.date };
+    });
+
+    const linePathD = points.length > 0 
+        ? `M ${points.map(p => `${p.x} ${p.y}`).join(' L ')}`
+        : '';
+        
+    const areaPathD = points.length > 0
+        ? `${linePathD} L ${points[points.length - 1].x} ${svgHeight - paddingY} L ${points[0].x} ${svgHeight - paddingY} Z`
+        : '';
+
     // Profile editing states
     const [isEditing, setIsEditing] = useState(false);
     
@@ -228,13 +310,113 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                         <section className="dash-card">
                             <div className="card-header">
                                 <h2>Gewichtsverlauf</h2>
-                                <span className="btn-small">Kg over 8 Wochen &gt;</span>
+                                <span className="btn-small">Kg over {weightHistory.length} Wochen &gt;</span>
                             </div>
-                            <p className="subtitle">Kg over 8 Wochen <span className="highlight-green right">78.5 kg (-3.5 kg)</span></p>
-                            <div className="chart-placeholder">
-                                {/* Chart representation */}
-                                <div className="chart-mockup"></div>
+                            <p className="subtitle">
+                                Kg over {weightHistory.length} Wochen 
+                                <span className="highlight-green right">
+                                    {latestWeight} kg ({netWeightChange >= 0 ? '+' : ''}{netWeightChange.toFixed(1)} kg)
+                                </span>
+                            </p>
+                            <div className="chart-placeholder" style={{ height: 'auto', background: 'transparent', borderBottom: 'none', position: 'relative' }}>
+                                <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} width="100%" height={svgHeight} style={{ overflow: 'visible' }}>
+                                    <defs>
+                                        <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stopColor="#10b981" stopOpacity="0.3" />
+                                            <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+                                        </linearGradient>
+                                    </defs>
+                                    
+                                    {/* Grid Lines */}
+                                    <line x1={paddingX} y1={paddingY} x2={svgWidth - paddingX} y2={paddingY} stroke="#2a2a2a" strokeDasharray="3,3" />
+                                    <line x1={paddingX} y1={paddingY + chartHeight / 2} x2={svgWidth - paddingX} y2={paddingY + chartHeight / 2} stroke="#2a2a2a" strokeDasharray="3,3" />
+                                    <line x1={paddingX} y1={paddingY + chartHeight} x2={svgWidth - paddingX} y2={paddingY + chartHeight} stroke="#2a2a2a" strokeDasharray="3,3" />
+                                    
+                                    {/* Fill Area */}
+                                    {points.length > 0 && <path d={areaPathD} fill="url(#chartGrad)" />}
+                                    
+                                    {/* Stroke Line */}
+                                    {points.length > 0 && (
+                                        <path 
+                                            d={linePathD} 
+                                            fill="none" 
+                                            stroke="#10b981" 
+                                            strokeWidth="3" 
+                                            strokeLinecap="round" 
+                                            strokeLinejoin="round" 
+                                        />
+                                    )}
+                                    
+                                    {/* Nodes & Hover Tooltips */}
+                                    {points.map((p, i) => (
+                                        <g key={i} className="chart-node-group">
+                                            <circle 
+                                                cx={p.x} 
+                                                cy={p.y} 
+                                                r="4" 
+                                                fill="#10b981" 
+                                                stroke="var(--card-bg, #1a1a1a)" 
+                                                strokeWidth="2" 
+                                                style={{ transition: 'all 0.3s ease', cursor: 'pointer' }}
+                                            />
+                                            {/* Date Labels below */}
+                                            <text 
+                                                x={p.x} 
+                                                y={svgHeight - 2} 
+                                                fill="#6b7280" 
+                                                fontSize="9" 
+                                                textAnchor="middle"
+                                            >
+                                                {p.date}
+                                            </text>
+                                            {/* Value on Hover */}
+                                            <text 
+                                                x={p.x} 
+                                                y={p.y - 8} 
+                                                fill="#fff" 
+                                                fontSize="9" 
+                                                fontWeight="bold" 
+                                                textAnchor="middle"
+                                                className="chart-node-value"
+                                                style={{ opacity: 0, transition: 'opacity 0.2s ease', pointerEvents: 'none' }}
+                                            >
+                                                {p.weight}
+                                            </text>
+                                        </g>
+                                    ))}
+                                </svg>
                             </div>
+                            
+                            {/* Inline weight logging form */}
+                            <form onSubmit={handleAddWeight} style={{ display: 'flex', gap: '10px', marginTop: '15px', alignItems: 'center' }}>
+                                <input 
+                                    type="number" 
+                                    step="0.1" 
+                                    placeholder="kg" 
+                                    className="profile-input" 
+                                    style={{ padding: '8px 12px', fontSize: '13px', width: '80px', height: '36px' }}
+                                    value={newWeight}
+                                    onChange={(e) => setNewWeight(e.target.value)}
+                                    required
+                                    min="1"
+                                />
+                                <input 
+                                    type="text" 
+                                    placeholder="z.B. 05.06" 
+                                    className="profile-input" 
+                                    style={{ padding: '8px 12px', fontSize: '13px', width: '100px', height: '36px' }}
+                                    value={newWeightDate}
+                                    onChange={(e) => setNewWeightDate(e.target.value)}
+                                    required
+                                />
+                                <button 
+                                    type="submit"
+                                    className="water-btn" 
+                                    style={{ padding: '0 15px', height: '36px', fontSize: '12px', whiteSpace: 'nowrap' }}
+                                >
+                                    Eintragen
+                                </button>
+                            </form>
                         </section>
                     </div>
 
