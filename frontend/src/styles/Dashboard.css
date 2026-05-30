@@ -178,6 +178,7 @@
 .progress-mini .fill {
     height: 100%;
     background-color: #10b981;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Dashboard Grid */
@@ -580,5 +581,41 @@ body.light-mode .btn-cancel {
 body.light-mode .btn-cancel:hover {
     border-color: #ef4444;
     color: #ef4444;
+}
+
+/* Water Tracker Action Buttons */
+.water-btn {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.water-btn:hover {
+    background: #10b981;
+    color: #fff;
+    border-color: #10b981;
+    transform: translateY(-1px);
+}
+
+.water-btn:active {
+    transform: translateY(0);
+}
+
+/* Light mode overrides */
+body.light-mode .water-btn {
+    background: rgba(16, 185, 129, 0.05);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+body.light-mode .water-btn:hover {
+    background: #10b981;
+    color: #fff;
 }
 

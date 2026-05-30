@@ -22,6 +22,18 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
     const [fatTarget, setFatTarget] = useState(
         parseInt(localStorage.getItem('userFatTarget')) || 75
     );
+    const [currentWater, setCurrentWater] = useState(() => {
+        const stored = localStorage.getItem('userCurrentWater');
+        return stored !== null ? Math.max(0, parseFloat(stored) || 0) : 1.5;
+    });
+
+    const handleAdjustWater = (amount) => {
+        setCurrentWater((prev) => {
+            const nextWater = Math.max(0, Math.round((prev + amount) * 100) / 100);
+            localStorage.setItem('userCurrentWater', nextWater.toString());
+            return nextWater;
+        });
+    };
 
     // Profile editing states
     const [isEditing, setIsEditing] = useState(false);
@@ -97,7 +109,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
         setIsEditing(false);
     };
 
-    const waterPercentage = Math.min(Math.round((2.1 / waterTarget) * 100), 100);
+    const waterPercentage = Math.min(Math.round((currentWater / waterTarget) * 100), 100);
 
     return (
         <div className="dashboard-wrapper dark-theme-override">
@@ -155,11 +167,21 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                         <small>Tagesbedarf</small>
                                     </div>
                                 </div>
-                                <div className="stat-pill">
-                                    <span className="icon">💧</span>
-                                    <div>
-                                        <strong>Wasseraufnahme:</strong> 2.1L / {waterTarget}L
-                                        <div className="progress-mini"><div className="fill" style={{width: `${waterPercentage}%`}}></div></div>
+                                <div className="stat-pill" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                        <span className="icon" style={{ fontSize: '24px' }}>💧</span>
+                                        <div>
+                                            <strong style={{ display: 'block', fontSize: '14px' }}>Wasseraufnahme:</strong>
+                                            <span style={{ fontSize: '13px', color: 'inherit', opacity: 0.85 }}>{currentWater.toFixed(2)}L / {waterTarget}L</span>
+                                            <div className="progress-mini" style={{ width: '120px' }}>
+                                                <div className="fill" style={{ width: `${waterPercentage}%` }}></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="water-tracker-actions" style={{ display: 'flex', gap: '5px', width: '100%', marginTop: '4px' }}>
+                                        <button className="water-btn" onClick={(e) => { e.stopPropagation(); handleAdjustWater(-0.25); }} title="-250 ml">-250ml</button>
+                                        <button className="water-btn" onClick={(e) => { e.stopPropagation(); handleAdjustWater(0.25); }} title="+250 ml">+250ml</button>
+                                        <button className="water-btn" onClick={(e) => { e.stopPropagation(); handleAdjustWater(0.50); }} title="+500 ml">+500ml</button>
                                     </div>
                                 </div>
                             </div>
