@@ -1,8 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Dashboard.css';
 
-const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme }) => {
+const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpdateProfileName }) => {
     const [activeTab, setActiveTab] = useState('Dashboard');
+
+    // Profile targets and information state (persisted in localStorage)
+    const [name, setName] = useState(userName || localStorage.getItem('userName') || 'Max Mustermann');
+    const [goal, setGoal] = useState(localStorage.getItem('userGoal') || 'Muskelaufbau');
+    const [calorieTarget, setCalorieTarget] = useState(
+        parseInt(localStorage.getItem('userCalorieTarget')) || 2200
+    );
+    const [waterTarget, setWaterTarget] = useState(
+        parseFloat(localStorage.getItem('userWaterTarget')) || 2.5
+    );
+    const [proteinTarget, setProteinTarget] = useState(
+        parseInt(localStorage.getItem('userProteinTarget')) || 150
+    );
+    const [carbsTarget, setCarbsTarget] = useState(
+        parseInt(localStorage.getItem('userCarbsTarget')) || 200
+    );
+    const [fatTarget, setFatTarget] = useState(
+        parseInt(localStorage.getItem('userFatTarget')) || 75
+    );
+
+    // Profile editing states
+    const [isEditing, setIsEditing] = useState(false);
+    
+    // Form fields temporary states
+    const [tempName, setTempName] = useState(name);
+    const [tempGoal, setTempGoal] = useState(goal);
+    const [tempCalorieTarget, setTempCalorieTarget] = useState(calorieTarget);
+    const [tempWaterTarget, setTempWaterTarget] = useState(waterTarget);
+    const [tempProteinTarget, setTempProteinTarget] = useState(proteinTarget);
+    const [tempCarbsTarget, setTempCarbsTarget] = useState(carbsTarget);
+    const [tempFatTarget, setTempFatTarget] = useState(fatTarget);
+
+    useEffect(() => {
+        if (userName) {
+            setName(userName);
+        }
+    }, [userName]);
 
     const handleTabClick = (tabName) => {
         setActiveTab(tabName);
@@ -11,6 +48,57 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme }) => 
     const handleActionClick = (actionName) => {
         alert(`${actionName} feature coming soon!`);
     };
+
+    const handleEditProfileClick = () => {
+        setTempName(name);
+        setTempGoal(goal);
+        setTempCalorieTarget(calorieTarget);
+        setTempWaterTarget(waterTarget);
+        setTempProteinTarget(proteinTarget);
+        setTempCarbsTarget(carbsTarget);
+        setTempFatTarget(fatTarget);
+        setIsEditing(true);
+    };
+
+    const handleSaveProfile = (e) => {
+        e.preventDefault();
+        
+        if (!tempName.trim()) {
+            alert('Name cannot be empty.');
+            return;
+        }
+        if (tempCalorieTarget <= 0 || tempWaterTarget <= 0 || tempProteinTarget <= 0 || tempCarbsTarget <= 0 || tempFatTarget <= 0) {
+            alert('Target values must be greater than zero.');
+            return;
+        }
+
+        // Persist to localStorage
+        localStorage.setItem('userName', tempName);
+        localStorage.setItem('userGoal', tempGoal);
+        localStorage.setItem('userCalorieTarget', tempCalorieTarget.toString());
+        localStorage.setItem('userWaterTarget', tempWaterTarget.toString());
+        localStorage.setItem('userProteinTarget', tempProteinTarget.toString());
+        localStorage.setItem('userCarbsTarget', tempCarbsTarget.toString());
+        localStorage.setItem('userFatTarget', tempFatTarget.toString());
+
+        // Update local state
+        setName(tempName);
+        setGoal(tempGoal);
+        setCalorieTarget(tempCalorieTarget);
+        setWaterTarget(tempWaterTarget);
+        setProteinTarget(tempProteinTarget);
+        setCarbsTarget(tempCarbsTarget);
+        setFatTarget(tempFatTarget);
+
+        if (onUpdateProfileName) {
+            onUpdateProfileName(tempName);
+        }
+
+        setIsEditing(false);
+    };
+
+    const waterPercentage = Math.min(Math.round((2.1 / waterTarget) * 100), 100);
+
     return (
         <div className="dashboard-wrapper dark-theme-override">
             {/* Left Icon Sidebar */}
@@ -46,7 +134,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme }) => 
                         </button>
                         <span>❓</span>
                         <span>🔔</span>
-                        <span>{userName || 'Max M.'}</span>
+                        <span>{name || userName || 'Max M.'}</span>
                         <button onClick={onSignOut} className="btn-outline-small" style={{marginLeft: '15px'}}>Sign Out</button>
                     </div>
                 </header>
@@ -70,8 +158,8 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme }) => 
                                 <div className="stat-pill">
                                     <span className="icon">💧</span>
                                     <div>
-                                        <strong>Wasseraufnahme:</strong> 2.1L / 2.5L
-                                        <div className="progress-mini"><div className="fill" style={{width: '80%'}}></div></div>
+                                        <strong>Wasseraufnahme:</strong> 2.1L / {waterTarget}L
+                                        <div className="progress-mini"><div className="fill" style={{width: `${waterPercentage}%`}}></div></div>
                                     </div>
                                 </div>
                             </div>
@@ -90,25 +178,25 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme }) => 
                             <div className="macro-rings-placeholder">
                                 <div className="ring ring-cal">
                                     <div className="ring-inner">
-                                        <strong>1840</strong><small>2200 kcal</small>
+                                        <strong>1840</strong><small>{calorieTarget} kcal</small>
                                     </div>
                                     <span>Kalorien</span>
                                 </div>
                                 <div className="ring ring-pro">
                                     <div className="ring-inner">
-                                        <strong>125g</strong><small>150g</small>
+                                        <strong>125g</strong><small>{proteinTarget}g</small>
                                     </div>
                                     <span>Proteine</span>
                                 </div>
                                 <div className="ring ring-carbs">
                                     <div className="ring-inner">
-                                        <strong>160g</strong><small>200g</small>
+                                        <strong>160g</strong><small>{carbsTarget}g</small>
                                     </div>
                                     <span>Kohlenhydrate</span>
                                 </div>
                                 <div className="ring ring-fat">
                                     <div className="ring-inner">
-                                        <strong>65g</strong><small>75g</small>
+                                        <strong>65g</strong><small>{fatTarget}g</small>
                                     </div>
                                     <span>Fette</span>
                                 </div>
@@ -224,34 +312,141 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme }) => 
                 </>
                 ) : activeTab === 'Profile' ? (
                     <div style={{ padding: '40px', maxWidth: '600px', margin: '0 auto', width: '100%' }}>
-                        <h2 style={{ fontSize: '28px', marginBottom: '30px' }}>Mein Profil</h2>
+                        <h2 style={{ fontSize: '28px', marginBottom: '30px' }}>{isEditing ? 'Profil bearbeiten' : 'Mein Profil'}</h2>
                         <section className="dash-card" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', paddingBottom: '20px', borderBottom: '1px solid #2a2a2a' }}>
-                                <div className="profile-pic" style={{ width: '80px', height: '80px', fontSize: '40px', backgroundColor: '#10b981', color: '#fff' }}>👤</div>
-                                <div>
-                                    <h3 style={{ margin: '0 0 5px 0', fontSize: '24px' }}>{userName || 'Max Mustermann'}</h3>
-                                    <p style={{ margin: 0, color: '#888' }}>Premium Mitglied</p>
-                                </div>
-                            </div>
-                            
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '15px', fontSize: '14px' }}>
-                                <strong style={{ color: '#aaa' }}>Name:</strong>
-                                <span>{userName || 'Max Mustermann'}</span>
-                                
-                                <strong style={{ color: '#aaa' }}>Email:</strong>
-                                <span>{userEmail || 'max.mustermann@example.com'}</span>
-                                
-                                <strong style={{ color: '#aaa' }}>Mitglied seit:</strong>
-                                <span>Oktober 2023</span>
-                                
-                                <strong style={{ color: '#aaa' }}>Aktuelles Ziel:</strong>
-                                <span>Muskelaufbau</span>
-                            </div>
-                            
-                            <div style={{ marginTop: '20px', display: 'flex', gap: '15px' }}>
-                                <button className="btn-outline-small" style={{ padding: '10px 20px' }} onClick={() => handleActionClick('Profil bearbeiten')}>Profil bearbeiten</button>
-                                <button className="btn-outline-small" style={{ padding: '10px 20px', borderColor: '#ef4444', color: '#ef4444' }} onClick={onSignOut}>Abmelden</button>
-                            </div>
+                            {isEditing ? (
+                                <form onSubmit={handleSaveProfile} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                    <div className="profile-form-grid">
+                                        <div className="profile-form-group full-width">
+                                            <label className="profile-label">Name</label>
+                                            <input 
+                                                type="text" 
+                                                className="profile-input" 
+                                                value={tempName} 
+                                                onChange={(e) => setTempName(e.target.value)} 
+                                                required
+                                            />
+                                        </div>
+                                        
+                                        <div className="profile-form-group full-width">
+                                            <label className="profile-label">Aktuelles Ziel</label>
+                                            <select 
+                                                className="profile-select" 
+                                                value={tempGoal} 
+                                                onChange={(e) => setTempGoal(e.target.value)}
+                                            >
+                                                <option value="Muskelaufbau">Muskelaufbau</option>
+                                                <option value="Gewichtsverlust">Gewichtsverlust</option>
+                                                <option value="Gesunder Lebensstil">Gesunder Lebensstil</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="profile-form-group">
+                                            <label className="profile-label">Tägliche Kalorien (kcal)</label>
+                                            <input 
+                                                type="number" 
+                                                className="profile-input" 
+                                                value={tempCalorieTarget} 
+                                                onChange={(e) => setTempCalorieTarget(Math.max(1, parseInt(e.target.value) || 0))} 
+                                                required
+                                                min="1"
+                                            />
+                                        </div>
+
+                                        <div className="profile-form-group">
+                                            <label className="profile-label">Tägliches Wasserziel (L)</label>
+                                            <input 
+                                                type="number" 
+                                                step="0.1" 
+                                                className="profile-input" 
+                                                value={tempWaterTarget} 
+                                                onChange={(e) => setTempWaterTarget(Math.max(0.1, parseFloat(e.target.value) || 0))} 
+                                                required
+                                                min="0.1"
+                                            />
+                                        </div>
+
+                                        <div className="profile-form-group">
+                                            <label className="profile-label">Proteine (g)</label>
+                                            <input 
+                                                type="number" 
+                                                className="profile-input" 
+                                                value={tempProteinTarget} 
+                                                onChange={(e) => setTempProteinTarget(Math.max(1, parseInt(e.target.value) || 0))} 
+                                                required
+                                                min="1"
+                                            />
+                                        </div>
+
+                                        <div className="profile-form-group">
+                                            <label className="profile-label">Kohlenhydrate (g)</label>
+                                            <input 
+                                                type="number" 
+                                                className="profile-input" 
+                                                value={tempCarbsTarget} 
+                                                onChange={(e) => setTempCarbsTarget(Math.max(1, parseInt(e.target.value) || 0))} 
+                                                required
+                                                min="1"
+                                            />
+                                        </div>
+
+                                        <div className="profile-form-group">
+                                            <label className="profile-label">Fette (g)</label>
+                                            <input 
+                                                type="number" 
+                                                className="profile-input" 
+                                                value={tempFatTarget} 
+                                                onChange={(e) => setTempFatTarget(Math.max(1, parseInt(e.target.value) || 0))} 
+                                                required
+                                                min="1"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="profile-form-actions">
+                                        <button type="button" className="btn-cancel" onClick={() => setIsEditing(false)}>Abbrechen</button>
+                                        <button type="submit" className="btn-save">Speichern</button>
+                                    </div>
+                                </form>
+                            ) : (
+                                <>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px', paddingBottom: '20px', borderBottom: '1px solid #2a2a2a' }}>
+                                        <div className="profile-pic" style={{ width: '80px', height: '80px', fontSize: '40px', backgroundColor: '#10b981', color: '#fff' }}>👤</div>
+                                        <div>
+                                            <h3 style={{ margin: '0 0 5px 0', fontSize: '24px' }}>{name}</h3>
+                                            <p style={{ margin: 0, color: '#888' }}>Premium Mitglied</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '15px', fontSize: '14px' }}>
+                                        <strong style={{ color: '#aaa' }}>Name:</strong>
+                                        <span>{name}</span>
+                                        
+                                        <strong style={{ color: '#aaa' }}>Email:</strong>
+                                        <span>{userEmail || 'max.mustermann@example.com'}</span>
+                                        
+                                        <strong style={{ color: '#aaa' }}>Mitglied seit:</strong>
+                                        <span>Oktober 2023</span>
+                                        
+                                        <strong style={{ color: '#aaa' }}>Aktuelles Ziel:</strong>
+                                        <span>{goal}</span>
+
+                                        <strong style={{ color: '#aaa' }}>Kalorienziel:</strong>
+                                        <span>{calorieTarget} kcal / Tag</span>
+
+                                        <strong style={{ color: '#aaa' }}>Wasseraufnahme Ziel:</strong>
+                                        <span>{waterTarget} Liter / Tag</span>
+
+                                        <strong style={{ color: '#aaa' }}>Makros Target:</strong>
+                                        <span>{proteinTarget}g Proteine | {carbsTarget}g Kohlenhydrate | {fatTarget}g Fette</span>
+                                    </div>
+                                    
+                                    <div style={{ marginTop: '20px', display: 'flex', gap: '15px' }}>
+                                        <button className="btn-outline-small" style={{ padding: '10px 20px' }} onClick={handleEditProfileClick}>Profil bearbeiten</button>
+                                        <button className="btn-outline-small" style={{ padding: '10px 20px', borderColor: '#ef4444', color: '#ef4444' }} onClick={onSignOut}>Abmelden</button>
+                                    </div>
+                                </>
+                            )}
                         </section>
                     </div>
                 ) : (

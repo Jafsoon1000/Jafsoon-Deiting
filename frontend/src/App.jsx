@@ -51,6 +51,11 @@ function AppContent() {
         localStorage.removeItem('userToken');
     };
 
+    const handleUpdateProfileName = (newName) => {
+        setUserName(newName);
+        localStorage.setItem('userName', newName);
+    };
+
     return (
         <>
             <ScrollToTop />
@@ -77,7 +82,14 @@ function AppContent() {
                         path="/dashboard" 
                         element={
                             <ProtectedRoute userEmail={userEmail}>
-                                <Dashboard userEmail={userEmail} userName={userName} onSignOut={handleSignOut} theme={theme} onToggleTheme={toggleTheme} />
+                                <Dashboard 
+                                    userEmail={userEmail} 
+                                    userName={userName} 
+                                    onSignOut={handleSignOut} 
+                                    theme={theme} 
+                                    onToggleTheme={toggleTheme} 
+                                    onUpdateProfileName={handleUpdateProfileName}
+                                />
                             </ProtectedRoute>
                         } 
                     />
