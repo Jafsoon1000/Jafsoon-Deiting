@@ -55,6 +55,9 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
     const [waterTarget, setWaterTarget] = useState(
         parseFloat(localStorage.getItem('userWaterTarget')) || 2.5
     );
+    const [weightTarget, setWeightTarget] = useState(
+        parseFloat(localStorage.getItem('userWeightTarget')) || 75.0
+    );
     const [proteinTarget, setProteinTarget] = useState(
         parseInt(localStorage.getItem('userProteinTarget')) || 150
     );
@@ -270,6 +273,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
     const [tempGoal, setTempGoal] = useState(goal);
     const [tempCalorieTarget, setTempCalorieTarget] = useState(calorieTarget);
     const [tempWaterTarget, setTempWaterTarget] = useState(waterTarget);
+    const [tempWeightTarget, setTempWeightTarget] = useState(weightTarget);
     const [tempProteinTarget, setTempProteinTarget] = useState(proteinTarget);
     const [tempCarbsTarget, setTempCarbsTarget] = useState(carbsTarget);
     const [tempFatTarget, setTempFatTarget] = useState(fatTarget);
@@ -293,6 +297,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
         setTempGoal(goal);
         setTempCalorieTarget(calorieTarget);
         setTempWaterTarget(waterTarget);
+        setTempWeightTarget(weightTarget);
         setTempProteinTarget(proteinTarget);
         setTempCarbsTarget(carbsTarget);
         setTempFatTarget(fatTarget);
@@ -306,7 +311,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
             alert('Name cannot be empty.');
             return;
         }
-        if (tempCalorieTarget <= 0 || tempWaterTarget <= 0 || tempProteinTarget <= 0 || tempCarbsTarget <= 0 || tempFatTarget <= 0) {
+        if (tempCalorieTarget <= 0 || tempWaterTarget <= 0 || tempWeightTarget <= 0 || tempProteinTarget <= 0 || tempCarbsTarget <= 0 || tempFatTarget <= 0) {
             alert('Target values must be greater than zero.');
             return;
         }
@@ -316,6 +321,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
         localStorage.setItem('userGoal', tempGoal);
         localStorage.setItem('userCalorieTarget', tempCalorieTarget.toString());
         localStorage.setItem('userWaterTarget', tempWaterTarget.toString());
+        localStorage.setItem('userWeightTarget', tempWeightTarget.toString());
         localStorage.setItem('userProteinTarget', tempProteinTarget.toString());
         localStorage.setItem('userCarbsTarget', tempCarbsTarget.toString());
         localStorage.setItem('userFatTarget', tempFatTarget.toString());
@@ -325,6 +331,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
         setGoal(tempGoal);
         setCalorieTarget(tempCalorieTarget);
         setWaterTarget(tempWaterTarget);
+        setWeightTarget(tempWeightTarget);
         setProteinTarget(tempProteinTarget);
         setCarbsTarget(tempCarbsTarget);
         setFatTarget(tempFatTarget);
@@ -337,6 +344,37 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
     };
 
     const waterPercentage = Math.min(Math.round((currentWater / waterTarget) * 100), 100);
+
+    // Dynamic Goals calculations
+    let goalProgress = 70;
+    let goalText = '70% der wöchentlichen Ziele erreicht';
+
+    if (goal === 'Gewichtsverlust') {
+        const totalToLose = initialWeight - weightTarget;
+        const lostSoFar = initialWeight - latestWeight;
+        if (totalToLose > 0) {
+            goalProgress = Math.max(0, Math.min(Math.round((lostSoFar / totalToLose) * 100), 100));
+            goalText = `${lostSoFar.toFixed(1)} kg abgenommen von ${totalToLose.toFixed(1)} kg Ziel (${goalProgress}%)`;
+        } else {
+            goalProgress = 100;
+            goalText = 'Gewichtsziel erreicht! Ausgezeichnet!';
+        }
+    } else if (goal === 'Muskelaufbau') {
+        const totalToGain = weightTarget - initialWeight;
+        const gainedSoFar = latestWeight - initialWeight;
+        if (totalToGain > 0) {
+            goalProgress = Math.max(0, Math.min(Math.round((gainedSoFar / totalToGain) * 100), 100));
+            goalText = `${gainedSoFar.toFixed(1)} kg zugenommen von ${totalToGain.toFixed(1)} kg Ziel (${goalProgress}%)`;
+        } else {
+            goalProgress = 100;
+            goalText = 'Gewichtsziel erreicht! Ausgezeichnet!';
+        }
+    } else {
+        const waterProg = Math.min((currentWater / waterTarget) * 100, 100);
+        const calProg = calorieTarget > 0 ? Math.min((totalCalories / calorieTarget) * 100, 100) : 0;
+        goalProgress = Math.round((waterProg + calProg) / 2);
+        goalText = `Tagesziel: ${goalProgress}% der täglichen Gewohnheiten abgeschlossen`;
+    }
 
     return (
         <div className="dashboard-wrapper dark-theme-override">
@@ -744,9 +782,13 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                     {/* Right Column */}
                     <div className="grid-column right-col">
                         <section className="dash-card">
-                            <h2>Ziele erreichen</h2>
-                            <div className="progress-bar-placeholder">
-                                <div className="fill" style={{width: '70%'}}></div>
+                            <div className="card-header" style={{ marginBottom: '12px' }}>
+                                <h2>Ziele erreichen</h2>
+                                <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '13px' }}>{goal}</span>
+                            </div>
+                            <p style={{ fontSize: '13px', margin: '0 0 10px 0', color: '#888' }}>{goalText}</p>
+                            <div className="progress-bar-placeholder" style={{ height: '10px', borderRadius: '5px' }}>
+                                <div className="fill" style={{ width: `${goalProgress}%`, height: '100%', backgroundColor: '#10b981', borderRadius: '5px', transition: 'width 0.5s ease-out' }}></div>
                             </div>
                         </section>
                         
@@ -833,6 +875,19 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                         </div>
 
                                         <div className="profile-form-group">
+                                            <label className="profile-label">Zielgewicht (kg)</label>
+                                            <input 
+                                                type="number" 
+                                                step="0.1" 
+                                                className="profile-input" 
+                                                value={tempWeightTarget} 
+                                                onChange={(e) => setTempWeightTarget(Math.max(1, parseFloat(e.target.value) || 0))} 
+                                                required
+                                                min="1"
+                                            />
+                                        </div>
+
+                                        <div className="profile-form-group">
                                             <label className="profile-label">Proteine (g)</label>
                                             <input 
                                                 type="number" 
@@ -902,6 +957,9 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
 
                                         <strong style={{ color: '#aaa' }}>Wasseraufnahme Ziel:</strong>
                                         <span>{waterTarget} Liter / Tag</span>
+
+                                        <strong style={{ color: '#aaa' }}>Zielgewicht:</strong>
+                                        <span>{weightTarget} kg</span>
 
                                         <strong style={{ color: '#aaa' }}>Makros Target:</strong>
                                         <span>{proteinTarget}g Proteine | {carbsTarget}g Kohlenhydrate | {fatTarget}g Fette</span>
