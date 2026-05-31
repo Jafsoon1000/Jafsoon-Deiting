@@ -633,4 +633,19 @@ body.light-mode .water-btn:hover {
     opacity: 1 !important;
 }
 
+/* Circular SVG progress rings styling */
+.ring-inner-svg circle:first-child {
+    stroke: #333;
+}
+body.light-mode .ring-inner-svg circle:first-child {
+    stroke: #e5e7eb;
+}
 
+.delete-meal-btn {
+    transition: opacity 0.2s ease, transform 0.2s ease !important;
+}
+
+.delete-meal-btn:hover {
+    opacity: 1 !important;
+    transform: scale(1.15);
+}

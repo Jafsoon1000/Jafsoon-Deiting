@@ -1,6 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/Dashboard.css';
 
+const CircularProgress = ({ value, target, color, size = 80, strokeWidth = 6, label, sublabel }) => {
+    const percentage = target > 0 ? Math.min(Math.round((value / target) * 100), 100) : 0;
+    const radius = (size - strokeWidth) / 2;
+    const circumference = radius * 2 * Math.PI;
+    const offset = circumference - (percentage / 100) * circumference;
+
+    return (
+        <div className="ring">
+            <div className="ring-inner-svg" style={{ position: 'relative', width: size, height: size, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginBottom: '10px' }}>
+                <svg width={size} height={size} style={{ transform: 'rotate(-90deg)', position: 'absolute', top: 0, left: 0 }}>
+                    {/* Background circle */}
+                    <circle
+                        cx={size / 2}
+                        cy={size / 2}
+                        r={radius}
+                        fill="transparent"
+                        strokeWidth={strokeWidth}
+                    />
+                    {/* Foreground circle */}
+                    <circle
+                        cx={size / 2}
+                        cy={size / 2}
+                        r={radius}
+                        fill="transparent"
+                        stroke={color}
+                        strokeWidth={strokeWidth}
+                        strokeDasharray={circumference}
+                        strokeDashoffset={offset}
+                        strokeLinecap="round"
+                        style={{ transition: 'stroke-dashoffset 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                    />
+                </svg>
+                <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', zIndex: 1 }}>
+                    <strong style={{ fontSize: '15px', fontWeight: '700' }}>{value}</strong>
+                    <small style={{ fontSize: '9px', color: '#888' }}>{sublabel}</small>
+                </div>
+            </div>
+            <span style={{ fontSize: '12px', color: '#888' }}>{label}</span>
+        </div>
+    );
+};
+
 const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpdateProfileName }) => {
     const [activeTab, setActiveTab] = useState('Dashboard');
 
@@ -55,6 +97,78 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
             { date: '29.05', weight: 78.5 }
         ];
     });
+
+    // Meal Tracking State and Helpers
+    const [meals, setMeals] = useState(() => {
+        const stored = localStorage.getItem('userMeals');
+        if (stored) {
+            try {
+                return JSON.parse(stored);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        return [
+            { id: 1, type: 'Frühstück', name: 'Haferflocken mit Beeren', calories: 450, protein: 25, carbs: 65, fat: 8 },
+            { id: 2, type: 'Mittagessen', name: 'Hähnchen-Quinoa-Bowl', calories: 620, protein: 45, carbs: 55, fat: 18 },
+            { id: 3, type: 'Abendessen', name: 'Gebackener Lachs', calories: 550, protein: 40, carbs: 20, fat: 32 },
+            { id: 4, type: 'Snack', name: 'Apfel, Mandeln', calories: 180, protein: 15, carbs: 20, fat: 7 }
+        ];
+    });
+
+    const [isAddingMeal, setIsAddingMeal] = useState(false);
+    const [mealName, setMealName] = useState('');
+    const [mealType, setMealType] = useState('Frühstück');
+    const [mealCalories, setMealCalories] = useState('');
+    const [mealProtein, setMealProtein] = useState('');
+    const [mealCarbs, setMealCarbs] = useState('');
+    const [mealFat, setMealFat] = useState('');
+
+    const handleAddMealSubmit = (e) => {
+        e.preventDefault();
+        if (!mealName.trim()) {
+            alert('Bitte einen Namen für die Mahlzeit eingeben.');
+            return;
+        }
+
+        const parsedCalories = parseInt(mealCalories) || 0;
+        const parsedProtein = parseInt(mealProtein) || 0;
+        const parsedCarbs = parseInt(mealCarbs) || 0;
+        const parsedFat = parseInt(mealFat) || 0;
+
+        const newMeal = {
+            id: Date.now(),
+            type: mealType,
+            name: mealName,
+            calories: parsedCalories,
+            protein: parsedProtein,
+            carbs: parsedCarbs,
+            fat: parsedFat
+        };
+
+        const updatedMeals = [...meals, newMeal];
+        setMeals(updatedMeals);
+        localStorage.setItem('userMeals', JSON.stringify(updatedMeals));
+
+        // Reset fields & close form
+        setMealName('');
+        setMealCalories('');
+        setMealProtein('');
+        setMealCarbs('');
+        setMealFat('');
+        setIsAddingMeal(false);
+    };
+
+    const handleDeleteMeal = (id) => {
+        const updatedMeals = meals.filter(m => m.id !== id);
+        setMeals(updatedMeals);
+        localStorage.setItem('userMeals', JSON.stringify(updatedMeals));
+    };
+
+    const totalCalories = meals.reduce((sum, m) => sum + m.calories, 0);
+    const totalProtein = meals.reduce((sum, m) => sum + m.protein, 0);
+    const totalCarbs = meals.reduce((sum, m) => sum + m.carbs, 0);
+    const totalFat = meals.reduce((sum, m) => sum + m.fat, 0);
 
     const [newWeight, setNewWeight] = useState('');
     const [newWeightDate, setNewWeightDate] = useState('');
@@ -280,30 +394,34 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                 <span>Tagesübersicht &gt;</span>
                             </div>
                             <div className="macro-rings-placeholder">
-                                <div className="ring ring-cal">
-                                    <div className="ring-inner">
-                                        <strong>1840</strong><small>{calorieTarget} kcal</small>
-                                    </div>
-                                    <span>Kalorien</span>
-                                </div>
-                                <div className="ring ring-pro">
-                                    <div className="ring-inner">
-                                        <strong>125g</strong><small>{proteinTarget}g</small>
-                                    </div>
-                                    <span>Proteine</span>
-                                </div>
-                                <div className="ring ring-carbs">
-                                    <div className="ring-inner">
-                                        <strong>160g</strong><small>{carbsTarget}g</small>
-                                    </div>
-                                    <span>Kohlenhydrate</span>
-                                </div>
-                                <div className="ring ring-fat">
-                                    <div className="ring-inner">
-                                        <strong>65g</strong><small>{fatTarget}g</small>
-                                    </div>
-                                    <span>Fette</span>
-                                </div>
+                                <CircularProgress 
+                                    value={totalCalories} 
+                                    target={calorieTarget} 
+                                    color="#10b981" 
+                                    label="Kalorien" 
+                                    sublabel={`${calorieTarget} kcal`}
+                                />
+                                <CircularProgress 
+                                    value={totalProtein} 
+                                    target={proteinTarget} 
+                                    color="#3b82f6" 
+                                    label="Proteine" 
+                                    sublabel={`${proteinTarget}g`}
+                                />
+                                <CircularProgress 
+                                    value={totalCarbs} 
+                                    target={carbsTarget} 
+                                    color="#f59e0b" 
+                                    label="Kohlenhydrate" 
+                                    sublabel={`${carbsTarget}g`}
+                                />
+                                <CircularProgress 
+                                    value={totalFat} 
+                                    target={fatTarget} 
+                                    color="#ef4444" 
+                                    label="Fette" 
+                                    sublabel={`${fatTarget}g`}
+                                />
                             </div>
                         </section>
 
@@ -441,40 +559,153 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                             </div>
 
                             <div className="meals-list">
-                                <div className="meal-card">
-                                    <div className="meal-img placeholder-img">IMG</div>
-                                    <div className="meal-info">
-                                        <h3>Frühstück</h3>
-                                        <p>Haferflocken mit Beeren</p>
-                                        <small>🕒 450 kcal</small>
+                                {meals.map((meal) => (
+                                    <div key={meal.id} className="meal-card" style={{ position: 'relative' }}>
+                                        <div className="meal-img placeholder-img" style={{ fontSize: '24px' }}>
+                                            {meal.type === 'Frühstück' ? '🥣' : meal.type === 'Mittagessen' ? '🥗' : meal.type === 'Abendessen' ? '🐟' : '🍎'}
+                                        </div>
+                                        <div className="meal-info" style={{ flexGrow: 1 }}>
+                                            <h3 style={{ fontSize: '15px' }}>{meal.type}</h3>
+                                            <p style={{ fontWeight: '500', color: 'inherit' }}>{meal.name}</p>
+                                            <div style={{ display: 'flex', gap: '12px', fontSize: '11px', color: '#888', marginTop: '6px' }}>
+                                                <span>🔥 {meal.calories} kcal</span>
+                                                <span>💪 P: {meal.protein}g</span>
+                                                <span>🍞 C: {meal.carbs}g</span>
+                                                <span>🥑 F: {meal.fat}g</span>
+                                            </div>
+                                        </div>
+                                        <button 
+                                            onClick={() => handleDeleteMeal(meal.id)}
+                                            style={{ 
+                                                position: 'absolute', 
+                                                top: '12px', 
+                                                right: '12px', 
+                                                background: 'transparent', 
+                                                border: 'none', 
+                                                color: '#ef4444', 
+                                                cursor: 'pointer', 
+                                                fontSize: '14px', 
+                                                opacity: 0.5,
+                                                padding: '4px'
+                                            }}
+                                            className="delete-meal-btn"
+                                            title="Mahlzeit löschen"
+                                        >
+                                            ❌
+                                        </button>
                                     </div>
-                                </div>
-                                <div className="meal-card">
-                                    <div className="meal-img placeholder-img">IMG</div>
-                                    <div className="meal-info">
-                                        <h3>Mittagessen</h3>
-                                        <p>Hähnchen-Quinoa-Bowl</p>
-                                        <small>🕒 620 kcal</small>
-                                    </div>
-                                </div>
-                                <div className="meal-card">
-                                    <div className="meal-img placeholder-img">IMG</div>
-                                    <div className="meal-info">
-                                        <h3>Abendessen</h3>
-                                        <p>Gebackener Lachs</p>
-                                        <small>🕒 550 kcal</small>
-                                    </div>
-                                </div>
-                                <div className="meal-card">
-                                    <div className="meal-img placeholder-img">IMG</div>
-                                    <div className="meal-info">
-                                        <h3>Snack</h3>
-                                        <p>Apfel, Mandeln</p>
-                                        <small>🕒 180 kcal</small>
-                                    </div>
-                                </div>
-                                
-                                <button className="btn-add-meal" onClick={() => handleActionClick('Mahlzeit hinzufügen')}>Mahlzeit hinzufügen</button>
+                                ))}
+
+                                {isAddingMeal ? (
+                                    <form onSubmit={handleAddMealSubmit} className="meal-card add-meal-form-card" style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '15px', border: '1px solid #10b981' }}>
+                                        <h3 style={{ margin: 0, fontSize: '15px', color: '#10b981' }}>Mahlzeit hinzufügen</h3>
+                                        
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '10px' }}>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                <label style={{ fontSize: '11px', color: '#888' }}>Mahlzeitentyp</label>
+                                                <select 
+                                                    value={mealType} 
+                                                    onChange={(e) => setMealType(e.target.value)} 
+                                                    className="profile-select"
+                                                    style={{ padding: '6px 10px', fontSize: '13px', height: '36px' }}
+                                                >
+                                                    <option value="Frühstück">Frühstück</option>
+                                                    <option value="Mittagessen">Mittagessen</option>
+                                                    <option value="Abendessen">Abendessen</option>
+                                                    <option value="Snack">Snack</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                <label style={{ fontSize: '11px', color: '#888' }}>Name</label>
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="z.B. Rührei mit Toast" 
+                                                    value={mealName} 
+                                                    onChange={(e) => setMealName(e.target.value)} 
+                                                    className="profile-input"
+                                                    required
+                                                    style={{ padding: '6px 10px', fontSize: '13px', height: '36px' }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px' }}>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                <label style={{ fontSize: '10px', color: '#888' }}>kcal</label>
+                                                <input 
+                                                    type="number" 
+                                                    placeholder="kcal" 
+                                                    value={mealCalories} 
+                                                    onChange={(e) => setMealCalories(e.target.value)} 
+                                                    className="profile-input"
+                                                    required
+                                                    min="0"
+                                                    style={{ padding: '6px', fontSize: '12px', height: '34px', textAlign: 'center' }}
+                                                />
+                                            </div>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                <label style={{ fontSize: '10px', color: '#888' }}>Protein (g)</label>
+                                                <input 
+                                                    type="number" 
+                                                    placeholder="g" 
+                                                    value={mealProtein} 
+                                                    onChange={(e) => setMealProtein(e.target.value)} 
+                                                    className="profile-input"
+                                                    required
+                                                    min="0"
+                                                    style={{ padding: '6px', fontSize: '12px', height: '34px', textAlign: 'center' }}
+                                                />
+                                            </div>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                <label style={{ fontSize: '10px', color: '#888' }}>Carbs (g)</label>
+                                                <input 
+                                                    type="number" 
+                                                    placeholder="g" 
+                                                    value={mealCarbs} 
+                                                    onChange={(e) => setMealCarbs(e.target.value)} 
+                                                    className="profile-input"
+                                                    required
+                                                    min="0"
+                                                    style={{ padding: '6px', fontSize: '12px', height: '34px', textAlign: 'center' }}
+                                                />
+                                            </div>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                <label style={{ fontSize: '10px', color: '#888' }}>Fett (g)</label>
+                                                <input 
+                                                    type="number" 
+                                                    placeholder="g" 
+                                                    value={mealFat} 
+                                                    onChange={(e) => setMealFat(e.target.value)} 
+                                                    className="profile-input"
+                                                    required
+                                                    min="0"
+                                                    style={{ padding: '6px', fontSize: '12px', height: '34px', textAlign: 'center' }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div style={{ display: 'flex', gap: '10px', marginTop: '5px', justifyContent: 'flex-end' }}>
+                                            <button 
+                                                type="button" 
+                                                className="water-btn" 
+                                                onClick={() => setIsAddingMeal(false)}
+                                                style={{ background: 'transparent', borderColor: '#444', color: '#aaa', height: '32px' }}
+                                            >
+                                                Abbrechen
+                                            </button>
+                                            <button 
+                                                type="submit" 
+                                                className="water-btn"
+                                                style={{ height: '32px' }}
+                                            >
+                                                Hinzufügen
+                                            </button>
+                                        </div>
+                                    </form>
+                                ) : (
+                                    <button className="btn-add-meal" onClick={() => setIsAddingMeal(true)}>Mahlzeit hinzufügen</button>
+                                )}
                             </div>
                         </section>
                     </div>
