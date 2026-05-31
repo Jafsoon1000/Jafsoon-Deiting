@@ -69,10 +69,41 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
         return stored !== null ? Math.max(0, parseFloat(stored) || 0) : 1.5;
     });
 
+    const [confetti, setConfetti] = useState([]);
+    const [showToast, setShowToast] = useState(false);
+
+    const triggerConfetti = () => {
+        const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#ec4899', '#8b5cf6'];
+        const particles = [];
+        for (let i = 0; i < 65; i++) {
+            particles.push({
+                id: Math.random(),
+                x: Math.random() * 100,
+                y: 110,
+                size: Math.random() * 8 + 6,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                rotation: Math.random() * 360,
+                delay: Math.random() * 0.45,
+                shape: Math.random() > 0.5 ? 'circle' : 'square'
+            });
+        }
+        setConfetti(particles);
+        setShowToast(true);
+        setTimeout(() => {
+            setConfetti([]);
+        }, 4000);
+        setTimeout(() => {
+            setShowToast(false);
+        }, 4500);
+    };
+
     const handleAdjustWater = (amount) => {
         setCurrentWater((prev) => {
             const nextWater = Math.max(0, Math.round((prev + amount) * 100) / 100);
             localStorage.setItem('userCurrentWater', nextWater.toString());
+            if (prev < waterTarget && nextWater >= waterTarget) {
+                triggerConfetti();
+            }
             return nextWater;
         });
     };
@@ -893,6 +924,66 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                     </div>
                 )}
             </main>
+
+            {/* Confetti particles element overlay */}
+            {confetti.length > 0 && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    pointerEvents: 'none',
+                    zIndex: 9999,
+                    overflow: 'hidden'
+                }}>
+                    {confetti.map(p => (
+                        <div
+                            key={p.id}
+                            className="confetti-particle"
+                            style={{
+                                position: 'absolute',
+                                width: p.size,
+                                height: p.size,
+                                backgroundColor: p.color,
+                                borderRadius: p.shape === 'circle' ? '50%' : '2px',
+                                left: `${p.x}%`,
+                                bottom: '-20px',
+                                transform: `rotate(${p.rotation}deg)`,
+                                animationDelay: `${p.delay}s`,
+                                opacity: 0.95
+                            }}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {/* Congratulatory Celebration Toast */}
+            {showToast && (
+                <div className="celebration-toast" style={{
+                    position: 'fixed',
+                    bottom: '30px',
+                    right: '30px',
+                    backgroundColor: '#10b981',
+                    color: '#fff',
+                    padding: '16px 24px',
+                    borderRadius: '12px',
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.1)',
+                    zIndex: 10000,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontWeight: 'bold',
+                    fontSize: '14px',
+                    animation: 'slide-in-toast 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards'
+                }}>
+                    <span style={{ fontSize: '24px' }}>🏆</span>
+                    <div>
+                        <div style={{ fontWeight: '800', fontSize: '15px' }}>Ziel erreicht!</div>
+                        <div style={{ fontSize: '12px', fontWeight: '400', opacity: 0.95, marginTop: '2px' }}>Du hast dein tägliches Wasserziel geschafft!</div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

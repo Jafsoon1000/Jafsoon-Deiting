@@ -636,6 +636,201 @@ body.light-mode .water-btn:hover {
 /* Circular SVG progress rings styling */
 .ring-inner-svg circle:first-child {
     stroke: #333;
+    background-color: #f3f4f6;
+}
+
+body.light-mode .meal-plan-filters { border-color: #e5e7eb; }
+body.light-mode .meal-plan-filters .active { color: #111827; }
+
+body.light-mode .btn-small, 
+body.light-mode .btn-outline-small { 
+    border-color: #d1d5db; 
+    color: #374151; 
+}
+
+body.light-mode .placeholder-img { 
+    background-color: #e5e7eb; 
+    color: #9ca3af; 
+}
+
+body.light-mode .btn-add-meal {
+    border-color: #d1d5db;
+    color: #6b7280;
+}
+
+body.light-mode .top-nav-profile span,
+body.light-mode .top-nav-profile button {
+    color: #111827;
+}
+
+/* Profile Form Styles */
+.profile-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+@media (max-width: 600px) {
+    .profile-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.profile-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-form-group.full-width {
+    grid-column: span 2;
+}
+
+@media (max-width: 600px) {
+    .profile-form-group.full-width {
+        grid-column: span 1;
+    }
+}
+
+.profile-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #aaa;
+}
+
+.profile-input, .profile-select {
+    background-color: #222;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.profile-input:focus, .profile-select:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.profile-form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    justify-content: flex-end;
+}
+
+.btn-save {
+    background-color: #10b981;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-save:hover {
+    background-color: #059669;
+}
+
+.btn-cancel {
+    background-color: transparent;
+    border: 1px solid #333;
+    color: #ddd;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* Light Mode Form Overrides */
+body.light-mode .profile-input,
+body.light-mode .profile-select {
+    background-color: #ffffff;
+    border-color: #d1d5db;
+    color: #111827;
+}
+
+body.light-mode .profile-label {
+    color: #4b5563;
+}
+
+body.light-mode .btn-cancel {
+    border-color: #d1d5db;
+    color: #4b5563;
+}
+
+body.light-mode .btn-cancel:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* Water Tracker Action Buttons */
+.water-btn {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.water-btn:hover {
+    background: #10b981;
+    color: #fff;
+    border-color: #10b981;
+    transform: translateY(-1px);
+}
+
+.water-btn:active {
+    transform: translateY(0);
+}
+
+/* Light mode overrides */
+body.light-mode .water-btn {
+    background: rgba(16, 185, 129, 0.05);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+body.light-mode .water-btn:hover {
+    background: #10b981;
+    color: #fff;
+}
+
+/* Interactive Weight Chart Styles */
+.chart-node-group circle {
+    transition: r 0.25s cubic-bezier(0.4, 0, 0.2, 1), fill 0.25s ease;
+}
+
+.chart-node-group:hover circle {
+    r: 6 !important;
+    fill: #059669 !important;
+}
+
+.chart-node-group:hover .chart-node-value {
+    opacity: 1 !important;
+}
+
+/* Circular SVG progress rings styling */
+.ring-inner-svg circle:first-child {
+    stroke: #333;
 }
 body.light-mode .ring-inner-svg circle:first-child {
     stroke: #e5e7eb;
@@ -648,4 +843,35 @@ body.light-mode .ring-inner-svg circle:first-child {
 .delete-meal-btn:hover {
     opacity: 1 !important;
     transform: scale(1.15);
+}
+
+/* Celebration Confetti Animations */
+.confetti-particle {
+    animation: confetti-fall 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-110vh) rotate(720deg) translateX(40px);
+        opacity: 0;
+    }
+}
+
+/* Celebration Toast slide-in animation */
+@keyframes slide-in-toast {
+    0% {
+        transform: translateY(80px) scale(0.9);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
 }
