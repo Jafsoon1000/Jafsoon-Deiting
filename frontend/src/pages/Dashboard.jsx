@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import '../styles/Dashboard.css';
 
 const CircularProgress = ({ value, target, color, size = 80, strokeWidth = 6, label, sublabel }) => {
@@ -44,6 +45,7 @@ const CircularProgress = ({ value, target, color, size = 80, strokeWidth = 6, la
 };
 
 const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpdateProfileName }) => {
+    const { t, i18n } = useTranslation();
     const [activeTab, setActiveTab] = useState('Dashboard');
 
     // Profile targets and information state (persisted in localStorage)
@@ -174,7 +176,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
         const parsedDuration = parseInt(workoutDuration) || 0;
         const parsedCalories = parseInt(workoutCalories) || 0;
         if (parsedDuration <= 0 || parsedCalories <= 0) {
-            alert('Bitte eine gültige Dauer und Kalorienanzahl eingeben.');
+            alert(i18n.language === 'en' ? 'Please enter a valid duration and calories.' : 'Bitte eine gültige Dauer und Kalorienanzahl eingeben.');
             return;
         }
 
@@ -290,7 +292,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
     };
 
     const handleResetAllData = () => {
-        if (window.confirm('Möchtest du wirklich alle Jafsoon-Appdaten löschen? Dies kann nicht rückgängig gemacht werden.')) {
+        if (window.confirm(i18n.language === 'en' ? 'Do you really want to delete all Jafsoon app data? This cannot be undone.' : 'Möchtest du wirklich alle Jafsoon-Appdaten löschen? Dies kann nicht rückgängig gemacht werden.')) {
             localStorage.clear();
             setName('Max Mustermann');
             setGoal('Muskelaufbau');
@@ -335,7 +337,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
             setSettingsMetric(true);
             setSettingsAlerts(true);
             
-            alert('Alle App-Daten wurden erfolgreich zurückgesetzt!');
+            alert(i18n.language === 'en' ? 'All app data has been successfully reset!' : 'Alle App-Daten wurden erfolgreich zurückgesetzt!');
             setActiveTab('Dashboard');
         }
     };
@@ -391,7 +393,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
     const handleAddMealSubmit = (e) => {
         e.preventDefault();
         if (!mealName.trim()) {
-            alert('Bitte einen Namen für die Mahlzeit eingeben.');
+            alert(i18n.language === 'en' ? 'Please enter a name for the meal.' : 'Bitte einen Namen für die Mahlzeit eingeben.');
             return;
         }
 
@@ -443,11 +445,11 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
         e?.preventDefault();
         const parsedWeight = parseFloat(newWeight);
         if (isNaN(parsedWeight) || parsedWeight <= 0) {
-            alert('Bitte ein gültiges Gewicht eingeben.');
+            alert(i18n.language === 'en' ? 'Please enter a valid weight.' : 'Bitte ein gültiges Gewicht eingeben.');
             return;
         }
         if (!newWeightDate.trim()) {
-            alert('Bitte ein Datum eingeben (z.B. 05.06).');
+            alert(i18n.language === 'en' ? 'Please enter a date (e.g. 05.06).' : 'Bitte ein Datum eingeben (z.B. 05.06).');
             return;
         }
 
@@ -521,7 +523,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
     };
 
     const handleActionClick = (actionName) => {
-        alert(`${actionName} feature coming soon!`);
+        alert(i18n.language === 'en' ? `${actionName} feature coming soon!` : `Die Funktion für "${actionName}" ist bald verfügbar!`);
     };
 
     const handleEditProfileClick = () => {
@@ -540,11 +542,11 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
         e.preventDefault();
         
         if (!tempName.trim()) {
-            alert('Name cannot be empty.');
+            alert(i18n.language === 'en' ? 'Name cannot be empty.' : 'Der Name darf nicht leer sein.');
             return;
         }
         if (tempCalorieTarget <= 0 || tempWaterTarget <= 0 || tempWeightTarget <= 0 || tempProteinTarget <= 0 || tempCarbsTarget <= 0 || tempFatTarget <= 0) {
-            alert('Target values must be greater than zero.');
+            alert(i18n.language === 'en' ? 'Target values must be greater than zero.' : 'Die Zielwerte müssen größer als Null sein.');
             return;
         }
 
@@ -579,42 +581,42 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
 
     // Dynamic Goals calculations
     let goalProgress = 70;
-    let goalText = '70% der wöchentlichen Ziele erreicht';
+    let goalText = t('dashboard.weekGoalsReached');
 
     if (goal === 'Gewichtsverlust') {
         const totalToLose = initialWeight - weightTarget;
         const lostSoFar = initialWeight - latestWeight;
         if (totalToLose > 0) {
             goalProgress = Math.max(0, Math.min(Math.round((lostSoFar / totalToLose) * 100), 100));
-            goalText = `${lostSoFar.toFixed(1)} kg abgenommen von ${totalToLose.toFixed(1)} kg Ziel (${goalProgress}%)`;
+            goalText = t('dashboard.goalTextAbnehmen', { lost: lostSoFar.toFixed(1), target: totalToLose.toFixed(1), percent: goalProgress });
         } else {
             goalProgress = 100;
-            goalText = 'Gewichtsziel erreicht! Ausgezeichnet!';
+            goalText = t('dashboard.weightGoalReached');
         }
     } else if (goal === 'Muskelaufbau') {
         const totalToGain = weightTarget - initialWeight;
         const gainedSoFar = latestWeight - initialWeight;
         if (totalToGain > 0) {
             goalProgress = Math.max(0, Math.min(Math.round((gainedSoFar / totalToGain) * 100), 100));
-            goalText = `${gainedSoFar.toFixed(1)} kg zugenommen von ${totalToGain.toFixed(1)} kg Ziel (${goalProgress}%)`;
+            goalText = t('dashboard.goalTextZunehmen', { gained: gainedSoFar.toFixed(1), target: totalToGain.toFixed(1), percent: goalProgress });
         } else {
             goalProgress = 100;
-            goalText = 'Gewichtsziel erreicht! Ausgezeichnet!';
+            goalText = t('dashboard.weightGoalReached');
         }
     } else {
         const waterProg = Math.min((currentWater / waterTarget) * 100, 100);
         const calProg = calorieTarget > 0 ? Math.min((totalCalories / calorieTarget) * 100, 100) : 0;
         goalProgress = Math.round((waterProg + calProg) / 2);
-        goalText = `Tagesziel: ${goalProgress}% der täglichen Gewohnheiten abgeschlossen`;
+        goalText = t('dashboard.weeklyHabitsProgress', { progress: goalProgress });
     }
 
     const achievementsList = [
-        { id: 'water', icon: '💧', title: 'Wasser-Meister', desc: 'Trinke dein tägliches Wasserziel.', unlocked: currentWater >= waterTarget },
-        { id: 'calories', icon: '🔥', title: 'Kalorien-Pionier', desc: 'Trage Mahlzeiten mit mind. 1000 kcal ein.', unlocked: totalCalories >= 1000 },
-        { id: 'workouts', icon: '🏃', title: 'Aktivitäts-Champion', desc: 'Logge heute mindestens 1 Workout.', unlocked: workouts.length >= 1 },
-        { id: 'weight', icon: '⚖️', title: 'Gewichts-Tracker', desc: 'Trage mind. 3 Daten in deinen Verlauf ein.', unlocked: weightHistory.length >= 3 },
-        { id: 'gourmet', icon: '🍳', title: 'Feinschmecker', desc: 'Logge alle 4 Mahlzeitentypen an einem Tag.', unlocked: ['Frühstück', 'Mittagessen', 'Abendessen', 'Snack'].every(type => meals.some(m => m.type === type)) },
-        { id: 'willpower', icon: '🏆', title: 'Eiserner Wille', desc: 'Erreiche dein wöchentliches Ziel zu 100%.', unlocked: goalProgress >= 100 }
+        { id: 'water', icon: '💧', title: t('dashboard.trophyWaterTitle'), desc: t('dashboard.trophyWaterDesc'), unlocked: currentWater >= waterTarget },
+        { id: 'calories', icon: '🔥', title: t('dashboard.trophyCalsTitle'), desc: t('dashboard.trophyCalsDesc'), unlocked: totalCalories >= 1000 },
+        { id: 'workouts', icon: '🏃', title: t('dashboard.trophyWorkoutsTitle'), desc: t('dashboard.trophyWorkoutsDesc'), unlocked: workouts.length >= 1 },
+        { id: 'weight', icon: '⚖️', title: t('dashboard.trophyWeightTitle'), desc: t('dashboard.trophyWeightDesc'), unlocked: weightHistory.length >= 3 },
+        { id: 'gourmet', icon: '🍳', title: t('dashboard.trophyGourmetTitle'), desc: t('dashboard.trophyGourmetDesc'), unlocked: ['Frühstück', 'Mittagessen', 'Abendessen', 'Snack'].every(type => meals.some(m => m.type === type)) },
+        { id: 'willpower', icon: '🏆', title: t('dashboard.trophyWillpowerTitle'), desc: t('dashboard.trophyWillpowerDesc'), unlocked: goalProgress >= 100 }
     ];
 
     return (
@@ -662,29 +664,29 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                         {/* Header Stats */}
                         <div className="dashboard-header-stats">
                             <div>
-                                <h1>Ihr Fortschritt</h1>
-                                <p>Macro Tracking</p>
+                                <h1>{t('dashboard.title')}</h1>
+                                <p>{t('dashboard.subtitle')}</p>
                             </div>
                             <div className="top-stats-right">
                                 <div className="stat-pill">
                                     <span className="icon">🔥</span>
                                     <div>
                                         <strong>{totalCalories} / {calorieTarget} kcal</strong>
-                                        <small>Tagesbedarf</small>
+                                        <small>{t('dashboard.dailyNeed')}</small>
                                     </div>
                                 </div>
                                 <div className="stat-pill">
                                     <span className="icon">⚡</span>
                                     <div>
                                         <strong>{totalBurnedCalories} kcal</strong>
-                                        <small>Aktiv verbrannt</small>
+                                        <small>{t('dashboard.activeBurned')}</small>
                                     </div>
                                 </div>
                                 <div className="stat-pill" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                                         <span className="icon" style={{ fontSize: '24px' }}>💧</span>
                                         <div>
-                                            <strong style={{ display: 'block', fontSize: '14px' }}>Wasseraufnahme:</strong>
+                                            <strong style={{ display: 'block', fontSize: '14px' }}>{t('dashboard.waterIntake')}:</strong>
                                             <span style={{ fontSize: '13px', color: 'inherit', opacity: 0.85 }}>{currentWater.toFixed(2)}L / {waterTarget}L</span>
                                             <div className="progress-mini" style={{ width: '120px' }}>
                                                 <div className="fill" style={{ width: `${waterPercentage}%` }}></div>
@@ -707,36 +709,36 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                     <div className="grid-column left-col">
                         <section className="dash-card">
                             <div className="card-header">
-                                <h2>Tagesübersicht</h2>
-                                <span>Tagesübersicht &gt;</span>
+                                <h2>{t('dashboard.dailyOverview')}</h2>
+                                <span>{t('dashboard.dailyOverview')} &gt;</span>
                             </div>
                             <div className="macro-rings-placeholder">
                                 <CircularProgress 
                                     value={totalCalories} 
                                     target={calorieTarget} 
                                     color="#10b981" 
-                                    label="Kalorien" 
+                                    label={t('dashboard.calories')} 
                                     sublabel={`${calorieTarget} kcal`}
                                 />
                                 <CircularProgress 
                                     value={totalProtein} 
                                     target={proteinTarget} 
                                     color="#3b82f6" 
-                                    label="Proteine" 
+                                    label={t('dashboard.proteins')} 
                                     sublabel={`${proteinTarget}g`}
                                 />
                                 <CircularProgress 
                                     value={totalCarbs} 
                                     target={carbsTarget} 
                                     color="#f59e0b" 
-                                    label="Kohlenhydrate" 
+                                    label={t('dashboard.carbs')} 
                                     sublabel={`${carbsTarget}g`}
                                 />
                                 <CircularProgress 
                                     value={totalFat} 
                                     target={fatTarget} 
                                     color="#ef4444" 
-                                    label="Fette" 
+                                    label={t('dashboard.fats')} 
                                     sublabel={`${fatTarget}g`}
                                 />
                             </div>
@@ -744,11 +746,11 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
 
                         <section className="dash-card">
                             <div className="card-header">
-                                <h2>Gewichtsverlauf</h2>
-                                <span className="btn-small">Kg over {weightHistory.length} Wochen &gt;</span>
+                                <h2>{t('dashboard.weightHistory')}</h2>
+                                <span className="btn-small">Kg {i18n.language === 'en' ? 'over' : 'über'} {weightHistory.length} {t('dashboard.weeks')} &gt;</span>
                             </div>
                             <p className="subtitle">
-                                Kg over {weightHistory.length} Wochen 
+                                Kg {i18n.language === 'en' ? 'over' : 'über'} {weightHistory.length} {t('dashboard.weeks')} 
                                 <span className="highlight-green right">
                                     {latestWeight} kg ({netWeightChange >= 0 ? '+' : ''}{netWeightChange.toFixed(1)} kg)
                                 </span>
@@ -837,7 +839,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                 />
                                 <input 
                                     type="text" 
-                                    placeholder="z.B. 05.06" 
+                                    placeholder={i18n.language === 'en' ? 'e.g. 06/05' : 'z.B. 05.06'} 
                                     className="profile-input" 
                                     style={{ padding: '8px 12px', fontSize: '13px', width: '100px', height: '36px' }}
                                     value={newWeightDate}
@@ -849,7 +851,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                     className="water-btn" 
                                     style={{ padding: '0 15px', height: '36px', fontSize: '12px', whiteSpace: 'nowrap' }}
                                 >
-                                    Eintragen
+                                    {i18n.language === 'en' ? 'Log' : 'Eintragen'}
                                 </button>
                             </form>
                         </section>
@@ -860,19 +862,19 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                         <section className="dash-card meal-plan-card">
                             <div className="card-header">
                                 <div>
-                                    <h2>Mahlzeiten Plan</h2>
-                                    <p>Heute: Dienstag, 24. Oktober</p>
+                                    <h2>{t('dashboard.mealPlan')}</h2>
+                                    <p>{t('dashboard.today')}: {i18n.language === 'en' ? 'Tuesday, Oct 24' : 'Dienstag, 24. Oktober'}</p>
                                 </div>
                                 <div className="nav-arrows">
-                                    <span style={{cursor: 'pointer'}} onClick={() => handleActionClick('Previous Day')}>&lt;</span>
-                                    <span style={{cursor: 'pointer'}} onClick={() => handleActionClick('Next Day')}>&gt;</span>
+                                    <span style={{cursor: 'pointer'}} onClick={() => handleActionClick(i18n.language === 'en' ? 'Previous Day' : 'Vorheriger Tag')}>&lt;</span>
+                                    <span style={{cursor: 'pointer'}} onClick={() => handleActionClick(i18n.language === 'en' ? 'Next Day' : 'Nächster Tag')}>&gt;</span>
                                 </div>
                             </div>
                             
                             <div className="meal-plan-filters">
-                                <span className="active" style={{cursor: 'pointer'}}>Heute</span>
-                                <span style={{cursor: 'pointer'}} onClick={() => handleActionClick('Select Day')}>Dienstag ⌄</span>
-                                <button className="btn-outline-small right" onClick={() => handleActionClick('Rezepte entdecken')}>Rezepte entdecken</button>
+                                <span className="active" style={{cursor: 'pointer'}}>{t('dashboard.today')}</span>
+                                <span style={{cursor: 'pointer'}} onClick={() => handleActionClick(i18n.language === 'en' ? 'Select Day' : 'Tag auswählen')}>{i18n.language === 'en' ? 'Tuesday' : 'Dienstag'} ⌄</span>
+                                <button className="btn-outline-small right" onClick={() => handleActionClick(t('dashboard.discoverRecipes'))}>{t('dashboard.discoverRecipes')}</button>
                             </div>
 
                             <div className="meals-list">
@@ -882,7 +884,12 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                             {meal.type === 'Frühstück' ? '🥣' : meal.type === 'Mittagessen' ? '🥗' : meal.type === 'Abendessen' ? '🐟' : '🍎'}
                                         </div>
                                         <div className="meal-info" style={{ flexGrow: 1 }}>
-                                            <h3 style={{ fontSize: '15px' }}>{meal.type}</h3>
+                                            <h3 style={{ fontSize: '15px' }}>
+                                                {meal.type === 'Frühstück' ? t('calculator.breakfast') : 
+                                                 meal.type === 'Mittagessen' ? t('calculator.lunch') : 
+                                                 meal.type === 'Abendessen' ? t('calculator.dinner') : 
+                                                 meal.type === 'Snack' ? t('calculator.snack') : meal.type}
+                                            </h3>
                                             <p style={{ fontWeight: '500', color: 'inherit' }}>{meal.name}</p>
                                             <div style={{ display: 'flex', gap: '12px', fontSize: '11px', color: '#888', marginTop: '6px' }}>
                                                 <span>🔥 {meal.calories} kcal</span>
@@ -906,7 +913,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                                 padding: '4px'
                                             }}
                                             className="delete-meal-btn"
-                                            title="Mahlzeit löschen"
+                                            title={i18n.language === 'en' ? 'Delete meal' : 'Mahlzeit löschen'}
                                         >
                                             ❌
                                         </button>
@@ -915,29 +922,29 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
 
                                 {isAddingMeal ? (
                                     <form onSubmit={handleAddMealSubmit} className="meal-card add-meal-form-card" style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '15px', border: '1px solid #10b981' }}>
-                                        <h3 style={{ margin: 0, fontSize: '15px', color: '#10b981' }}>Mahlzeit hinzufügen</h3>
+                                        <h3 style={{ margin: 0, fontSize: '15px', color: '#10b981' }}>{t('dashboard.addMeal')}</h3>
                                         
                                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '10px' }}>
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                                <label style={{ fontSize: '11px', color: '#888' }}>Mahlzeitentyp</label>
+                                                <label style={{ fontSize: '11px', color: '#888' }}>{t('dashboard.mealType')}</label>
                                                 <select 
                                                     value={mealType} 
                                                     onChange={(e) => setMealType(e.target.value)} 
                                                     className="profile-select"
                                                     style={{ padding: '6px 10px', fontSize: '13px', height: '36px' }}
                                                 >
-                                                    <option value="Frühstück">Frühstück</option>
-                                                    <option value="Mittagessen">Mittagessen</option>
-                                                    <option value="Abendessen">Abendessen</option>
-                                                    <option value="Snack">Snack</option>
+                                                    <option value="Frühstück">{t('calculator.breakfast')}</option>
+                                                    <option value="Mittagessen">{t('calculator.lunch')}</option>
+                                                    <option value="Abendessen">{t('calculator.dinner')}</option>
+                                                    <option value="Snack">{t('calculator.snack')}</option>
                                                 </select>
                                             </div>
                                             
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                                <label style={{ fontSize: '11px', color: '#888' }}>Name</label>
+                                                <label style={{ fontSize: '11px', color: '#888' }}>{t('dashboard.name')}</label>
                                                 <input 
                                                     type="text" 
-                                                    placeholder="z.B. Rührei mit Toast" 
+                                                    placeholder={i18n.language === 'en' ? 'e.g. Scrambled eggs with toast' : 'z.B. Rührei mit Toast'} 
                                                     value={mealName} 
                                                     onChange={(e) => setMealName(e.target.value)} 
                                                     className="profile-input"
@@ -962,7 +969,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                                 />
                                             </div>
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                                <label style={{ fontSize: '10px', color: '#888' }}>Protein (g)</label>
+                                                <label style={{ fontSize: '10px', color: '#888' }}>{t('calculator.protein')} (g)</label>
                                                 <input 
                                                     type="number" 
                                                     placeholder="g" 
@@ -975,7 +982,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                                 />
                                             </div>
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                                <label style={{ fontSize: '10px', color: '#888' }}>Carbs (g)</label>
+                                                <label style={{ fontSize: '10px', color: '#888' }}>{t('dashboard.carbs')} (g)</label>
                                                 <input 
                                                     type="number" 
                                                     placeholder="g" 
@@ -988,7 +995,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                                 />
                                             </div>
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                                <label style={{ fontSize: '10px', color: '#888' }}>Fett (g)</label>
+                                                <label style={{ fontSize: '10px', color: '#888' }}>{t('dashboard.fats')} (g)</label>
                                                 <input 
                                                     type="number" 
                                                     placeholder="g" 
@@ -1009,19 +1016,19 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                                 onClick={() => setIsAddingMeal(false)}
                                                 style={{ background: 'transparent', borderColor: '#444', color: '#aaa', height: '32px' }}
                                             >
-                                                Abbrechen
+                                                {t('dashboard.cancel')}
                                             </button>
                                             <button 
                                                 type="submit" 
                                                 className="water-btn"
                                                 style={{ height: '32px' }}
                                             >
-                                                Hinzufügen
+                                                {i18n.language === 'en' ? 'Add' : 'Hinzufügen'}
                                             </button>
                                         </div>
                                     </form>
                                 ) : (
-                                    <button className="btn-add-meal" onClick={() => setIsAddingMeal(true)}>Mahlzeit hinzufügen</button>
+                                    <button className="btn-add-meal" onClick={() => setIsAddingMeal(true)}>{t('dashboard.addMealBtn')}</button>
                                 )}
                             </div>
                         </section>
@@ -1031,8 +1038,12 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                     <div className="grid-column right-col">
                         <section className="dash-card">
                             <div className="card-header" style={{ marginBottom: '12px' }}>
-                                <h2>Ziele erreichen</h2>
-                                <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '13px' }}>{goal}</span>
+                                <h2>{t('dashboard.goalProgress')}</h2>
+                                <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '13px' }}>
+                                    {goal === 'Muskelaufbau' ? t('dashboard.goalBuildMuscle') : 
+                                     goal === 'Gewichtsverlust' ? t('dashboard.goalLoseWeight') : 
+                                     goal === 'Gesunder Lebensstil' ? t('dashboard.goalHealthyLife') : goal}
+                                </span>
                             </div>
                             <p style={{ fontSize: '13px', margin: '0 0 10px 0', color: '#888' }}>{goalText}</p>
                             <div className="progress-bar-placeholder" style={{ height: '10px', borderRadius: '5px' }}>
@@ -1042,36 +1053,36 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                         
                         <section className="dash-card">
                             <div className="card-header" style={{ marginBottom: '12px' }}>
-                                <h2>Aktivitäten & Sport</h2>
-                                <span className="btn-small" style={{ cursor: 'pointer' }} onClick={() => handleTabClick('Fortschritt')}>Statistiken &gt;</span>
+                                <h2>{t('dashboard.workouts')}</h2>
+                                <span className="btn-small" style={{ cursor: 'pointer' }} onClick={() => handleTabClick('Fortschritt')}>{t('dashboard.stats')} &gt;</span>
                             </div>
                             
                             {isAddingWorkout ? (
                                 <form onSubmit={handleAddWorkoutSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '12px', border: '1px solid #3b82f6', borderRadius: '12px', marginBottom: '15px' }}>
-                                    <h3 style={{ margin: 0, fontSize: '13px', color: '#3b82f6' }}>Workout hinzufügen</h3>
+                                    <h3 style={{ margin: 0, fontSize: '13px', color: '#3b82f6' }}>{t('dashboard.addWorkout')}</h3>
                                     
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                            <label style={{ fontSize: '10px', color: '#888' }}>Typ</label>
+                                            <label style={{ fontSize: '10px', color: '#888' }}>{t('dashboard.type')}</label>
                                             <select 
                                                 value={workoutType} 
                                                 onChange={(e) => setWorkoutType(e.target.value)} 
                                                 className="profile-select"
                                                 style={{ padding: '6px', fontSize: '12px', height: '32px' }}
                                             >
-                                                <option value="Laufen">🏃 Laufen</option>
-                                                <option value="Krafttraining">🏋️ Krafttraining</option>
-                                                <option value="Radfahren">🚴 Radfahren</option>
-                                                <option value="Schwimmen">🏊 Schwimmen</option>
+                                                <option value="Laufen">🏃 {i18n.language === 'en' ? 'Running' : 'Laufen'}</option>
+                                                <option value="Krafttraining">🏋️ {i18n.language === 'en' ? 'Strength Training' : 'Krafttraining'}</option>
+                                                <option value="Radfahren">🚴 {i18n.language === 'en' ? 'Cycling' : 'Radfahren'}</option>
+                                                <option value="Schwimmen">🏊 {i18n.language === 'en' ? 'Swimming' : 'Schwimmen'}</option>
                                                 <option value="Yoga">🧘 Yoga</option>
-                                                <option value="Anderes">💪 Anderes</option>
+                                                <option value="Anderes">💪 {i18n.language === 'en' ? 'Other' : 'Anderes'}</option>
                                             </select>
                                         </div>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                            <label style={{ fontSize: '10px', color: '#888' }}>Uhrzeit</label>
+                                            <label style={{ fontSize: '10px', color: '#888' }}>{t('dashboard.time')}</label>
                                             <input 
                                                 type="text" 
-                                                placeholder="z.B. 18:00 Uhr" 
+                                                placeholder={i18n.language === 'en' ? 'e.g. 6:00 PM' : 'z.B. 18:00 Uhr'} 
                                                 value={workoutTime} 
                                                 onChange={(e) => setWorkoutTime(e.target.value)} 
                                                 className="profile-input"
@@ -1082,10 +1093,10 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
 
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                            <label style={{ fontSize: '10px', color: '#888' }}>Dauer (Min)</label>
+                                            <label style={{ fontSize: '10px', color: '#888' }}>{t('dashboard.duration')}</label>
                                             <input 
                                                 type="number" 
-                                                placeholder="Minuten" 
+                                                placeholder={i18n.language === 'en' ? 'Minutes' : 'Minuten'} 
                                                 value={workoutDuration} 
                                                 onChange={(e) => setWorkoutDuration(e.target.value)} 
                                                 className="profile-input"
@@ -1095,7 +1106,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                             />
                                         </div>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                            <label style={{ fontSize: '10px', color: '#888' }}>Kalorien (kcal)</label>
+                                            <label style={{ fontSize: '10px', color: '#888' }}>{t('dashboard.caloriesBurned')}</label>
                                             <input 
                                                 type="number" 
                                                 placeholder="kcal" 
@@ -1110,12 +1121,12 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                     </div>
 
                                     <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '4px' }}>
-                                        <button type="button" className="water-btn" onClick={() => setIsAddingWorkout(false)} style={{ background: 'transparent', color: '#aaa', borderColor: '#444' }}>Abbrechen</button>
-                                        <button type="submit" className="water-btn" style={{ background: '#3b82f6', borderColor: '#3b82f6', color: '#fff' }}>Speichern</button>
+                                        <button type="button" className="water-btn" onClick={() => setIsAddingWorkout(false)} style={{ background: 'transparent', color: '#aaa', borderColor: '#444' }}>{t('dashboard.cancel')}</button>
+                                        <button type="submit" className="water-btn" style={{ background: '#3b82f6', borderColor: '#3b82f6', color: '#fff' }}>{t('dashboard.save')}</button>
                                     </div>
                                 </form>
                             ) : (
-                                <button className="btn-add-meal" style={{ padding: '8px', marginBottom: '15px', borderStyle: 'dashed', borderColor: '#3b82f6', color: '#3b82f6' }} onClick={() => setIsAddingWorkout(true)}>+ Aktivität loggen</button>
+                                <button className="btn-add-meal" style={{ padding: '8px', marginBottom: '15px', borderStyle: 'dashed', borderColor: '#3b82f6', color: '#3b82f6' }} onClick={() => setIsAddingWorkout(true)}>{t('dashboard.addWorkoutBtn')}</button>
                             )}
 
                             <div className="workout-list-dynamic">
@@ -1124,35 +1135,62 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                         <div key={w.id} className="workout-item">
                                             <div className="workout-item-details">
                                                 <div className="workout-item-title">
-                                                    {w.type === 'Laufen' ? '🏃' : w.type === 'Krafttraining' ? '🏋️' : w.type === 'Radfahren' ? '🚴' : w.type === 'Schwimmen' ? '🏊' : w.type === 'Yoga' ? '🧘' : '💪'} {w.type}
+                                                    {w.type === 'Laufen' ? '🏃' : w.type === 'Krafttraining' ? '🏋️' : w.type === 'Radfahren' ? '🚴' : w.type === 'Schwimmen' ? '🏊' : w.type === 'Yoga' ? '🧘' : '💪'} {
+                                                        w.type === 'Laufen' ? (i18n.language === 'en' ? 'Running' : 'Laufen') :
+                                                        w.type === 'Krafttraining' ? (i18n.language === 'en' ? 'Strength Training' : 'Krafttraining') :
+                                                        w.type === 'Radfahren' ? (i18n.language === 'en' ? 'Cycling' : 'Radfahren') :
+                                                        w.type === 'Schwimmen' ? (i18n.language === 'en' ? 'Swimming' : 'Schwimmen') :
+                                                        w.type === 'Yoga' ? 'Yoga' :
+                                                        w.type === 'Anderes' ? (i18n.language === 'en' ? 'Other' : 'Anderes') : w.type
+                                                    }
                                                 </div>
-                                                <div className="workout-item-meta">⏱️ {w.duration} Min. | 🕒 {w.time}</div>
+                                                <div className="workout-item-meta">⏱️ {w.duration} {i18n.language === 'en' ? 'Min' : 'Min.'} | 🕒 {w.time}</div>
                                             </div>
                                             <div className="workout-item-calories">
                                                 <span className="workout-calories-value">-{w.calories} kcal</span>
-                                                <button onClick={() => handleDeleteWorkout(w.id)} className="workout-delete-btn" title="Workout löschen">❌</button>
+                                                <button onClick={() => handleDeleteWorkout(w.id)} className="workout-delete-btn" title={i18n.language === 'en' ? 'Delete workout' : 'Workout löschen'}>❌</button>
                                             </div>
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="workout-empty">Keine sportlichen Aktivitäten für heute geloggt.</div>
+                                    <div className="workout-empty">{t('dashboard.workoutPlaceholder')}</div>
                                 )}
                             </div>
                         </section>
 
                         <section className="dash-card">
                             <div className="card-header">
-                                <h2>Empfehlung für dich &gt;</h2>
-                                <span className="btn-small" style={{ cursor: 'pointer' }} onClick={() => handleTabClick('Rezepte')}>Alle Rezepte &gt;</span>
+                                <h2>{t('dashboard.recommendation')} &gt;</h2>
+                                <span className="btn-small" style={{ cursor: 'pointer' }} onClick={() => handleTabClick('Rezepte')}>{t('dashboard.allRecipes')} &gt;</span>
                             </div>
                             {(() => {
-                                let recommendedRecipe = { name: 'Veggie Burger', calories: 450, protein: 18, carbs: 55, fat: 12, desc: 'Knackig & gesund mit hausgemachtem Kichererbsen-Patty.', type: 'Mittagessen', icon: '🍔' };
+                                let recommendedRecipe = { 
+                                    name: 'Veggie Burger', 
+                                    calories: 450, protein: 18, carbs: 55, fat: 12, 
+                                    desc: i18n.language === 'en' ? 'Crispy & healthy with a homemade chickpea patty.' : 'Knackig & gesund mit hausgemachtem Kichererbsen-Patty.', 
+                                    type: 'Mittagessen', icon: '🍔' 
+                                };
                                 if (goal === 'Muskelaufbau') {
-                                    recommendedRecipe = { name: 'Protein-Pancakes mit Erdnussbutter', calories: 650, protein: 35, carbs: 80, fat: 20, desc: 'Die perfekte Kombination aus Protein und komplexen Kohlenhydraten.', type: 'Frühstück', icon: '🥞' };
+                                    recommendedRecipe = { 
+                                        name: i18n.language === 'en' ? 'Protein Pancakes with Peanut Butter' : 'Protein-Pancakes mit Erdnussbutter', 
+                                        calories: 650, protein: 35, carbs: 80, fat: 20, 
+                                        desc: i18n.language === 'en' ? 'The perfect combination of protein and complex carbohydrates.' : 'Die perfekte Kombination aus Protein und komplexen Kohlenhydraten.', 
+                                        type: 'Frühstück', icon: '🥞' 
+                                    };
                                 } else if (goal === 'Gewichtsverlust') {
-                                    recommendedRecipe = { name: 'Kabeljau auf Zucchininudeln', calories: 340, protein: 35, carbs: 12, fat: 16, desc: 'Kalorienarm, proteinreich und reich an gesunden Omega-3 Fetten.', type: 'Abendessen', icon: '🐟' };
+                                    recommendedRecipe = { 
+                                        name: i18n.language === 'en' ? 'Cod over Zucchini Noodles' : 'Kabeljau auf Zucchininudeln', 
+                                        calories: 340, protein: 35, carbs: 12, fat: 16, 
+                                        desc: i18n.language === 'en' ? 'Low calorie, high protein, and rich in healthy omega-3 fats.' : 'Kalorienarm, proteinreich und reich an gesunden Omega-3 Fetten.', 
+                                        type: 'Abendessen', icon: '🐟' 
+                                    };
                                 } else if (goal === 'Gesunder Lebensstil') {
-                                    recommendedRecipe = { name: 'Quinoa-Bowl mit Avocado', calories: 550, protein: 18, carbs: 65, fat: 22, desc: 'Superfood-Bowl reich an gesunden Fetten und Ballaststoffen.', type: 'Mittagessen', icon: '🥗' };
+                                    recommendedRecipe = { 
+                                        name: i18n.language === 'en' ? 'Quinoa Bowl with Avocado' : 'Quinoa-Bowl mit Avocado', 
+                                        calories: 550, protein: 18, carbs: 65, fat: 22, 
+                                        desc: i18n.language === 'en' ? 'Superfood bowl rich in healthy fats and fiber.' : 'Superfood-Bowl reich an gesunden Fetten und Ballaststoffen.', 
+                                        type: 'Mittagessen', icon: '🥗' 
+                                    };
                                 }
                                 return (
                                     <div className="recipe-card" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -1166,7 +1204,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                             <span>💪 P: {recommendedRecipe.protein}g</span>
                                         </div>
                                         <button className="recipe-btn-add" style={{ padding: '8px', fontSize: '12px' }} onClick={() => handleAddMealFromPlan(recommendedRecipe)}>
-                                            Zu Mahlzeiten hinzufügen
+                                            {t('dashboard.addMealPlan')}
                                         </button>
                                     </div>
                                 );
@@ -1178,13 +1216,13 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                 </>
                 ) : activeTab === 'Profile' ? (
                     <div style={{ padding: '40px', maxWidth: '600px', margin: '0 auto', width: '100%' }}>
-                        <h2 style={{ fontSize: '28px', marginBottom: '30px' }}>{isEditing ? 'Profil bearbeiten' : 'Mein Profil'}</h2>
+                        <h2 style={{ fontSize: '28px', marginBottom: '30px' }}>{isEditing ? t('dashboard.profileEdit') : t('dashboard.profileTitle')}</h2>
                         <section className="dash-card" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                             {isEditing ? (
                                 <form onSubmit={handleSaveProfile} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                                     <div className="profile-form-grid">
                                         <div className="profile-form-group full-width">
-                                            <label className="profile-label">Name</label>
+                                            <label className="profile-label">{t('dashboard.name')}</label>
                                             <input 
                                                 type="text" 
                                                 className="profile-input" 
@@ -1195,20 +1233,20 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                         </div>
                                         
                                         <div className="profile-form-group full-width">
-                                            <label className="profile-label">Aktuelles Ziel</label>
+                                            <label className="profile-label">{i18n.language === 'en' ? 'Current Goal' : 'Aktuelles Ziel'}</label>
                                             <select 
                                                 className="profile-select" 
                                                 value={tempGoal} 
                                                 onChange={(e) => setTempGoal(e.target.value)}
                                             >
-                                                <option value="Muskelaufbau">Muskelaufbau</option>
-                                                <option value="Gewichtsverlust">Gewichtsverlust</option>
-                                                <option value="Gesunder Lebensstil">Gesunder Lebensstil</option>
+                                                <option value="Muskelaufbau">{t('dashboard.goalBuildMuscle')}</option>
+                                                <option value="Gewichtsverlust">{t('dashboard.goalLoseWeight')}</option>
+                                                <option value="Gesunder Lebensstil">{t('dashboard.goalHealthyLife')}</option>
                                             </select>
                                         </div>
 
                                         <div className="profile-form-group">
-                                            <label className="profile-label">Tägliche Kalorien (kcal)</label>
+                                            <label className="profile-label">{i18n.language === 'en' ? 'Daily Calories (kcal)' : 'Tägliche Kalorien (kcal)'}</label>
                                             <input 
                                                 type="number" 
                                                 className="profile-input" 
@@ -1220,7 +1258,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                         </div>
 
                                         <div className="profile-form-group">
-                                            <label className="profile-label">Tägliches Wasserziel (L)</label>
+                                            <label className="profile-label">{i18n.language === 'en' ? 'Daily Water Target (L)' : 'Tägliches Wasserziel (L)'}</label>
                                             <input 
                                                 type="number" 
                                                 step="0.1" 
@@ -1233,7 +1271,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                         </div>
 
                                         <div className="profile-form-group">
-                                            <label className="profile-label">Zielgewicht (kg)</label>
+                                            <label className="profile-label">{i18n.language === 'en' ? 'Goal Weight (kg)' : 'Zielgewicht (kg)'}</label>
                                             <input 
                                                 type="number" 
                                                 step="0.1" 
@@ -1246,7 +1284,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                         </div>
 
                                         <div className="profile-form-group">
-                                            <label className="profile-label">Proteine (g)</label>
+                                            <label className="profile-label">{t('dashboard.proteins')} (g)</label>
                                             <input 
                                                 type="number" 
                                                 className="profile-input" 
@@ -1258,7 +1296,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                         </div>
 
                                         <div className="profile-form-group">
-                                            <label className="profile-label">Kohlenhydrate (g)</label>
+                                            <label className="profile-label">{t('dashboard.carbs')} (g)</label>
                                             <input 
                                                 type="number" 
                                                 className="profile-input" 
@@ -1270,7 +1308,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                         </div>
 
                                         <div className="profile-form-group">
-                                            <label className="profile-label">Fette (g)</label>
+                                            <label className="profile-label">{t('dashboard.fats')} (g)</label>
                                             <input 
                                                 type="number" 
                                                 className="profile-input" 
@@ -1283,8 +1321,8 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                     </div>
 
                                     <div className="profile-form-actions">
-                                        <button type="button" className="btn-cancel" onClick={() => setIsEditing(false)}>Abbrechen</button>
-                                        <button type="submit" className="btn-save">Speichern</button>
+                                        <button type="button" className="btn-cancel" onClick={() => setIsEditing(false)}>{t('dashboard.cancel')}</button>
+                                        <button type="submit" className="btn-save">{t('dashboard.save')}</button>
                                     </div>
                                 </form>
                             ) : (
@@ -1293,39 +1331,43 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                         <div className="profile-pic" style={{ width: '80px', height: '80px', fontSize: '40px', backgroundColor: '#10b981', color: '#fff' }}>👤</div>
                                         <div>
                                             <h3 style={{ margin: '0 0 5px 0', fontSize: '24px' }}>{name}</h3>
-                                            <p style={{ margin: 0, color: '#888' }}>Premium Mitglied</p>
+                                            <p style={{ margin: 0, color: '#888' }}>{t('dashboard.premiumMember')}</p>
                                         </div>
                                     </div>
                                     
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '15px', fontSize: '14px' }}>
-                                        <strong style={{ color: '#aaa' }}>Name:</strong>
+                                        <strong style={{ color: '#aaa' }}>{t('dashboard.name')}:</strong>
                                         <span>{name}</span>
                                         
                                         <strong style={{ color: '#aaa' }}>Email:</strong>
                                         <span>{userEmail || 'max.mustermann@example.com'}</span>
                                         
-                                        <strong style={{ color: '#aaa' }}>Mitglied seit:</strong>
-                                        <span>Oktober 2023</span>
+                                        <strong style={{ color: '#aaa' }}>{t('dashboard.memberSince')}:</strong>
+                                        <span>{i18n.language === 'en' ? 'October 2023' : 'Oktober 2023'}</span>
                                         
-                                        <strong style={{ color: '#aaa' }}>Aktuelles Ziel:</strong>
-                                        <span>{goal}</span>
+                                        <strong style={{ color: '#aaa' }}>{i18n.language === 'en' ? 'Current Goal' : 'Aktuelles Ziel'}:</strong>
+                                        <span>
+                                            {goal === 'Muskelaufbau' ? t('dashboard.goalBuildMuscle') : 
+                                             goal === 'Gewichtsverlust' ? t('dashboard.goalLoseWeight') : 
+                                             goal === 'Gesunder Lebensstil' ? t('dashboard.goalHealthyLife') : goal}
+                                        </span>
 
-                                        <strong style={{ color: '#aaa' }}>Kalorienziel:</strong>
-                                        <span>{calorieTarget} kcal / Tag</span>
+                                        <strong style={{ color: '#aaa' }}>{t('dashboard.calorieGoal')}:</strong>
+                                        <span>{calorieTarget} kcal / {i18n.language === 'en' ? 'day' : 'Tag'}</span>
 
-                                        <strong style={{ color: '#aaa' }}>Wasseraufnahme Ziel:</strong>
-                                        <span>{waterTarget} Liter / Tag</span>
+                                        <strong style={{ color: '#aaa' }}>{t('dashboard.waterIntake')}:</strong>
+                                        <span>{waterTarget} {i18n.language === 'en' ? 'Liters / day' : 'Liter / Tag'}</span>
 
-                                        <strong style={{ color: '#aaa' }}>Zielgewicht:</strong>
+                                        <strong style={{ color: '#aaa' }}>{i18n.language === 'en' ? 'Target Weight' : 'Zielgewicht'}:</strong>
                                         <span>{weightTarget} kg</span>
 
-                                        <strong style={{ color: '#aaa' }}>Makros Target:</strong>
-                                        <span>{proteinTarget}g Proteine | {carbsTarget}g Kohlenhydrate | {fatTarget}g Fette</span>
+                                        <strong style={{ color: '#aaa' }}>{i18n.language === 'en' ? 'Macros Target' : 'Makros Target'}:</strong>
+                                        <span>{proteinTarget}g {t('dashboard.proteins')} | {carbsTarget}g {t('dashboard.carbs')} | {fatTarget}g {t('dashboard.fats')}</span>
                                     </div>
                                     
                                     <div style={{ marginTop: '20px', display: 'flex', gap: '15px' }}>
-                                        <button className="btn-outline-small" style={{ padding: '10px 20px' }} onClick={handleEditProfileClick}>Profil bearbeiten</button>
-                                        <button className="btn-outline-small" style={{ padding: '10px 20px', borderColor: '#ef4444', color: '#ef4444' }} onClick={onSignOut}>Abmelden</button>
+                                        <button className="btn-outline-small" style={{ padding: '10px 20px' }} onClick={handleEditProfileClick}>{t('dashboard.profileEdit')}</button>
+                                        <button className="btn-outline-small" style={{ padding: '10px 20px', borderColor: '#ef4444', color: '#ef4444' }} onClick={onSignOut}>{t('dashboard.signOut')}</button>
                                     </div>
                                 </>
                             )}
@@ -1334,32 +1376,32 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                 ) : activeTab === 'Ernährungsplan' ? (
                     <div style={{ padding: '20px', width: '100%' }}>
                         <div style={{ marginBottom: '30px' }}>
-                            <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>Dein Ernährungsplan</h2>
-                            <p style={{ color: '#888', margin: 0 }}>Maßgeschneiderter Ernährungsplan basierend auf deinem Ziel: <strong>{goal}</strong></p>
+                            <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>{t('dashboard.mealPlannerTitle')}</h2>
+                            <p style={{ color: '#888', margin: 0 }}>{t('dashboard.mealPlannerDesc')}: <strong>{goal === 'Muskelaufbau' ? t('dashboard.goalBuildMuscle') : goal === 'Gewichtsverlust' ? t('dashboard.goalLoseWeight') : t('dashboard.goalHealthyLife')}</strong></p>
                         </div>
                         
                         {(() => {
                             let mealPlanList = [];
                             if (goal === 'Muskelaufbau') {
                                 mealPlanList = [
-                                    { type: 'Frühstück', name: 'Protein-Pancakes mit Erdnussbutter & Banane', calories: 650, protein: 35, carbs: 80, fat: 20, desc: 'Reich an komplexen Kohlenhydraten und Proteinen für den optimalen Start.', icon: '🥞' },
-                                    { type: 'Mittagessen', name: 'Putengeschnetzeltes mit Vollkornreis & Brokkoli', calories: 750, protein: 55, carbs: 85, fat: 15, desc: 'Klassische Sportler-Mahlzeit. Fettarm, eiweißreich und extrem sättigend.', icon: '🍛' },
-                                    { type: 'Abendessen', name: 'Rindersteak mit Süßkartoffelpüree & Spargel', calories: 680, protein: 50, carbs: 60, fat: 22, desc: 'Hochwertige Proteine und Mikronährstoffe für die nächtliche Regeneration.', icon: '🥩' },
-                                    { type: 'Snack', name: 'Magerquark mit Mandeln & Beeren', calories: 320, protein: 30, carbs: 25, fat: 10, desc: 'Langsames Casein-Protein für die kontinuierliche Muskelversorgung.', icon: '🥣' }
+                                    { type: t('calculator.breakfast'), name: i18n.language === 'en' ? 'Protein Pancakes & Peanut Butter' : 'Protein-Pancakes mit Erdnussbutter & Banane', calories: 650, protein: 35, carbs: 80, fat: 20, desc: i18n.language === 'en' ? 'Rich in complex carbs and clean proteins for building muscle.' : 'Reich an komplexen Kohlenhydraten und Proteinen für den optimalen Start.', icon: '🥞' },
+                                    { type: t('calculator.lunch'), name: i18n.language === 'en' ? 'Sliced Turkey with Rice & Broccoli' : 'Putengeschnetzeltes mit Vollkornreis & Brokkoli', calories: 750, protein: 55, carbs: 85, fat: 15, desc: i18n.language === 'en' ? 'Classic lean chicken or turkey sports fueling lunch.' : 'Klassische Sportler-Mahlzeit. Fettarm, eiweißreich und extrem sättigend.', icon: '🍛' },
+                                    { type: t('calculator.dinner'), name: i18n.language === 'en' ? 'Beef Steak with Sweet Potato Puree' : 'Rindersteak mit Süßkartoffelpüree & Spargel', calories: 680, protein: 50, carbs: 60, fat: 22, desc: i18n.language === 'en' ? 'High-quality iron and amino acids for nighttime muscle repair.' : 'Hochwertige Proteine und Mikronährstoffe für die nächtliche Regeneration.', icon: '🥩' },
+                                    { type: t('calculator.snack'), name: i18n.language === 'en' ? 'Low-fat Quark with Almonds & Berries' : 'Magerquark mit Mandeln & Beeren', calories: 320, protein: 30, carbs: 25, fat: 10, desc: i18n.language === 'en' ? 'Slow-release casein protein to feed your muscles during sleep.' : 'Langsames Casein-Protein für die kontinuierliche Muskelversorgung.', icon: '🥣' }
                                 ];
                             } else if (goal === 'Gewichtsverlust') {
                                 mealPlanList = [
-                                    { type: 'Frühstück', name: 'Rührei (3 Eier) mit Spinat & Tomaten', calories: 280, protein: 22, carbs: 5, fat: 18, desc: 'Kohlenhydratarm und reich an Proteinen. Hält den Insulinspiegel stabil.', icon: '🍳' },
-                                    { type: 'Mittagessen', name: 'Gegrilltes Hähnchenbrustfilet auf gemischtem Salat', calories: 380, protein: 42, carbs: 10, fat: 12, desc: 'Maximale Sättigung bei minimaler Kaloriendichte.', icon: '🥗' },
-                                    { type: 'Abendessen', name: 'Gebackener Kabeljau mit Zucchininudeln & Pesto', calories: 340, protein: 35, carbs: 12, fat: 16, desc: 'Sehr leicht verdauliches, mageres Fischprotein mit gesunden Kräuterfetten.', icon: '🐟' },
-                                    { type: 'Snack', name: 'Selleriestangen mit Hummus', calories: 150, protein: 5, carbs: 15, fat: 8, desc: 'Knuspriger und gesunder Snack für zwischendurch.', icon: '🥒' }
+                                    { type: t('calculator.breakfast'), name: i18n.language === 'en' ? 'Scrambled Eggs with Spinach & Tomatoes' : 'Rührei (3 Eier) mit Spinat & Tomaten', calories: 280, protein: 22, carbs: 5, fat: 18, desc: i18n.language === 'en' ? 'Very low carb and high protein to keep blood sugar stable.' : 'Kohlenhydratarm und reich an Proteinen. Hält den Insulinspiegel stabil.', icon: '🍳' },
+                                    { type: t('calculator.lunch'), name: i18n.language === 'en' ? 'Grilled Chicken Breast over Mixed Salad' : 'Gegrilltes Hähnchenbrustfilet auf gemischtem Salat', calories: 380, protein: 42, carbs: 10, fat: 12, desc: i18n.language === 'en' ? 'Maximum volume and high satiety with very low calories.' : 'Maximale Sättigung bei minimaler Kaloriendichte.', icon: '🥗' },
+                                    { type: t('calculator.dinner'), name: i18n.language === 'en' ? 'Baked Cod with Zucchini Noodles & Pesto' : 'Gebackener Kabeljau mit Zucchininudeln & Pesto', calories: 340, protein: 35, carbs: 12, fat: 16, desc: i18n.language === 'en' ? 'Very light fish protein with healthy herb fats.' : 'Sehr leicht verdauliches, mageres Fischprotein mit gesunden Kräuterfetten.', icon: '🐟' },
+                                    { type: t('calculator.snack'), name: i18n.language === 'en' ? 'Celery Sticks with Hummus' : 'Selleriestangen mit Hummus', calories: 150, protein: 5, carbs: 15, fat: 8, desc: i18n.language === 'en' ? 'A crunchy, nutrient-dense bite for mid-day snacking.' : 'Knuspriger und gesunder Snack für zwischendurch.', icon: '🥒' }
                                 ];
                             } else {
                                 mealPlanList = [
-                                    { type: 'Frühstück', name: 'Müsli mit griechischem Joghurt & Honig', calories: 450, protein: 20, carbs: 55, fat: 12, desc: 'Ausgewogene Energie und wertvolle Probiotika für eine fitte Verdauung.', icon: '🥣' },
-                                    { type: 'Mittagessen', name: 'Quinoa-Bowl mit Avocado, Kichererbsen & Feta', calories: 550, protein: 18, carbs: 65, fat: 22, desc: 'Voller gesunder Fette, pflanzlicher Proteine und wichtiger Ballaststoffe.', icon: '🥗' },
-                                    { type: 'Abendessen', name: 'Ofengemüse mit gebackenem Tofu & Kürbiskernen', calories: 480, protein: 22, carbs: 40, fat: 18, desc: 'Buntes Antioxidantien-Kraftpaket mit lecker mariniertem Räuchertofu.', icon: '🥦' },
-                                    { type: 'Snack', name: 'Handvoll Walnüsse & eine reife Birne', calories: 220, protein: 5, carbs: 25, fat: 12, desc: 'Fördert die Konzentration und liefert gesunde Omega-3 Fette.', icon: '🍐' }
+                                    { type: t('calculator.breakfast'), name: i18n.language === 'en' ? 'Muesli with Greek Yogurt & Honey' : 'Müsli mit griechischem Joghurt & Honig', calories: 450, protein: 20, carbs: 55, fat: 12, desc: i18n.language === 'en' ? 'Balanced energy release and probiotics for digestive health.' : 'Ausgewogene Energie und wertvolle Probiotika für eine fitte Verdauung.', icon: '🥣' },
+                                    { type: t('calculator.lunch'), name: i18n.language === 'en' ? 'Quinoa Bowl with Avocado & Chickpeas' : 'Quinoa-Bowl mit Avocado, Kichererbsen & Feta', calories: 550, protein: 18, carbs: 65, fat: 22, desc: i18n.language === 'en' ? 'Rich in healthy fats, plant protein, and high fibers.' : 'Voller gesunder Fette, pflanzlicher Proteine und wichtiger Ballaststoffe.', icon: '🥗' },
+                                    { type: t('calculator.dinner'), name: i18n.language === 'en' ? 'Roasted Vegetables with Baked Tofu' : 'Ofengemüse mit gebackenem Tofu & Kürbiskernen', calories: 480, protein: 22, carbs: 40, fat: 18, desc: i18n.language === 'en' ? 'Colorful antioxidant power with delicious baked tofu.' : 'Buntes Antioxidantien-Kraftpaket mit lecker mariniertem Räuchertofu.', icon: '🥦' },
+                                    { type: t('calculator.snack'), name: i18n.language === 'en' ? 'Walnuts & Pear' : 'Handvoll Walnüsse & eine reife Birne', calories: 220, protein: 5, carbs: 25, fat: 12, desc: i18n.language === 'en' ? 'Brain boosting omega-3 fatty acids snack.' : 'Fördert die Konzentration und liefert gesunde Omega-3 Fette.', icon: '🍐' }
                                 ];
                             }
 
@@ -1377,19 +1419,19 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                             </div>
                                             <div className="recipe-macros-bar" style={{ marginTop: 'auto' }}>
                                                 <div className="macro-box">
-                                                    <span className="macro-box-label">Kcal</span>
+                                                    <span className="macro-box-label">{t('dashboard.calories').substring(0, 4)}</span>
                                                     <span className="macro-box-value">{meal.calories}</span>
                                                 </div>
                                                 <div className="macro-box">
-                                                    <span className="macro-box-label">Prot</span>
+                                                    <span className="macro-box-label">{t('dashboard.proteins').substring(0, 4)}</span>
                                                     <span className="macro-box-value">{meal.protein}g</span>
                                                 </div>
                                                 <div className="macro-box">
-                                                    <span className="macro-box-label">Carb</span>
+                                                    <span className="macro-box-label">{t('dashboard.carbs').substring(0, 4)}</span>
                                                     <span className="macro-box-value">{meal.carbs}g</span>
                                                 </div>
                                                 <div className="macro-box">
-                                                    <span className="macro-box-label">Fett</span>
+                                                    <span className="macro-box-label">{t('dashboard.fats').substring(0, 4)}</span>
                                                     <span className="macro-box-value">{meal.fat}g</span>
                                                 </div>
                                             </div>
@@ -1398,7 +1440,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                                 style={{ width: '100%', padding: '10px' }}
                                                 onClick={() => handleAddMealFromPlan(meal)}
                                             >
-                                                Mahlzeit loggen
+                                                {t('dashboard.logMeal')}
                                             </button>
                                         </section>
                                     ))}
@@ -1409,8 +1451,8 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                 ) : activeTab === 'Rezepte' ? (
                     <div style={{ padding: '20px', width: '100%' }}>
                         <div style={{ marginBottom: '30px' }}>
-                            <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>Rezepte-Bibliothek</h2>
-                            <p style={{ color: '#888', margin: 0 }}>Entdecke köstliche, fitnessorientierte Gerichte und tracke sie mit einem Klick.</p>
+                            <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>{t('dashboard.recipesTitle')}</h2>
+                            <p style={{ color: '#888', margin: 0 }}>{t('dashboard.recipesDesc')}</p>
                         </div>
 
                         <div className="recipe-search-container">
@@ -1418,7 +1460,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                 <span className="recipe-search-icon">🔍</span>
                                 <input 
                                     type="text" 
-                                    placeholder="Rezepte nach Name oder Zutat suchen..." 
+                                    placeholder={t('dashboard.searchPlaceholder')}
                                     className="recipe-search-input"
                                     value={recipeSearch}
                                     onChange={(e) => setRecipeSearch(e.target.value)}
@@ -1426,13 +1468,18 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                             </div>
                             
                             <div className="filter-tags">
-                                {['Alle', 'Proteinreich', 'Low-Carb', 'Vegan'].map(cat => (
+                                {[
+                                    { key: 'Alle', label: t('dashboard.all') },
+                                    { key: 'Proteinreich', label: t('dashboard.proteinRich') },
+                                    { key: 'Low-Carb', label: t('dashboard.lowCarb') },
+                                    { key: 'Vegan', label: t('dashboard.vegan') }
+                                ].map(cat => (
                                     <button 
-                                        key={cat} 
-                                        className={`tag-btn ${recipeFilter === cat ? 'active' : ''}`}
-                                        onClick={() => setRecipeFilter(cat)}
+                                        key={cat.key} 
+                                        className={`tag-btn ${recipeFilter === cat.key ? 'active' : ''}`}
+                                        onClick={() => setRecipeFilter(cat.key)}
                                     >
-                                        {cat}
+                                        {cat.label}
                                     </button>
                                 ))}
                             </div>
@@ -1440,12 +1487,12 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
 
                         {(() => {
                             const recipeDb = [
-                                { id: 'r1', name: 'Lachs-Avocado-Wrap', category: 'Low-Carb', calories: 480, protein: 32, carbs: 12, fat: 28, prepTime: '15 Min', difficulty: 'Einfach', icon: '🌯', ingredients: 'Räucherlachs, Avocado, Vollkornwrap, Frischkäse, Rucola', desc: 'Frischer Räucherlachs mit cremiger Avocado gerollt in einem leichten Wrap. Perfekt für das schnelle Mittagessen.' },
-                                { id: 'r2', name: 'Kichererbsen-Curry mit Kokosmilch', category: 'Vegan', calories: 520, protein: 18, carbs: 70, fat: 14, prepTime: '25 Min', difficulty: 'Mittel', icon: '🍛', ingredients: 'Kichererbsen, Kokosmilch, Spinat, Currypaste, Tomaten', desc: 'Cremiges Curry reich an pflanzlichen Ballaststoffen und Proteinen. Schmeckt hervorragend mit Vollkornreis.' },
-                                { id: 'r3', name: 'Double Chocolate Protein-Shake', category: 'Proteinreich', calories: 310, protein: 40, carbs: 15, fat: 4, prepTime: '5 Min', difficulty: 'Einfach', icon: '🥤', ingredients: 'Schoko-Proteinpulver, Mandelmilch, Banane, Kakaopulver', desc: 'Die absolute Post-Workout-Bombe für maximalen Muskelaufbau und Regeneration.' },
-                                { id: 'r4', name: 'Chia-Samen Pudding mit Waldbeeren', category: 'Vegan', calories: 240, protein: 6, carbs: 28, fat: 10, prepTime: '10 Min', difficulty: 'Einfach', icon: '🍓', ingredients: 'Chiasamen, Mandelmilch, Ahornsirup, Himbeeren, Heidelbeeren', desc: 'Gesunder Snack voller Ballaststoffe und Antioxidantien. Ideal zum Vorbereiten (Meal Prep).' },
-                                { id: 'r5', name: 'Puten-Gnocchi-Gemüsepfanne', category: 'Proteinreich', calories: 610, protein: 45, carbs: 65, fat: 12, prepTime: '20 Min', difficulty: 'Einfach', icon: '🥘', ingredients: 'Putenbrust, Gnocchi, Paprika, Zucchini, Tomatensauce', desc: 'Sättigende Sportler-Mahlzeit mit magerem Geflügelfleisch und leckeren Gnocchi.' },
-                                { id: 'r6', name: 'Zucchini-Lasagne mit Rinderhack', category: 'Low-Carb', calories: 390, protein: 28, carbs: 18, fat: 20, prepTime: '40 Min', difficulty: 'Mittel', icon: '🍝', ingredients: 'Zucchini-Scheiben, Rinderhackfleisch, Ricotta, Parmesan, Tomatensauce', desc: 'Ein kohlenhydratarmer Auflaufklassiker mit saftigem Rinderhack und Zucchini anstelle von Nudelteig.' }
+                                { id: 'r1', name: i18n.language === 'en' ? 'Salmon Avocado Wrap' : 'Lachs-Avocado-Wrap', category: 'Low-Carb', calories: 480, protein: 32, carbs: 12, fat: 28, prepTime: '15 Min', difficulty: i18n.language === 'en' ? 'Easy' : 'Einfach', icon: '🌯', ingredients: i18n.language === 'en' ? 'Smoked salmon, avocado, wrap, cream cheese, arugula' : 'Räucherlachs, Avocado, Vollkornwrap, Frischkäse, Rucola', desc: i18n.language === 'en' ? 'Fresh smoked salmon with creamy avocado rolled in a light wrap.' : 'Frischer Räucherlachs mit cremiger Avocado gerollt in einem leichten Wrap. Perfekt für das schnelle Mittagessen.' },
+                                { id: 'r2', name: i18n.language === 'en' ? 'Chickpea Curry with Coconut Milk' : 'Kichererbsen-Curry mit Kokosmilch', category: 'Vegan', calories: 520, protein: 18, carbs: 70, fat: 14, prepTime: '25 Min', difficulty: i18n.language === 'en' ? 'Medium' : 'Mittel', icon: '🍛', ingredients: i18n.language === 'en' ? 'Chickpeas, coconut milk, spinach, curry paste, tomatoes' : 'Kichererbsen, Kokosmilch, Spinat, Currypaste, Tomaten', desc: i18n.language === 'en' ? 'Creamy vegan curry packed with fibers and plant protein.' : 'Cremiges Curry reich an pflanzlichen Ballaststoffen und Proteinen. Schmeckt hervorragend mit Vollkornreis.' },
+                                { id: 'r3', name: i18n.language === 'en' ? 'Double Chocolate Protein Shake' : 'Double Chocolate Protein-Shake', category: 'Proteinreich', calories: 310, protein: 40, carbs: 15, fat: 4, prepTime: '5 Min', difficulty: i18n.language === 'en' ? 'Easy' : 'Einfach', icon: '🥤', ingredients: i18n.language === 'en' ? 'Chocolate protein powder, almond milk, banana, cocoa' : 'Schoko-Proteinpulver, Mandelmilch, Banane, Kakaopulver', desc: i18n.language === 'en' ? 'Excellent post-workout macro shake for muscle build and repair.' : 'Die absolute Post-Workout-Bombe für maximalen Muskelaufbau und Regeneration.' },
+                                { id: 'r4', name: i18n.language === 'en' ? 'Chia Seeds Pudding with Berries' : 'Chia-Samen Pudding mit Waldbeeren', category: 'Vegan', calories: 240, protein: 6, carbs: 28, fat: 10, prepTime: '10 Min', difficulty: i18n.language === 'en' ? 'Easy' : 'Einfach', icon: '🍓', ingredients: i18n.language === 'en' ? 'Chia seeds, almond milk, maple syrup, raspberries, blueberries' : 'Chiasamen, Mandelmilch, Ahornsirup, Himbeeren, Heidelbeeren', desc: i18n.language === 'en' ? 'Antioxidant and omega-3 rich snack. Perfect for meal prep.' : 'Gesunder Snack voller Ballaststoffe und Antioxidantien. Ideal zum Vorbereiten (Meal Prep).' },
+                                { id: 'r5', name: i18n.language === 'en' ? 'Turkey Gnocchi Vegetable Pan' : 'Puten-Gnocchi-Gemüsepfanne', category: 'Proteinreich', calories: 610, protein: 45, carbs: 65, fat: 12, prepTime: '20 Min', difficulty: i18n.language === 'en' ? 'Easy' : 'Einfach', icon: '🥘', ingredients: i18n.language === 'en' ? 'Turkey breast, gnocchi, bell peppers, zucchini, tomato sauce' : 'Putenbrust, Gnocchi, Paprika, Zucchini, Tomatensauce', desc: i18n.language === 'en' ? 'Filling athlete meal with lean turkey meat and soft gnocchi.' : 'Sättigende Sportler-Mahlzeit mit magerem Geflügelfleisch und leckeren Gnocchi.' },
+                                { id: 'r6', name: i18n.language === 'en' ? 'Zucchini Lasagna with Beef Hack' : 'Zucchini-Lasagne mit Rinderhack', category: 'Low-Carb', calories: 390, protein: 28, carbs: 18, fat: 20, prepTime: '40 Min', difficulty: i18n.language === 'en' ? 'Medium' : 'Mittel', icon: '🍝', ingredients: i18n.language === 'en' ? 'Zucchini slices, minced beef, ricotta, parmesan, tomato sauce' : 'Zucchini-Scheiben, Rinderhackfleisch, Ricotta, Parmesan, Tomatensauce', desc: i18n.language === 'en' ? 'Low-carb lasagna layers using fresh zucchini slices instead of pasta sheets.' : 'Ein kohlenhydratarmer Auflaufklassiker mit saftigem Rinderhack und Zucchini anstelle von Nudelteig.' }
                             ];
 
                             const filtered = recipeDb.filter(r => {
@@ -1460,7 +1507,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                     {filtered.length > 0 ? (
                                         filtered.map(recipe => (
                                             <div key={recipe.id} className="recipe-card-detailed">
-                                                <span className="recipe-badge-category">{recipe.category}</span>
+                                                <span className="recipe-badge-category">{recipe.category === 'Low-Carb' ? t('dashboard.lowCarb') : recipe.category === 'Proteinreich' ? t('dashboard.proteinRich') : recipe.category === 'Vegan' ? t('dashboard.vegan') : recipe.category}</span>
                                                 <div className="recipe-visual-gradient">
                                                     {recipe.icon}
                                                 </div>
@@ -1471,26 +1518,26 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                                         <span className="recipe-meta-pill">📊 {recipe.difficulty}</span>
                                                     </div>
                                                     <p className="recipe-ingredients-preview">
-                                                        <strong>Zutaten:</strong> {recipe.ingredients}
+                                                        <strong>{t('dashboard.ingredients')}:</strong> {recipe.ingredients}
                                                     </p>
                                                     <p style={{ fontSize: '11px', color: '#888', margin: '0', lineHeight: '1.4' }}>
                                                         {recipe.desc}
                                                     </p>
                                                     <div className="recipe-macros-bar" style={{ margin: '8px 0' }}>
                                                         <div className="macro-box">
-                                                            <span className="macro-box-label">Kcal</span>
+                                                            <span className="macro-box-label">{t('dashboard.calories').substring(0, 4)}</span>
                                                             <span className="macro-box-value">{recipe.calories}</span>
                                                         </div>
                                                         <div className="macro-box">
-                                                            <span className="macro-box-label">Prot</span>
+                                                            <span className="macro-box-label">{t('dashboard.proteins').substring(0, 4)}</span>
                                                             <span className="macro-box-value">{recipe.protein}g</span>
                                                         </div>
                                                         <div className="macro-box">
-                                                            <span className="macro-box-label">Carb</span>
+                                                            <span className="macro-box-label">{t('dashboard.carbs').substring(0, 4)}</span>
                                                             <span className="macro-box-value">{recipe.carbs}g</span>
                                                         </div>
                                                         <div className="macro-box">
-                                                            <span className="macro-box-label">Fett</span>
+                                                            <span className="macro-box-label">{t('dashboard.fats').substring(0, 4)}</span>
                                                             <span className="macro-box-value">{recipe.fat}g</span>
                                                         </div>
                                                     </div>
@@ -1505,14 +1552,14 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                                             fat: recipe.fat
                                                         })}
                                                     >
-                                                        Rezept loggen
+                                                        {t('dashboard.logRecipe')}
                                                     </button>
                                                 </div>
                                             </div>
                                         ))
                                     ) : (
                                         <div style={{ gridColumn: 'span 3', textAlign: 'center', padding: '40px', color: '#6b7280' }}>
-                                            Keine Rezepte gefunden, die deiner Suche entsprechen.
+                                            {t('dashboard.noRecipesFound')}
                                         </div>
                                     )}
                                 </div>
@@ -1523,8 +1570,8 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                     <div style={{ padding: '20px', width: '100%', display: 'flex', flexDirection: 'column', gap: '30px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div>
-                                <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>Dein Fortschritt</h2>
-                                <p style={{ color: '#888', margin: 0 }}>Statistiken, BMI-Rechner und deine freigeschalteten Auszeichnungen.</p>
+                                <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>{t('dashboard.progressTitle')}</h2>
+                                <p style={{ color: '#888', margin: 0 }}>{t('dashboard.progressDesc')}</p>
                             </div>
                         </div>
 
@@ -1532,11 +1579,11 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                             {/* Left Side: BMI and History */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                                 <section className="dash-card">
-                                    <h2 style={{ fontSize: '18px', marginBottom: '15px' }}>BMI-Rechner</h2>
+                                    <h2 style={{ fontSize: '18px', marginBottom: '15px' }}>{t('dashboard.bmiTitle')}</h2>
                                     <div className="bmi-card-wrapper">
                                         <form onSubmit={handleCalculateBmi} className="bmi-calc-inputs">
                                             <div className="profile-form-group">
-                                                <label className="profile-label">Größe (cm)</label>
+                                                <label className="profile-label">{t('dashboard.height')}</label>
                                                 <input 
                                                     type="number" 
                                                     className="profile-input" 
@@ -1548,7 +1595,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                                 />
                                             </div>
                                             <div className="profile-form-group">
-                                                <label className="profile-label">Gewicht (kg)</label>
+                                                <label className="profile-label">{t('dashboard.weight')}</label>
                                                 <input 
                                                     type="number" 
                                                     step="0.1" 
@@ -1560,17 +1607,17 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                                     max="250"
                                                 />
                                             </div>
-                                            <button type="submit" className="btn-save" style={{ marginTop: '10px' }}>Berechnen</button>
+                                            <button type="submit" className="btn-save" style={{ marginTop: '10px' }}>{t('dashboard.calc')}</button>
                                         </form>
 
                                         <div className="bmi-result-display">
-                                            <span style={{ fontSize: '12px', color: '#888' }}>Dein errechneter BMI</span>
+                                            <span style={{ fontSize: '12px', color: '#888' }}>{t('dashboard.yourBmi')}</span>
                                             <div className="bmi-val-big" style={{ color: bmiResult ? (bmiClass === 'Normal' ? '#10b981' : bmiClass === 'Uebergewicht' ? '#f59e0b' : '#ef4444') : '#fff' }}>
                                                 {bmiResult || '--.-'}
                                             </div>
                                             {bmiResult && (
                                                 <span className={`bmi-class-badge bmi-class-${bmiClass}`}>
-                                                    {bmiClass === 'Uebergewicht' ? 'Übergewicht' : bmiClass}
+                                                    {bmiClass === 'Untergewicht' ? t('dashboard.underweight') : bmiClass === 'Normal' ? t('dashboard.normal') : bmiClass === 'Uebergewicht' ? t('dashboard.overweight') : t('dashboard.obese')}
                                                 </span>
                                             )}
                                             
@@ -1585,17 +1632,17 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                             </div>
                                             
                                             <div className="bmi-legend-labels">
-                                                <span>15 (Untergew.)</span>
-                                                <span>25 (Übergew.)</span>
-                                                <span>40 (Adiposit.)</span>
+                                                <span>15 ({t('dashboard.underweight')})</span>
+                                                <span>25 ({t('dashboard.overweight')})</span>
+                                                <span>40 ({t('dashboard.obese')})</span>
                                             </div>
                                         </div>
                                     </div>
                                 </section>
 
                                 <section className="dash-card">
-                                    <h2 style={{ fontSize: '18px', marginBottom: '8px' }}>Gewichtsprotokoll verwalten</h2>
-                                    <p style={{ fontSize: '11px', color: '#888', margin: '0 0 15px 0' }}>Hier kannst du alte Einträge aus deiner Verlaufskurve löschen.</p>
+                                    <h2 style={{ fontSize: '18px', marginBottom: '8px' }}>{t('dashboard.manageWeight')}</h2>
+                                    <p style={{ fontSize: '11px', color: '#888', margin: '0 0 15px 0' }}>{t('dashboard.weightManageDesc')}</p>
                                     
                                     <div className="weight-logs-scroller">
                                         {weightHistory.length > 0 ? (
@@ -1607,7 +1654,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                                         <button 
                                                             className="workout-delete-btn" 
                                                             onClick={() => handleDeleteWeightEntry(index)}
-                                                            title="Eintrag löschen"
+                                                            title={i18n.language === 'en' ? 'Delete entry' : 'Eintrag löschen'}
                                                         >
                                                             ❌
                                                         </button>
@@ -1616,7 +1663,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                             ))
                                         ) : (
                                             <div style={{ textAlign: 'center', padding: '15px', color: '#6b7280', fontSize: '12px' }}>
-                                                Bisher keine Gewichtsdaten eingetragen.
+                                                {t('dashboard.noWeightLogs')}
                                             </div>
                                         )}
                                     </div>
@@ -1625,12 +1672,12 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
 
                             {/* Right Side: Habits & Achievements */}
                             <section className="dash-card" style={{ display: 'flex', flexDirection: 'column' }}>
-                                <h2 style={{ fontSize: '18px', margin: '0 0 5px 0' }}>Erfolge & Abzeichen</h2>
-                                <p style={{ fontSize: '12px', color: '#888', margin: '0 0 10px 0' }}>Trophäen schalten sich automatisch frei, sobald du deine täglichen Ziele erreichst.</p>
+                                <h2 style={{ fontSize: '18px', margin: '0 0 5px 0' }}>{t('dashboard.achievementsTitle')}</h2>
+                                <p style={{ fontSize: '12px', color: '#888', margin: '0 0 10px 0' }}>{t('dashboard.achievementsDesc')}</p>
                                 
                                 <div className="achievements-grid">
                                     {achievementsList.map(trophy => (
-                                        <div key={trophy.id} className={`achievement-card ${trophy.unlocked ? 'unlocked' : ''}`} title={trophy.unlocked ? 'Freigeschaltet!' : 'Noch gesperrt'}>
+                                        <div key={trophy.id} className={`achievement-card ${trophy.unlocked ? 'unlocked' : ''}`} title={trophy.unlocked ? t('dashboard.unlocked') : t('dashboard.locked')}>
                                             <span className="achievement-icon">{trophy.icon}</span>
                                             <span className="achievement-title">{trophy.title}</span>
                                             <span className="achievement-desc">{trophy.desc}</span>
@@ -1643,21 +1690,21 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                 ) : activeTab === 'Community' ? (
                     <div style={{ padding: '20px', width: '100%' }}>
                         <div style={{ marginBottom: '30px', textAlign: 'center' }}>
-                            <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>Jafsoon-Feed</h2>
-                            <p style={{ color: '#888', margin: 0 }}>Teile deine Fortschritte und hole dir Inspiration von Gleichgesinnten.</p>
+                            <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>{t('dashboard.feedTitle')}</h2>
+                            <p style={{ color: '#888', margin: 0 }}>{t('dashboard.feedDesc')}</p>
                         </div>
 
                         <div className="community-feed-wrapper">
                             <form onSubmit={handleCreatePost} className="post-composer-card">
                                 <textarea 
-                                    placeholder="Teile ein Rezept, ein Workout-Ziel oder motivierende Neuigkeiten..."
+                                    placeholder={t('dashboard.postPlaceholder')}
                                     className="post-composer-textarea"
                                     value={newPostText}
                                     onChange={(e) => setNewPostText(e.target.value)}
                                     required
                                 />
                                 <div className="post-composer-actions">
-                                    <button type="submit" className="btn-post">Beitrag teilen</button>
+                                    <button type="submit" className="btn-post">{t('dashboard.sharePost')}</button>
                                 </div>
                             </form>
 
@@ -1670,17 +1717,23 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                             </div>
                                             <div className="post-user-info">
                                                 <span className="post-username">{post.name}</span>
-                                                <span className="post-timestamp">⏱️ {post.time}</span>
+                                                <span className="post-timestamp">⏱ {post.time === 'Gerade eben' ? t('dashboard.justNow') : (i18n.language === 'en' ? (post.time === 'Vor 2 Std.' ? '2 hrs ago' : post.time === 'Vor 4 Std.' ? '4 hrs ago' : post.time === 'Gestern' ? 'Yesterday' : post.time) : post.time)}</span>
                                             </div>
                                         </div>
-                                        <p className="post-body-text">{post.text}</p>
+                                        <p className="post-body-text">
+                                            {i18n.language === 'en' ? (
+                                                post.text.includes('Heute 5 km') ? 'Ran 5 km in 28 minutes today! 🏃‍♀️🔥 The weight loss training plan works great!' :
+                                                post.text.includes('Empfehle absolut') ? 'Absolutely recommend the chickpea curry from the recipes library! Super delicious and perfect for muscle building. 🍛💪' :
+                                                post.text.includes('Gewichtsziel von') ? 'Finally broke the weight goal of 65 kg! Thanks to the great Jafsoon community for the motivation! 🎉❤️' : post.text
+                                            ) : post.text}
+                                        </p>
                                         <div className="post-actions-row">
                                             <button 
                                                 className={`like-action-btn ${post.liked ? 'liked' : ''}`}
                                                 onClick={() => handleLikePost(post.id)}
                                             >
                                                 <span>{post.liked ? '❤️' : '🤍'}</span>
-                                                <span>{post.likes} Likes</span>
+                                                <span>{post.likes} {t('dashboard.likes')}</span>
                                             </button>
                                         </div>
                                     </div>
@@ -1691,16 +1744,16 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                 ) : activeTab === 'Settings' ? (
                     <div style={{ padding: '20px', width: '100%' }}>
                         <div style={{ marginBottom: '35px', textAlign: 'center' }}>
-                            <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>System-Einstellungen</h2>
-                            <p style={{ color: '#888', margin: 0 }}>Verwalte deine Fitness-Ziele, Einheiten und Appdaten.</p>
+                            <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>{t('dashboard.settingsTitle')}</h2>
+                            <p style={{ color: '#888', margin: 0 }}>{t('dashboard.settingsDesc')}</p>
                         </div>
 
                         <div className="settings-scroller">
                             <section className="settings-card">
-                                <h3 style={{ fontSize: '16px', margin: '0 0 20px 0', borderBottom: '1px solid #2a2a2a', paddingBottom: '10px' }}>🎯 Manuelle Ziel-Konfiguration</h3>
+                                <h3 style={{ fontSize: '16px', margin: '0 0 20px 0', borderBottom: '1px solid #2a2a2a', paddingBottom: '10px' }}>🎯 {t('dashboard.targetsTitle')}</h3>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                                     <div className="profile-form-group">
-                                        <label className="profile-label">Kalorienziel (kcal)</label>
+                                        <label className="profile-label">{t('dashboard.calorieGoal')} (kcal)</label>
                                         <input 
                                             type="number" 
                                             className="profile-input" 
@@ -1713,7 +1766,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                         />
                                     </div>
                                     <div className="profile-form-group">
-                                        <label className="profile-label">Wasseraufnahme (L)</label>
+                                        <label className="profile-label">{t('dashboard.waterIntake')} (L)</label>
                                         <input 
                                             type="number" 
                                             step="0.1"
@@ -1727,7 +1780,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                         />
                                     </div>
                                     <div className="profile-form-group">
-                                        <label className="profile-label">Protein-Ziel (g)</label>
+                                        <label className="profile-label">{t('dashboard.proteinTarget')}</label>
                                         <input 
                                             type="number" 
                                             className="profile-input" 
@@ -1740,7 +1793,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                         />
                                     </div>
                                     <div className="profile-form-group">
-                                        <label className="profile-label">Kohlenhydrate-Ziel (g)</label>
+                                        <label className="profile-label">{t('dashboard.carbsTarget')}</label>
                                         <input 
                                             type="number" 
                                             className="profile-input" 
@@ -1756,12 +1809,12 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                             </section>
 
                             <section className="settings-card">
-                                <h3 style={{ fontSize: '16px', margin: '0 0 20px 0', borderBottom: '1px solid #2a2a2a', paddingBottom: '10px' }}>⚙️ App-Präferenzen</h3>
+                                <h3 style={{ fontSize: '16px', margin: '0 0 20px 0', borderBottom: '1px solid #2a2a2a', paddingBottom: '10px' }}>⚙️ {t('dashboard.preferencesTitle')}</h3>
                                 <div className="settings-group">
                                     <div className="settings-row">
                                         <div className="settings-info">
-                                            <span className="settings-title">Sound-Effekte</span>
-                                            <span className="settings-description">Confetti und Audio-Signale abspielen, wenn du Meilensteine erreichst.</span>
+                                            <span className="settings-title">{t('dashboard.soundEffects')}</span>
+                                            <span className="settings-description">{t('dashboard.soundDesc')}</span>
                                         </div>
                                         <label className="toggle-switch-wrapper">
                                             <input 
@@ -1779,8 +1832,8 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
 
                                     <div className="settings-row">
                                         <div className="settings-info">
-                                            <span className="settings-title">Metrisches System</span>
-                                            <span className="settings-description">Einheiten in Kilogramm (kg) und Liter (L) anstelle von Pfund und Unzen.</span>
+                                            <span className="settings-title">{t('dashboard.metricSystem')}</span>
+                                            <span className="settings-description">{t('dashboard.metricDesc')}</span>
                                         </div>
                                         <label className="toggle-switch-wrapper">
                                             <input 
@@ -1798,8 +1851,8 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
 
                                     <div className="settings-row">
                                         <div className="settings-info">
-                                            <span className="settings-title">Tägliche Erinnerungen</span>
-                                            <span className="settings-description">Erhalte Push-Nachrichten für ungeloggtes Wasser und Mahlzeiten.</span>
+                                            <span className="settings-title">{t('dashboard.dailyReminders')}</span>
+                                            <span className="settings-description">{t('dashboard.dailyRemindersDesc')}</span>
                                         </div>
                                         <label className="toggle-switch-wrapper">
                                             <input 
@@ -1818,10 +1871,10 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                             </section>
 
                             <section className="settings-card" style={{ borderColor: '#ef4444' }}>
-                                <h3 style={{ fontSize: '16px', margin: '0 0 10px 0', color: '#ef4444' }}>🚨 Gefahrenzone</h3>
-                                <p style={{ fontSize: '11px', color: '#888', margin: '0 0 20px 0' }}>Hiermit werden alle geloggten Mahlzeiten, Gewichtseinträge und Einstellungen unwiderruflich gelöscht.</p>
+                                <h3 style={{ fontSize: '16px', margin: '0 0 10px 0', color: '#ef4444' }}>🚨 {t('dashboard.dangerZone')}</h3>
+                                <p style={{ fontSize: '11px', color: '#888', margin: '0 0 20px 0' }}>{t('dashboard.dangerZoneDesc')}</p>
                                 <button className="btn-danger-reset" style={{ width: '100%' }} onClick={handleResetAllData}>
-                                    Alle App-Daten zurücksetzen
+                                    {t('dashboard.resetBtn')}
                                 </button>
                             </section>
                         </div>
