@@ -875,3 +875,853 @@ body.light-mode .ring-inner-svg circle:first-child {
         opacity: 1;
     }
 }
+
+/* ==========================================================================
+   ADVANCED DASHBOARD STYLES - RECIPES, WORKOUTS, PROGRESS, COMMUNITY, SETTINGS
+   ========================================================================== */
+
+/* General Layout Upgrades */
+.dashboard-main-content {
+    animation: fadeInPage 0.5s ease-out;
+}
+
+@keyframes fadeInPage {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dynamic Workouts Tracker styles */
+.workout-list-dynamic {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.workout-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid #2a2a2a;
+    transition: all 0.25s ease;
+}
+
+body.light-mode .workout-item {
+    background-color: #f3f4f6;
+    border-color: #e5e7eb;
+}
+
+.workout-item:hover {
+    transform: translateX(4px);
+    border-color: #3b82f6;
+}
+
+.workout-item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.workout-item-title {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.workout-item-meta {
+    font-size: 11px;
+    color: #888;
+}
+
+.workout-item-calories {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.workout-calories-value {
+    color: #3b82f6;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.workout-delete-btn {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.5;
+    transition: opacity 0.2s, transform 0.2s;
+    padding: 4px;
+}
+
+.workout-delete-btn:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.workout-empty {
+    text-align: center;
+    padding: 20px;
+    color: #6b7280;
+    font-size: 13px;
+    border: 1px dashed #333;
+    border-radius: 12px;
+}
+
+body.light-mode .workout-empty {
+    border-color: #d1d5db;
+}
+
+/* Recipes Library Styles */
+.recipe-search-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.recipe-search-bar-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.recipe-search-input {
+    width: 100%;
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    color: #fff;
+    padding: 14px 16px 14px 45px;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+body.light-mode .recipe-search-input {
+    background-color: #fff;
+    border-color: #d1d5db;
+    color: #111827;
+}
+
+.recipe-search-input:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.recipe-search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #6b7280;
+    pointer-events: none;
+}
+
+.filter-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tag-btn {
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    color: #888;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.light-mode .tag-btn {
+    background-color: #fff;
+    border-color: #e5e7eb;
+    color: #4b5563;
+}
+
+.tag-btn:hover {
+    color: #fff;
+    border-color: #10b981;
+}
+
+body.light-mode .tag-btn:hover {
+    color: #111827;
+    border-color: #10b981;
+}
+
+.tag-btn.active {
+    background-color: #10b981;
+    color: #fff;
+    border-color: #10b981;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+}
+
+.recipes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.recipe-card-detailed {
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+body.light-mode .recipe-card-detailed {
+    background-color: #fff;
+    border-color: #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.recipe-card-detailed:hover {
+    transform: translateY(-6px);
+    border-color: #10b981;
+    box-shadow: 0 12px 20px -10px rgba(0, 0, 0, 0.5);
+}
+
+body.light-mode .recipe-card-detailed:hover {
+    box-shadow: 0 12px 20px -10px rgba(16, 185, 129, 0.15);
+}
+
+.recipe-badge-category {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: rgba(16, 185, 129, 0.9);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    z-index: 2;
+    backdrop-filter: blur(4px);
+}
+
+.recipe-visual-gradient {
+    height: 120px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 45px;
+    background: linear-gradient(135deg, #1f2937, #111827);
+    border-bottom: 1px solid #2a2a2a;
+    transition: all 0.3s ease;
+}
+
+body.light-mode .recipe-visual-gradient {
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    border-color: #e5e7eb;
+}
+
+.recipe-card-detailed:hover .recipe-visual-gradient {
+    transform: scale(1.03);
+}
+
+.recipe-content-wrapper {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 12px;
+}
+
+.recipe-title-detailed {
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.recipe-meta-pills {
+    display: flex;
+    gap: 8px;
+    font-size: 11px;
+    color: #888;
+}
+
+.recipe-meta-pill {
+    background-color: #222;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+body.light-mode .recipe-meta-pill {
+    background-color: #f3f4f6;
+}
+
+.recipe-macros-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    background-color: #222;
+    padding: 8px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+body.light-mode .recipe-macros-bar {
+    background-color: #f9fafb;
+}
+
+.macro-box {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.macro-box-label {
+    font-size: 9px;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.macro-box-value {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.recipe-ingredients-preview {
+    font-size: 12px;
+    color: #aaa;
+    line-height: 1.4;
+}
+
+body.light-mode .recipe-ingredients-preview {
+    color: #4b5563;
+}
+
+.recipe-btn-add {
+    background-color: #10b981;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: auto;
+}
+
+.recipe-btn-add:hover {
+    background-color: #059669;
+    transform: translateY(-1px);
+}
+
+.recipe-btn-add:active {
+    transform: translateY(0);
+}
+
+/* BMI Calculator Styles */
+.bmi-card-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 25px;
+}
+
+@media (max-width: 768px) {
+    .bmi-card-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+
+.bmi-calc-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.bmi-result-display {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #222;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #2a2a2a;
+}
+
+body.light-mode .bmi-result-display {
+    background-color: #f9fafb;
+    border-color: #e5e7eb;
+}
+
+.bmi-val-big {
+    font-size: 38px;
+    font-weight: 900;
+    margin: 10px 0;
+    line-height: 1;
+}
+
+.bmi-class-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.bmi-class-Normal { background-color: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+.bmi-class-Uebergewicht { background-color: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+.bmi-class-Untergewicht { background-color: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); }
+.bmi-class-Adipositas { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+.bmi-visual-meter-bg {
+    width: 100%;
+    height: 10px;
+    background-color: #333;
+    border-radius: 5px;
+    margin: 20px 0 10px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+body.light-mode .bmi-visual-meter-bg {
+    background-color: #e5e7eb;
+}
+
+.bmi-visual-meter-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 5px;
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease;
+}
+
+.bmi-legend-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 9px;
+    color: #6b7280;
+}
+
+/* Weight Entry Manager List */
+.weight-logs-scroller {
+    max-height: 180px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 15px;
+    padding-right: 4px;
+}
+
+.weight-log-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #2a2a2a;
+    font-size: 13px;
+}
+
+body.light-mode .weight-log-item-row {
+    background-color: #f9fafb;
+    border-color: #e5e7eb;
+}
+
+.weight-log-date {
+    color: #888;
+}
+
+.weight-log-val {
+    font-weight: 700;
+}
+
+/* Gamified Achievements Trophy Styles */
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.achievement-card {
+    background-color: #222;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 15px 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.4;
+    filter: grayscale(1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+body.light-mode .achievement-card {
+    background-color: #f3f4f6;
+    border-color: #e5e7eb;
+}
+
+.achievement-card.unlocked {
+    opacity: 1;
+    filter: grayscale(0);
+    border-color: #f59e0b;
+    background: linear-gradient(145deg, #1e1b15, #1a1a1a);
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
+}
+
+body.light-mode .achievement-card.unlocked {
+    background: linear-gradient(145deg, #fefef9, #ffffff);
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
+}
+
+.achievement-card.unlocked:hover {
+    transform: scale(1.08) rotate(2deg);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
+}
+
+.achievement-icon {
+    font-size: 32px;
+    line-height: 1;
+    transition: transform 0.3s ease;
+}
+
+.achievement-card.unlocked:hover .achievement-icon {
+    transform: scale(1.2) translateY(-2px);
+}
+
+.achievement-title {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.achievement-desc {
+    font-size: 9px;
+    color: #888;
+    line-height: 1.3;
+}
+
+/* Community Feed Styles */
+.community-feed-wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.post-composer-card {
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+body.light-mode .post-composer-card {
+    background-color: #fff;
+    border-color: #e5e7eb;
+}
+
+.post-composer-textarea {
+    width: 100%;
+    min-height: 80px;
+    background-color: #222;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    resize: none;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+body.light-mode .post-composer-textarea {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+    color: #111827;
+}
+
+.post-composer-textarea:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
+}
+
+.post-composer-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-post {
+    background-color: #10b981;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-post:hover {
+    background-color: #059669;
+}
+
+.posts-list-scroller {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.community-post-card {
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.2s ease;
+}
+
+body.light-mode .community-post-card {
+    background-color: #fff;
+    border-color: #e5e7eb;
+}
+
+.post-user-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.post-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.post-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-username {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.post-timestamp {
+    font-size: 10px;
+    color: #6b7280;
+}
+
+.post-body-text {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #ddd;
+}
+
+body.light-mode .post-body-text {
+    color: #374151;
+}
+
+.post-actions-row {
+    border-top: 1px solid #2a2a2a;
+    padding-top: 10px;
+    display: flex;
+    gap: 15px;
+}
+
+body.light-mode .post-actions-row {
+    border-color: #e5e7eb;
+}
+
+.like-action-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.25s ease;
+}
+
+.like-action-btn:hover {
+    color: #ef4444;
+}
+
+.like-action-btn.liked {
+    color: #ef4444;
+    font-weight: 700;
+}
+
+.like-action-btn.liked span:first-child {
+    transform: scale(1.2);
+    display: inline-block;
+    animation: heartBeat 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1.2); }
+}
+
+/* Settings Styles */
+.settings-scroller {
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.settings-card {
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+body.light-mode .settings-card {
+    background-color: #fff;
+    border-color: #e5e7eb;
+}
+
+.settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #222;
+}
+
+body.light-mode .settings-row {
+    border-color: #f3f4f6;
+}
+
+.settings-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.settings-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.settings-title {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.settings-description {
+    font-size: 11px;
+    color: #888;
+}
+
+/* Interactive custom toggle switches */
+.toggle-switch-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+}
+
+.toggle-switch-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    border-radius: 24px;
+    transition: .3s;
+}
+
+body.light-mode .toggle-switch-slider {
+    background-color: #e5e7eb;
+}
+
+.toggle-switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .3s;
+}
+
+.toggle-switch-input:checked + .toggle-switch-slider {
+    background-color: #10b981;
+}
+
+.toggle-switch-input:checked + .toggle-switch-slider:before {
+    transform: translateX(24px);
+}
+
+.btn-danger-reset {
+    background-color: transparent;
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.btn-danger-reset:hover {
+    background-color: #ef4444;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+

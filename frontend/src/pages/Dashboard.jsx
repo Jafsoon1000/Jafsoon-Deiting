@@ -74,8 +74,59 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
 
     const [confetti, setConfetti] = useState([]);
     const [showToast, setShowToast] = useState(false);
+    const [toastTitle, setToastTitle] = useState('Ziel erreicht!');
+    const [toastText, setToastText] = useState('Du hast dein tägliches Wasserziel geschafft!');
 
-    const triggerConfetti = () => {
+    // Advanced interactive feature states
+    const [workouts, setWorkouts] = useState(() => {
+        const stored = localStorage.getItem('userWorkouts');
+        if (stored) {
+            try { return JSON.parse(stored); } catch (e) { console.error(e); }
+        }
+        return [
+            { id: 1, type: 'Laufen', duration: 30, calories: 350, time: '08:30 Uhr' },
+            { id: 2, type: 'Krafttraining', duration: 45, calories: 280, time: '17:00 Uhr' }
+        ];
+    });
+
+    const [isAddingWorkout, setIsAddingWorkout] = useState(false);
+    const [workoutType, setWorkoutType] = useState('Laufen');
+    const [workoutDuration, setWorkoutDuration] = useState('');
+    const [workoutCalories, setWorkoutCalories] = useState('');
+    const [workoutTime, setWorkoutTime] = useState('');
+
+    // BMI Calculator state
+    const [bmiHeight, setBmiHeight] = useState('180');
+    const [bmiWeight, setBmiWeight] = useState('80');
+    const [bmiResult, setBmiResult] = useState(null);
+    const [bmiClass, setBmiClass] = useState('');
+
+    // Community Feed state
+    const [communityPosts, setCommunityPosts] = useState(() => {
+        const stored = localStorage.getItem('userCommunityPosts');
+        if (stored) {
+            try { return JSON.parse(stored); } catch (e) { console.error(e); }
+        }
+        return [
+            { id: 1, name: 'Sarah M.', avatar: 'SM', text: 'Heute 5 km in 28 Minuten gelaufen! 🏃‍♀️🔥 Der Trainingsplan für den Gewichtsverlust funktioniert super!', likes: 14, liked: false, time: 'Vor 2 Std.' },
+            { id: 2, name: 'Christian K.', avatar: 'CK', text: 'Empfehle absolut das Kichererbsen-Curry aus der Rezepte-Bibliothek! Super lecker und perfekt für den Muskelaufbau. 🍛💪', likes: 8, liked: false, time: 'Vor 4 Std.' },
+            { id: 3, name: 'Laura B.', avatar: 'LB', text: 'Gewichtsziel von 65 kg endlich geknackt! Danke an die tolle Jafsoon Community für die Motivation! 🎉❤️', likes: 25, liked: false, time: 'Gestern' }
+        ];
+    });
+    const [newPostText, setNewPostText] = useState('');
+
+    // Recipe search & filter states
+    const [recipeSearch, setRecipeSearch] = useState('');
+    const [recipeFilter, setRecipeFilter] = useState('Alle');
+
+    // Settings panel toggles
+    const [settingsSound, setSettingsSound] = useState(() => localStorage.getItem('settingsSound') !== 'false');
+    const [settingsMetric, setSettingsMetric] = useState(() => localStorage.getItem('settingsMetric') !== 'false');
+    const [settingsAlerts, setSettingsAlerts] = useState(() => localStorage.getItem('settingsAlerts') !== 'false');
+
+    const triggerConfetti = (title = 'Ziel erreicht!', text = 'Du hast dein tägliches Wasserziel geschafft!') => {
+        setToastTitle(title);
+        setToastText(text);
         const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#ec4899', '#8b5cf6'];
         const particles = [];
         for (let i = 0; i < 65; i++) {
@@ -105,11 +156,190 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
             const nextWater = Math.max(0, Math.round((prev + amount) * 100) / 100);
             localStorage.setItem('userCurrentWater', nextWater.toString());
             if (prev < waterTarget && nextWater >= waterTarget) {
-                triggerConfetti();
+                if (settingsSound) {
+                    triggerConfetti('Ziel erreicht!', 'Du hast dein tägliches Wasserziel geschafft! 💧');
+                } else {
+                    setToastTitle('Ziel erreicht!');
+                    setToastText('Du hast dein tägliches Wasserziel geschafft! 💧');
+                    setShowToast(true);
+                    setTimeout(() => setShowToast(false), 3000);
+                }
             }
             return nextWater;
         });
     };
+
+    const handleAddWorkoutSubmit = (e) => {
+        e.preventDefault();
+        const parsedDuration = parseInt(workoutDuration) || 0;
+        const parsedCalories = parseInt(workoutCalories) || 0;
+        if (parsedDuration <= 0 || parsedCalories <= 0) {
+            alert('Bitte eine gültige Dauer und Kalorienanzahl eingeben.');
+            return;
+        }
+
+        const newWorkout = {
+            id: Date.now(),
+            type: workoutType,
+            duration: parsedDuration,
+            calories: parsedCalories,
+            time: workoutTime.trim() || new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr'
+        };
+
+        const updated = [...workouts, newWorkout];
+        setWorkouts(updated);
+        localStorage.setItem('userWorkouts', JSON.stringify(updated));
+
+        // Reset inputs
+        setWorkoutDuration('');
+        setWorkoutCalories('');
+        setWorkoutTime('');
+        setIsAddingWorkout(false);
+
+        if (settingsSound) {
+            triggerConfetti('Aktivität geloggt!', `Du hast ${parsedCalories} kcal aktiv verbrannt! 🔥`);
+        } else {
+            setToastTitle('Aktivität geloggt!');
+            setToastText(`Du hast ${parsedCalories} kcal aktiv verbrannt! 🔥`);
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
+        }
+    };
+
+    const handleDeleteWorkout = (id) => {
+        const updated = workouts.filter(w => w.id !== id);
+        setWorkouts(updated);
+        localStorage.setItem('userWorkouts', JSON.stringify(updated));
+    };
+
+    const handleAddMealFromPlan = (meal) => {
+        const newMeal = {
+            id: Date.now() + Math.random(),
+            type: meal.type,
+            name: meal.name,
+            calories: meal.calories,
+            protein: meal.protein,
+            carbs: meal.carbs,
+            fat: meal.fat
+        };
+        const updated = [...meals, newMeal];
+        setMeals(updated);
+        localStorage.setItem('userMeals', JSON.stringify(updated));
+
+        if (settingsSound) {
+            triggerConfetti('Essen hinzugefügt!', `"${meal.name}" wurde in dein Ernährungstagebuch eingetragen. 🍳`);
+        } else {
+            setToastTitle('Essen hinzugefügt!');
+            setToastText(`"${meal.name}" wurde in dein Ernährungstagebuch eingetragen. 🍳`);
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
+        }
+    };
+
+    const handleCalculateBmi = (e) => {
+        e?.preventDefault();
+        const h = parseFloat(bmiHeight) / 100;
+        const w = parseFloat(bmiWeight);
+        if (h > 0 && w > 0) {
+            const bmi = Math.round((w / (h * h)) * 10) / 10;
+            setBmiResult(bmi);
+            if (bmi < 18.5) setBmiClass('Untergewicht');
+            else if (bmi < 25) setBmiClass('Normal');
+            else if (bmi < 30) setBmiClass('Uebergewicht');
+            else setBmiClass('Adipositas');
+        }
+    };
+
+    const handleDeleteWeightEntry = (indexToDelete) => {
+        const updated = weightHistory.filter((_, i) => i !== indexToDelete);
+        setWeightHistory(updated);
+        localStorage.setItem('userWeightHistory', JSON.stringify(updated));
+    };
+
+    const handleLikePost = (id) => {
+        const updated = communityPosts.map(p => {
+            if (p.id === id) {
+                return {
+                    ...p,
+                    likes: p.liked ? p.likes - 1 : p.likes + 1,
+                    liked: !p.liked
+                };
+            }
+            return p;
+        });
+        setCommunityPosts(updated);
+        localStorage.setItem('userCommunityPosts', JSON.stringify(updated));
+    };
+
+    const handleCreatePost = (e) => {
+        e.preventDefault();
+        if (!newPostText.trim()) return;
+        const newPost = {
+            id: Date.now(),
+            name: name || 'Max Mustermann',
+            avatar: (name || 'Max').split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2),
+            text: newPostText,
+            likes: 0,
+            liked: false,
+            time: 'Gerade eben'
+        };
+        const updated = [newPost, ...communityPosts];
+        setCommunityPosts(updated);
+        localStorage.setItem('userCommunityPosts', JSON.stringify(updated));
+        setNewPostText('');
+    };
+
+    const handleResetAllData = () => {
+        if (window.confirm('Möchtest du wirklich alle Jafsoon-Appdaten löschen? Dies kann nicht rückgängig gemacht werden.')) {
+            localStorage.clear();
+            setName('Max Mustermann');
+            setGoal('Muskelaufbau');
+            setCalorieTarget(2200);
+            setWaterTarget(2.5);
+            setWeightTarget(75.0);
+            setProteinTarget(150);
+            setCarbsTarget(200);
+            setFatTarget(75);
+            setCurrentWater(1.5);
+            setMeals([
+                { id: 1, type: 'Frühstück', name: 'Haferflocken mit Beeren', calories: 450, protein: 25, carbs: 65, fat: 8 },
+                { id: 2, type: 'Mittagessen', name: 'Hähnchen-Quinoa-Bowl', calories: 620, protein: 45, carbs: 55, fat: 18 },
+                { id: 3, type: 'Abendessen', name: 'Gebackener Lachs', calories: 550, protein: 40, carbs: 20, fat: 32 },
+                { id: 4, type: 'Snack', name: 'Apfel, Mandeln', calories: 180, protein: 15, carbs: 20, fat: 7 }
+            ]);
+            setWeightHistory([
+                { date: '10.04', weight: 82.0 },
+                { date: '17.04', weight: 81.2 },
+                { date: '24.04', weight: 80.5 },
+                { date: '01.05', weight: 80.0 },
+                { date: '08.05', weight: 79.6 },
+                { date: '15.05', weight: 79.1 },
+                { date: '22.05', weight: 78.8 },
+                { date: '29.05', weight: 78.5 }
+            ]);
+            setWorkouts([
+                { id: 1, type: 'Laufen', duration: 30, calories: 350, time: '08:30 Uhr' },
+                { id: 2, type: 'Krafttraining', duration: 45, calories: 280, time: '17:00 Uhr' }
+            ]);
+            setCommunityPosts([
+                { id: 1, name: 'Sarah M.', avatar: 'SM', text: 'Heute 5 km in 28 Minuten gelaufen! 🏃‍♀️🔥 Der Trainingsplan für den Gewichtsverlust funktioniert super!', likes: 14, liked: false, time: 'Vor 2 Std.' },
+                { id: 2, name: 'Christian K.', avatar: 'CK', text: 'Empfehle absolut das Kichererbsen-Curry aus der Rezepte-Bibliothek! Super lecker und perfekt für den Muskelaufbau. 🍛💪', likes: 8, liked: false, time: 'Vor 4 Std.' },
+                { id: 3, name: 'Laura B.', avatar: 'LB', text: 'Gewichtsziel von 65 kg endlich geknackt! Danke an die tolle Jafsoon Community für die Motivation! 🎉❤️', likes: 25, liked: false, time: 'Gestern' }
+            ]);
+            setRecipeSearch('');
+            setRecipeFilter('Alle');
+            setBmiHeight('180');
+            setBmiWeight('80');
+            setBmiResult(null);
+            setSettingsSound(true);
+            setSettingsMetric(true);
+            setSettingsAlerts(true);
+            
+            alert('Alle App-Daten wurden erfolgreich zurückgesetzt!');
+            setActiveTab('Dashboard');
+        }
+    };
+
 
     const [weightHistory, setWeightHistory] = useState(() => {
         const stored = localStorage.getItem('userWeightHistory');
@@ -203,6 +433,8 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
     const totalProtein = meals.reduce((sum, m) => sum + m.protein, 0);
     const totalCarbs = meals.reduce((sum, m) => sum + m.carbs, 0);
     const totalFat = meals.reduce((sum, m) => sum + m.fat, 0);
+    const totalBurnedCalories = workouts.reduce((sum, w) => sum + w.calories, 0);
+    const netCalories = Math.max(0, totalCalories - totalBurnedCalories);
 
     const [newWeight, setNewWeight] = useState('');
     const [newWeightDate, setNewWeightDate] = useState('');
@@ -376,6 +608,15 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
         goalText = `Tagesziel: ${goalProgress}% der täglichen Gewohnheiten abgeschlossen`;
     }
 
+    const achievementsList = [
+        { id: 'water', icon: '💧', title: 'Wasser-Meister', desc: 'Trinke dein tägliches Wasserziel.', unlocked: currentWater >= waterTarget },
+        { id: 'calories', icon: '🔥', title: 'Kalorien-Pionier', desc: 'Trage Mahlzeiten mit mind. 1000 kcal ein.', unlocked: totalCalories >= 1000 },
+        { id: 'workouts', icon: '🏃', title: 'Aktivitäts-Champion', desc: 'Logge heute mindestens 1 Workout.', unlocked: workouts.length >= 1 },
+        { id: 'weight', icon: '⚖️', title: 'Gewichts-Tracker', desc: 'Trage mind. 3 Daten in deinen Verlauf ein.', unlocked: weightHistory.length >= 3 },
+        { id: 'gourmet', icon: '🍳', title: 'Feinschmecker', desc: 'Logge alle 4 Mahlzeitentypen an einem Tag.', unlocked: ['Frühstück', 'Mittagessen', 'Abendessen', 'Snack'].every(type => meals.some(m => m.type === type)) },
+        { id: 'willpower', icon: '🏆', title: 'Eiserner Wille', desc: 'Erreiche dein wöchentliches Ziel zu 100%.', unlocked: goalProgress >= 100 }
+    ];
+
     return (
         <div className="dashboard-wrapper dark-theme-override">
             {/* Left Icon Sidebar */}
@@ -428,8 +669,15 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                 <div className="stat-pill">
                                     <span className="icon">🔥</span>
                                     <div>
-                                        <strong>Kalorienziel</strong>
+                                        <strong>{totalCalories} / {calorieTarget} kcal</strong>
                                         <small>Tagesbedarf</small>
+                                    </div>
+                                </div>
+                                <div className="stat-pill">
+                                    <span className="icon">⚡</span>
+                                    <div>
+                                        <strong>{totalBurnedCalories} kcal</strong>
+                                        <small>Aktiv verbrannt</small>
                                     </div>
                                 </div>
                                 <div className="stat-pill" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
@@ -793,26 +1041,136 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                         </section>
                         
                         <section className="dash-card">
-                            <div className="card-header">
-                                <h2>Kommende Workouts &gt;</h2>
+                            <div className="card-header" style={{ marginBottom: '12px' }}>
+                                <h2>Aktivitäten & Sport</h2>
+                                <span className="btn-small" style={{ cursor: 'pointer' }} onClick={() => handleTabClick('Fortschritt')}>Statistiken &gt;</span>
                             </div>
-                            <div className="workout-card">
-                                <div className="workout-img placeholder-img">IMG</div>
-                                <h3>Yoga</h3>
-                                <small>🕒 18:00 Uhr</small>
+                            
+                            {isAddingWorkout ? (
+                                <form onSubmit={handleAddWorkoutSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '12px', border: '1px solid #3b82f6', borderRadius: '12px', marginBottom: '15px' }}>
+                                    <h3 style={{ margin: 0, fontSize: '13px', color: '#3b82f6' }}>Workout hinzufügen</h3>
+                                    
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                            <label style={{ fontSize: '10px', color: '#888' }}>Typ</label>
+                                            <select 
+                                                value={workoutType} 
+                                                onChange={(e) => setWorkoutType(e.target.value)} 
+                                                className="profile-select"
+                                                style={{ padding: '6px', fontSize: '12px', height: '32px' }}
+                                            >
+                                                <option value="Laufen">🏃 Laufen</option>
+                                                <option value="Krafttraining">🏋️ Krafttraining</option>
+                                                <option value="Radfahren">🚴 Radfahren</option>
+                                                <option value="Schwimmen">🏊 Schwimmen</option>
+                                                <option value="Yoga">🧘 Yoga</option>
+                                                <option value="Anderes">💪 Anderes</option>
+                                            </select>
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                            <label style={{ fontSize: '10px', color: '#888' }}>Uhrzeit</label>
+                                            <input 
+                                                type="text" 
+                                                placeholder="z.B. 18:00 Uhr" 
+                                                value={workoutTime} 
+                                                onChange={(e) => setWorkoutTime(e.target.value)} 
+                                                className="profile-input"
+                                                style={{ padding: '6px', fontSize: '12px', height: '32px' }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                            <label style={{ fontSize: '10px', color: '#888' }}>Dauer (Min)</label>
+                                            <input 
+                                                type="number" 
+                                                placeholder="Minuten" 
+                                                value={workoutDuration} 
+                                                onChange={(e) => setWorkoutDuration(e.target.value)} 
+                                                className="profile-input"
+                                                required
+                                                min="1"
+                                                style={{ padding: '6px', fontSize: '12px', height: '32px' }}
+                                            />
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                            <label style={{ fontSize: '10px', color: '#888' }}>Kalorien (kcal)</label>
+                                            <input 
+                                                type="number" 
+                                                placeholder="kcal" 
+                                                value={workoutCalories} 
+                                                onChange={(e) => setWorkoutCalories(e.target.value)} 
+                                                className="profile-input"
+                                                required
+                                                min="1"
+                                                style={{ padding: '6px', fontSize: '12px', height: '32px' }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '4px' }}>
+                                        <button type="button" className="water-btn" onClick={() => setIsAddingWorkout(false)} style={{ background: 'transparent', color: '#aaa', borderColor: '#444' }}>Abbrechen</button>
+                                        <button type="submit" className="water-btn" style={{ background: '#3b82f6', borderColor: '#3b82f6', color: '#fff' }}>Speichern</button>
+                                    </div>
+                                </form>
+                            ) : (
+                                <button className="btn-add-meal" style={{ padding: '8px', marginBottom: '15px', borderStyle: 'dashed', borderColor: '#3b82f6', color: '#3b82f6' }} onClick={() => setIsAddingWorkout(true)}>+ Aktivität loggen</button>
+                            )}
+
+                            <div className="workout-list-dynamic">
+                                {workouts.length > 0 ? (
+                                    workouts.map(w => (
+                                        <div key={w.id} className="workout-item">
+                                            <div className="workout-item-details">
+                                                <div className="workout-item-title">
+                                                    {w.type === 'Laufen' ? '🏃' : w.type === 'Krafttraining' ? '🏋️' : w.type === 'Radfahren' ? '🚴' : w.type === 'Schwimmen' ? '🏊' : w.type === 'Yoga' ? '🧘' : '💪'} {w.type}
+                                                </div>
+                                                <div className="workout-item-meta">⏱️ {w.duration} Min. | 🕒 {w.time}</div>
+                                            </div>
+                                            <div className="workout-item-calories">
+                                                <span className="workout-calories-value">-{w.calories} kcal</span>
+                                                <button onClick={() => handleDeleteWorkout(w.id)} className="workout-delete-btn" title="Workout löschen">❌</button>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="workout-empty">Keine sportlichen Aktivitäten für heute geloggt.</div>
+                                )}
                             </div>
                         </section>
 
                         <section className="dash-card">
                             <div className="card-header">
-                                <h2>Empfohlene Rezepte &gt;</h2>
+                                <h2>Empfehlung für dich &gt;</h2>
+                                <span className="btn-small" style={{ cursor: 'pointer' }} onClick={() => handleTabClick('Rezepte')}>Alle Rezepte &gt;</span>
                             </div>
-                            <div className="recipe-card">
-                                <div className="recipe-img placeholder-img">IMG</div>
-                                <h3>Veggie Burger</h3>
-                                <p>Veggie Burger entdecken...</p>
-                                <button className="btn-outline-small full-width" onClick={() => handleActionClick('Rezepte entdecken')}>Rezepte entdecken</button>
-                            </div>
+                            {(() => {
+                                let recommendedRecipe = { name: 'Veggie Burger', calories: 450, protein: 18, carbs: 55, fat: 12, desc: 'Knackig & gesund mit hausgemachtem Kichererbsen-Patty.', type: 'Mittagessen', icon: '🍔' };
+                                if (goal === 'Muskelaufbau') {
+                                    recommendedRecipe = { name: 'Protein-Pancakes mit Erdnussbutter', calories: 650, protein: 35, carbs: 80, fat: 20, desc: 'Die perfekte Kombination aus Protein und komplexen Kohlenhydraten.', type: 'Frühstück', icon: '🥞' };
+                                } else if (goal === 'Gewichtsverlust') {
+                                    recommendedRecipe = { name: 'Kabeljau auf Zucchininudeln', calories: 340, protein: 35, carbs: 12, fat: 16, desc: 'Kalorienarm, proteinreich und reich an gesunden Omega-3 Fetten.', type: 'Abendessen', icon: '🐟' };
+                                } else if (goal === 'Gesunder Lebensstil') {
+                                    recommendedRecipe = { name: 'Quinoa-Bowl mit Avocado', calories: 550, protein: 18, carbs: 65, fat: 22, desc: 'Superfood-Bowl reich an gesunden Fetten und Ballaststoffen.', type: 'Mittagessen', icon: '🥗' };
+                                }
+                                return (
+                                    <div className="recipe-card" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                        <div className="recipe-img placeholder-img" style={{ fontSize: '38px', height: '90px', background: 'linear-gradient(135deg, #065f46, #022c22)' }}>
+                                            {recommendedRecipe.icon}
+                                        </div>
+                                        <h3 style={{ fontSize: '15px', fontWeight: '800' }}>{recommendedRecipe.name}</h3>
+                                        <p style={{ fontSize: '12px', margin: '0', color: '#aaa', lineHeight: '1.4' }}>{recommendedRecipe.desc}</p>
+                                        <div style={{ display: 'flex', gap: '12px', fontSize: '11px', color: '#888', margin: '4px 0' }}>
+                                            <span>🔥 {recommendedRecipe.calories} kcal</span>
+                                            <span>💪 P: {recommendedRecipe.protein}g</span>
+                                        </div>
+                                        <button className="recipe-btn-add" style={{ padding: '8px', fontSize: '12px' }} onClick={() => handleAddMealFromPlan(recommendedRecipe)}>
+                                            Zu Mahlzeiten hinzufügen
+                                        </button>
+                                    </div>
+                                );
+                            })()}
                         </section>
                     </div>
 
@@ -973,6 +1331,501 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                             )}
                         </section>
                     </div>
+                ) : activeTab === 'Ernährungsplan' ? (
+                    <div style={{ padding: '20px', width: '100%' }}>
+                        <div style={{ marginBottom: '30px' }}>
+                            <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>Dein Ernährungsplan</h2>
+                            <p style={{ color: '#888', margin: 0 }}>Maßgeschneiderter Ernährungsplan basierend auf deinem Ziel: <strong>{goal}</strong></p>
+                        </div>
+                        
+                        {(() => {
+                            let mealPlanList = [];
+                            if (goal === 'Muskelaufbau') {
+                                mealPlanList = [
+                                    { type: 'Frühstück', name: 'Protein-Pancakes mit Erdnussbutter & Banane', calories: 650, protein: 35, carbs: 80, fat: 20, desc: 'Reich an komplexen Kohlenhydraten und Proteinen für den optimalen Start.', icon: '🥞' },
+                                    { type: 'Mittagessen', name: 'Putengeschnetzeltes mit Vollkornreis & Brokkoli', calories: 750, protein: 55, carbs: 85, fat: 15, desc: 'Klassische Sportler-Mahlzeit. Fettarm, eiweißreich und extrem sättigend.', icon: '🍛' },
+                                    { type: 'Abendessen', name: 'Rindersteak mit Süßkartoffelpüree & Spargel', calories: 680, protein: 50, carbs: 60, fat: 22, desc: 'Hochwertige Proteine und Mikronährstoffe für die nächtliche Regeneration.', icon: '🥩' },
+                                    { type: 'Snack', name: 'Magerquark mit Mandeln & Beeren', calories: 320, protein: 30, carbs: 25, fat: 10, desc: 'Langsames Casein-Protein für die kontinuierliche Muskelversorgung.', icon: '🥣' }
+                                ];
+                            } else if (goal === 'Gewichtsverlust') {
+                                mealPlanList = [
+                                    { type: 'Frühstück', name: 'Rührei (3 Eier) mit Spinat & Tomaten', calories: 280, protein: 22, carbs: 5, fat: 18, desc: 'Kohlenhydratarm und reich an Proteinen. Hält den Insulinspiegel stabil.', icon: '🍳' },
+                                    { type: 'Mittagessen', name: 'Gegrilltes Hähnchenbrustfilet auf gemischtem Salat', calories: 380, protein: 42, carbs: 10, fat: 12, desc: 'Maximale Sättigung bei minimaler Kaloriendichte.', icon: '🥗' },
+                                    { type: 'Abendessen', name: 'Gebackener Kabeljau mit Zucchininudeln & Pesto', calories: 340, protein: 35, carbs: 12, fat: 16, desc: 'Sehr leicht verdauliches, mageres Fischprotein mit gesunden Kräuterfetten.', icon: '🐟' },
+                                    { type: 'Snack', name: 'Selleriestangen mit Hummus', calories: 150, protein: 5, carbs: 15, fat: 8, desc: 'Knuspriger und gesunder Snack für zwischendurch.', icon: '🥒' }
+                                ];
+                            } else {
+                                mealPlanList = [
+                                    { type: 'Frühstück', name: 'Müsli mit griechischem Joghurt & Honig', calories: 450, protein: 20, carbs: 55, fat: 12, desc: 'Ausgewogene Energie und wertvolle Probiotika für eine fitte Verdauung.', icon: '🥣' },
+                                    { type: 'Mittagessen', name: 'Quinoa-Bowl mit Avocado, Kichererbsen & Feta', calories: 550, protein: 18, carbs: 65, fat: 22, desc: 'Voller gesunder Fette, pflanzlicher Proteine und wichtiger Ballaststoffe.', icon: '🥗' },
+                                    { type: 'Abendessen', name: 'Ofengemüse mit gebackenem Tofu & Kürbiskernen', calories: 480, protein: 22, carbs: 40, fat: 18, desc: 'Buntes Antioxidantien-Kraftpaket mit lecker mariniertem Räuchertofu.', icon: '🥦' },
+                                    { type: 'Snack', name: 'Handvoll Walnüsse & eine reife Birne', calories: 220, protein: 5, carbs: 25, fat: 12, desc: 'Fördert die Konzentration und liefert gesunde Omega-3 Fette.', icon: '🍐' }
+                                ];
+                            }
+
+                            return (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                                    {mealPlanList.map((meal, index) => (
+                                        <section key={index} className="dash-card" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#10b981', textTransform: 'uppercase', trackingLetter: '1px' }}>{meal.type}</span>
+                                                <span style={{ fontSize: '28px' }}>{meal.icon}</span>
+                                            </div>
+                                            <div>
+                                                <h3 style={{ margin: '0 0 5px 0', fontSize: '16px', fontWeight: '800' }}>{meal.name}</h3>
+                                                <p style={{ margin: 0, fontSize: '12px', color: '#888', lineHeight: '1.4' }}>{meal.desc}</p>
+                                            </div>
+                                            <div className="recipe-macros-bar" style={{ marginTop: 'auto' }}>
+                                                <div className="macro-box">
+                                                    <span className="macro-box-label">Kcal</span>
+                                                    <span className="macro-box-value">{meal.calories}</span>
+                                                </div>
+                                                <div className="macro-box">
+                                                    <span className="macro-box-label">Prot</span>
+                                                    <span className="macro-box-value">{meal.protein}g</span>
+                                                </div>
+                                                <div className="macro-box">
+                                                    <span className="macro-box-label">Carb</span>
+                                                    <span className="macro-box-value">{meal.carbs}g</span>
+                                                </div>
+                                                <div className="macro-box">
+                                                    <span className="macro-box-label">Fett</span>
+                                                    <span className="macro-box-value">{meal.fat}g</span>
+                                                </div>
+                                            </div>
+                                            <button 
+                                                className="recipe-btn-add" 
+                                                style={{ width: '100%', padding: '10px' }}
+                                                onClick={() => handleAddMealFromPlan(meal)}
+                                            >
+                                                Mahlzeit loggen
+                                            </button>
+                                        </section>
+                                    ))}
+                                </div>
+                            );
+                        })()}
+                    </div>
+                ) : activeTab === 'Rezepte' ? (
+                    <div style={{ padding: '20px', width: '100%' }}>
+                        <div style={{ marginBottom: '30px' }}>
+                            <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>Rezepte-Bibliothek</h2>
+                            <p style={{ color: '#888', margin: 0 }}>Entdecke köstliche, fitnessorientierte Gerichte und tracke sie mit einem Klick.</p>
+                        </div>
+
+                        <div className="recipe-search-container">
+                            <div className="recipe-search-bar-wrapper">
+                                <span className="recipe-search-icon">🔍</span>
+                                <input 
+                                    type="text" 
+                                    placeholder="Rezepte nach Name oder Zutat suchen..." 
+                                    className="recipe-search-input"
+                                    value={recipeSearch}
+                                    onChange={(e) => setRecipeSearch(e.target.value)}
+                                />
+                            </div>
+                            
+                            <div className="filter-tags">
+                                {['Alle', 'Proteinreich', 'Low-Carb', 'Vegan'].map(cat => (
+                                    <button 
+                                        key={cat} 
+                                        className={`tag-btn ${recipeFilter === cat ? 'active' : ''}`}
+                                        onClick={() => setRecipeFilter(cat)}
+                                    >
+                                        {cat}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {(() => {
+                            const recipeDb = [
+                                { id: 'r1', name: 'Lachs-Avocado-Wrap', category: 'Low-Carb', calories: 480, protein: 32, carbs: 12, fat: 28, prepTime: '15 Min', difficulty: 'Einfach', icon: '🌯', ingredients: 'Räucherlachs, Avocado, Vollkornwrap, Frischkäse, Rucola', desc: 'Frischer Räucherlachs mit cremiger Avocado gerollt in einem leichten Wrap. Perfekt für das schnelle Mittagessen.' },
+                                { id: 'r2', name: 'Kichererbsen-Curry mit Kokosmilch', category: 'Vegan', calories: 520, protein: 18, carbs: 70, fat: 14, prepTime: '25 Min', difficulty: 'Mittel', icon: '🍛', ingredients: 'Kichererbsen, Kokosmilch, Spinat, Currypaste, Tomaten', desc: 'Cremiges Curry reich an pflanzlichen Ballaststoffen und Proteinen. Schmeckt hervorragend mit Vollkornreis.' },
+                                { id: 'r3', name: 'Double Chocolate Protein-Shake', category: 'Proteinreich', calories: 310, protein: 40, carbs: 15, fat: 4, prepTime: '5 Min', difficulty: 'Einfach', icon: '🥤', ingredients: 'Schoko-Proteinpulver, Mandelmilch, Banane, Kakaopulver', desc: 'Die absolute Post-Workout-Bombe für maximalen Muskelaufbau und Regeneration.' },
+                                { id: 'r4', name: 'Chia-Samen Pudding mit Waldbeeren', category: 'Vegan', calories: 240, protein: 6, carbs: 28, fat: 10, prepTime: '10 Min', difficulty: 'Einfach', icon: '🍓', ingredients: 'Chiasamen, Mandelmilch, Ahornsirup, Himbeeren, Heidelbeeren', desc: 'Gesunder Snack voller Ballaststoffe und Antioxidantien. Ideal zum Vorbereiten (Meal Prep).' },
+                                { id: 'r5', name: 'Puten-Gnocchi-Gemüsepfanne', category: 'Proteinreich', calories: 610, protein: 45, carbs: 65, fat: 12, prepTime: '20 Min', difficulty: 'Einfach', icon: '🥘', ingredients: 'Putenbrust, Gnocchi, Paprika, Zucchini, Tomatensauce', desc: 'Sättigende Sportler-Mahlzeit mit magerem Geflügelfleisch und leckeren Gnocchi.' },
+                                { id: 'r6', name: 'Zucchini-Lasagne mit Rinderhack', category: 'Low-Carb', calories: 390, protein: 28, carbs: 18, fat: 20, prepTime: '40 Min', difficulty: 'Mittel', icon: '🍝', ingredients: 'Zucchini-Scheiben, Rinderhackfleisch, Ricotta, Parmesan, Tomatensauce', desc: 'Ein kohlenhydratarmer Auflaufklassiker mit saftigem Rinderhack und Zucchini anstelle von Nudelteig.' }
+                            ];
+
+                            const filtered = recipeDb.filter(r => {
+                                const matchesSearch = r.name.toLowerCase().includes(recipeSearch.toLowerCase()) || 
+                                                      r.ingredients.toLowerCase().includes(recipeSearch.toLowerCase());
+                                const matchesCat = recipeFilter === 'Alle' || r.category === recipeFilter;
+                                return matchesSearch && matchesCat;
+                            });
+
+                            return (
+                                <div className="recipes-grid">
+                                    {filtered.length > 0 ? (
+                                        filtered.map(recipe => (
+                                            <div key={recipe.id} className="recipe-card-detailed">
+                                                <span className="recipe-badge-category">{recipe.category}</span>
+                                                <div className="recipe-visual-gradient">
+                                                    {recipe.icon}
+                                                </div>
+                                                <div className="recipe-content-wrapper">
+                                                    <h3 className="recipe-title-detailed">{recipe.name}</h3>
+                                                    <div className="recipe-meta-pills">
+                                                        <span className="recipe-meta-pill">⏱️ {recipe.prepTime}</span>
+                                                        <span className="recipe-meta-pill">📊 {recipe.difficulty}</span>
+                                                    </div>
+                                                    <p className="recipe-ingredients-preview">
+                                                        <strong>Zutaten:</strong> {recipe.ingredients}
+                                                    </p>
+                                                    <p style={{ fontSize: '11px', color: '#888', margin: '0', lineHeight: '1.4' }}>
+                                                        {recipe.desc}
+                                                    </p>
+                                                    <div className="recipe-macros-bar" style={{ margin: '8px 0' }}>
+                                                        <div className="macro-box">
+                                                            <span className="macro-box-label">Kcal</span>
+                                                            <span className="macro-box-value">{recipe.calories}</span>
+                                                        </div>
+                                                        <div className="macro-box">
+                                                            <span className="macro-box-label">Prot</span>
+                                                            <span className="macro-box-value">{recipe.protein}g</span>
+                                                        </div>
+                                                        <div className="macro-box">
+                                                            <span className="macro-box-label">Carb</span>
+                                                            <span className="macro-box-value">{recipe.carbs}g</span>
+                                                        </div>
+                                                        <div className="macro-box">
+                                                            <span className="macro-box-label">Fett</span>
+                                                            <span className="macro-box-value">{recipe.fat}g</span>
+                                                        </div>
+                                                    </div>
+                                                    <button 
+                                                        className="recipe-btn-add"
+                                                        onClick={() => handleAddMealFromPlan({
+                                                            name: recipe.name,
+                                                            type: 'Mittagessen',
+                                                            calories: recipe.calories,
+                                                            protein: recipe.protein,
+                                                            carbs: recipe.carbs,
+                                                            fat: recipe.fat
+                                                        })}
+                                                    >
+                                                        Rezept loggen
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div style={{ gridColumn: 'span 3', textAlign: 'center', padding: '40px', color: '#6b7280' }}>
+                                            Keine Rezepte gefunden, die deiner Suche entsprechen.
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })()}
+                    </div>
+                ) : activeTab === 'Fortschritt' ? (
+                    <div style={{ padding: '20px', width: '100%', display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div>
+                                <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>Dein Fortschritt</h2>
+                                <p style={{ color: '#888', margin: 0 }}>Statistiken, BMI-Rechner und deine freigeschalteten Auszeichnungen.</p>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '20px' }}>
+                            {/* Left Side: BMI and History */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                <section className="dash-card">
+                                    <h2 style={{ fontSize: '18px', marginBottom: '15px' }}>BMI-Rechner</h2>
+                                    <div className="bmi-card-wrapper">
+                                        <form onSubmit={handleCalculateBmi} className="bmi-calc-inputs">
+                                            <div className="profile-form-group">
+                                                <label className="profile-label">Größe (cm)</label>
+                                                <input 
+                                                    type="number" 
+                                                    className="profile-input" 
+                                                    value={bmiHeight} 
+                                                    onChange={(e) => setBmiHeight(e.target.value)} 
+                                                    required 
+                                                    min="100" 
+                                                    max="250"
+                                                />
+                                            </div>
+                                            <div className="profile-form-group">
+                                                <label className="profile-label">Gewicht (kg)</label>
+                                                <input 
+                                                    type="number" 
+                                                    step="0.1" 
+                                                    className="profile-input" 
+                                                    value={bmiWeight} 
+                                                    onChange={(e) => setBmiWeight(e.target.value)} 
+                                                    required 
+                                                    min="30" 
+                                                    max="250"
+                                                />
+                                            </div>
+                                            <button type="submit" className="btn-save" style={{ marginTop: '10px' }}>Berechnen</button>
+                                        </form>
+
+                                        <div className="bmi-result-display">
+                                            <span style={{ fontSize: '12px', color: '#888' }}>Dein errechneter BMI</span>
+                                            <div className="bmi-val-big" style={{ color: bmiResult ? (bmiClass === 'Normal' ? '#10b981' : bmiClass === 'Uebergewicht' ? '#f59e0b' : '#ef4444') : '#fff' }}>
+                                                {bmiResult || '--.-'}
+                                            </div>
+                                            {bmiResult && (
+                                                <span className={`bmi-class-badge bmi-class-${bmiClass}`}>
+                                                    {bmiClass === 'Uebergewicht' ? 'Übergewicht' : bmiClass}
+                                                </span>
+                                            )}
+                                            
+                                            <div className="bmi-visual-meter-bg">
+                                                <div 
+                                                    className="bmi-visual-meter-fill" 
+                                                    style={{ 
+                                                        width: bmiResult ? `${Math.min(100, Math.max(0, ((bmiResult - 15) / 25) * 100))}%` : '0%',
+                                                        backgroundColor: bmiClass === 'Normal' ? '#10b981' : bmiClass === 'Uebergewicht' ? '#f59e0b' : '#ef4444'
+                                                    }}
+                                                ></div>
+                                            </div>
+                                            
+                                            <div className="bmi-legend-labels">
+                                                <span>15 (Untergew.)</span>
+                                                <span>25 (Übergew.)</span>
+                                                <span>40 (Adiposit.)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section className="dash-card">
+                                    <h2 style={{ fontSize: '18px', marginBottom: '8px' }}>Gewichtsprotokoll verwalten</h2>
+                                    <p style={{ fontSize: '11px', color: '#888', margin: '0 0 15px 0' }}>Hier kannst du alte Einträge aus deiner Verlaufskurve löschen.</p>
+                                    
+                                    <div className="weight-logs-scroller">
+                                        {weightHistory.length > 0 ? (
+                                            weightHistory.map((w, index) => (
+                                                <div key={index} className="weight-log-item-row">
+                                                    <span className="weight-log-date">📅 {w.date}</span>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                                        <span className="weight-log-val">{w.weight} kg</span>
+                                                        <button 
+                                                            className="workout-delete-btn" 
+                                                            onClick={() => handleDeleteWeightEntry(index)}
+                                                            title="Eintrag löschen"
+                                                        >
+                                                            ❌
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div style={{ textAlign: 'center', padding: '15px', color: '#6b7280', fontSize: '12px' }}>
+                                                Bisher keine Gewichtsdaten eingetragen.
+                                            </div>
+                                        )}
+                                    </div>
+                                </section>
+                            </div>
+
+                            {/* Right Side: Habits & Achievements */}
+                            <section className="dash-card" style={{ display: 'flex', flexDirection: 'column' }}>
+                                <h2 style={{ fontSize: '18px', margin: '0 0 5px 0' }}>Erfolge & Abzeichen</h2>
+                                <p style={{ fontSize: '12px', color: '#888', margin: '0 0 10px 0' }}>Trophäen schalten sich automatisch frei, sobald du deine täglichen Ziele erreichst.</p>
+                                
+                                <div className="achievements-grid">
+                                    {achievementsList.map(trophy => (
+                                        <div key={trophy.id} className={`achievement-card ${trophy.unlocked ? 'unlocked' : ''}`} title={trophy.unlocked ? 'Freigeschaltet!' : 'Noch gesperrt'}>
+                                            <span className="achievement-icon">{trophy.icon}</span>
+                                            <span className="achievement-title">{trophy.title}</span>
+                                            <span className="achievement-desc">{trophy.desc}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                ) : activeTab === 'Community' ? (
+                    <div style={{ padding: '20px', width: '100%' }}>
+                        <div style={{ marginBottom: '30px', textAlign: 'center' }}>
+                            <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>Jafsoon-Feed</h2>
+                            <p style={{ color: '#888', margin: 0 }}>Teile deine Fortschritte und hole dir Inspiration von Gleichgesinnten.</p>
+                        </div>
+
+                        <div className="community-feed-wrapper">
+                            <form onSubmit={handleCreatePost} className="post-composer-card">
+                                <textarea 
+                                    placeholder="Teile ein Rezept, ein Workout-Ziel oder motivierende Neuigkeiten..."
+                                    className="post-composer-textarea"
+                                    value={newPostText}
+                                    onChange={(e) => setNewPostText(e.target.value)}
+                                    required
+                                />
+                                <div className="post-composer-actions">
+                                    <button type="submit" className="btn-post">Beitrag teilen</button>
+                                </div>
+                            </form>
+
+                            <div className="posts-list-scroller">
+                                {communityPosts.map(post => (
+                                    <div key={post.id} className="community-post-card">
+                                        <div className="post-user-header">
+                                            <div className="post-avatar" style={{ backgroundColor: post.liked ? '#10b981' : '#3b82f6' }}>
+                                                {post.avatar}
+                                            </div>
+                                            <div className="post-user-info">
+                                                <span className="post-username">{post.name}</span>
+                                                <span className="post-timestamp">⏱️ {post.time}</span>
+                                            </div>
+                                        </div>
+                                        <p className="post-body-text">{post.text}</p>
+                                        <div className="post-actions-row">
+                                            <button 
+                                                className={`like-action-btn ${post.liked ? 'liked' : ''}`}
+                                                onClick={() => handleLikePost(post.id)}
+                                            >
+                                                <span>{post.liked ? '❤️' : '🤍'}</span>
+                                                <span>{post.likes} Likes</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                ) : activeTab === 'Settings' ? (
+                    <div style={{ padding: '20px', width: '100%' }}>
+                        <div style={{ marginBottom: '35px', textAlign: 'center' }}>
+                            <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>System-Einstellungen</h2>
+                            <p style={{ color: '#888', margin: 0 }}>Verwalte deine Fitness-Ziele, Einheiten und Appdaten.</p>
+                        </div>
+
+                        <div className="settings-scroller">
+                            <section className="settings-card">
+                                <h3 style={{ fontSize: '16px', margin: '0 0 20px 0', borderBottom: '1px solid #2a2a2a', paddingBottom: '10px' }}>🎯 Manuelle Ziel-Konfiguration</h3>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                                    <div className="profile-form-group">
+                                        <label className="profile-label">Kalorienziel (kcal)</label>
+                                        <input 
+                                            type="number" 
+                                            className="profile-input" 
+                                            value={calorieTarget}
+                                            onChange={(e) => {
+                                                const val = Math.max(1, parseInt(e.target.value) || 0);
+                                                setCalorieTarget(val);
+                                                localStorage.setItem('userCalorieTarget', val.toString());
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="profile-form-group">
+                                        <label className="profile-label">Wasseraufnahme (L)</label>
+                                        <input 
+                                            type="number" 
+                                            step="0.1"
+                                            className="profile-input" 
+                                            value={waterTarget}
+                                            onChange={(e) => {
+                                                const val = Math.max(0.1, parseFloat(e.target.value) || 0);
+                                                setWaterTarget(val);
+                                                localStorage.setItem('userWaterTarget', val.toString());
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="profile-form-group">
+                                        <label className="profile-label">Protein-Ziel (g)</label>
+                                        <input 
+                                            type="number" 
+                                            className="profile-input" 
+                                            value={proteinTarget}
+                                            onChange={(e) => {
+                                                const val = Math.max(1, parseInt(e.target.value) || 0);
+                                                setProteinTarget(val);
+                                                localStorage.setItem('userProteinTarget', val.toString());
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="profile-form-group">
+                                        <label className="profile-label">Kohlenhydrate-Ziel (g)</label>
+                                        <input 
+                                            type="number" 
+                                            className="profile-input" 
+                                            value={carbsTarget}
+                                            onChange={(e) => {
+                                                const val = Math.max(1, parseInt(e.target.value) || 0);
+                                                setCarbsTarget(val);
+                                                localStorage.setItem('userCarbsTarget', val.toString());
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section className="settings-card">
+                                <h3 style={{ fontSize: '16px', margin: '0 0 20px 0', borderBottom: '1px solid #2a2a2a', paddingBottom: '10px' }}>⚙️ App-Präferenzen</h3>
+                                <div className="settings-group">
+                                    <div className="settings-row">
+                                        <div className="settings-info">
+                                            <span className="settings-title">Sound-Effekte</span>
+                                            <span className="settings-description">Confetti und Audio-Signale abspielen, wenn du Meilensteine erreichst.</span>
+                                        </div>
+                                        <label className="toggle-switch-wrapper">
+                                            <input 
+                                                type="checkbox" 
+                                                className="toggle-switch-input" 
+                                                checked={settingsSound}
+                                                onChange={(e) => {
+                                                    setSettingsSound(e.target.checked);
+                                                    localStorage.setItem('settingsSound', e.target.checked.toString());
+                                                }}
+                                            />
+                                            <span className="toggle-switch-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <div className="settings-row">
+                                        <div className="settings-info">
+                                            <span className="settings-title">Metrisches System</span>
+                                            <span className="settings-description">Einheiten in Kilogramm (kg) und Liter (L) anstelle von Pfund und Unzen.</span>
+                                        </div>
+                                        <label className="toggle-switch-wrapper">
+                                            <input 
+                                                type="checkbox" 
+                                                className="toggle-switch-input" 
+                                                checked={settingsMetric}
+                                                onChange={(e) => {
+                                                    setSettingsMetric(e.target.checked);
+                                                    localStorage.setItem('settingsMetric', e.target.checked.toString());
+                                                }}
+                                            />
+                                            <span className="toggle-switch-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <div className="settings-row">
+                                        <div className="settings-info">
+                                            <span className="settings-title">Tägliche Erinnerungen</span>
+                                            <span className="settings-description">Erhalte Push-Nachrichten für ungeloggtes Wasser und Mahlzeiten.</span>
+                                        </div>
+                                        <label className="toggle-switch-wrapper">
+                                            <input 
+                                                type="checkbox" 
+                                                className="toggle-switch-input" 
+                                                checked={settingsAlerts}
+                                                onChange={(e) => {
+                                                    setSettingsAlerts(e.target.checked);
+                                                    localStorage.setItem('settingsAlerts', e.target.checked.toString());
+                                                }}
+                                            />
+                                            <span className="toggle-switch-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section className="settings-card" style={{ borderColor: '#ef4444' }}>
+                                <h3 style={{ fontSize: '16px', margin: '0 0 10px 0', color: '#ef4444' }}>🚨 Gefahrenzone</h3>
+                                <p style={{ fontSize: '11px', color: '#888', margin: '0 0 20px 0' }}>Hiermit werden alle geloggten Mahlzeiten, Gewichtseinträge und Einstellungen unwiderruflich gelöscht.</p>
+                                <button className="btn-danger-reset" style={{ width: '100%' }} onClick={handleResetAllData}>
+                                    Alle App-Daten zurücksetzen
+                                </button>
+                            </section>
+                        </div>
+                    </div>
                 ) : (
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1, height: '100%' }}>
                         <div style={{ textAlign: 'center', color: '#888' }}>
@@ -1037,8 +1890,8 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                 }}>
                     <span style={{ fontSize: '24px' }}>🏆</span>
                     <div>
-                        <div style={{ fontWeight: '800', fontSize: '15px' }}>Ziel erreicht!</div>
-                        <div style={{ fontSize: '12px', fontWeight: '400', opacity: 0.95, marginTop: '2px' }}>Du hast dein tägliches Wasserziel geschafft!</div>
+                        <div style={{ fontWeight: '800', fontSize: '15px' }}>{toastTitle}</div>
+                        <div style={{ fontSize: '12px', fontWeight: '400', opacity: 0.95, marginTop: '2px' }}>{toastText}</div>
                     </div>
                 </div>
             )}
