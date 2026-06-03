@@ -248,7 +248,16 @@
       "weightGoalReached": "Weight goal achieved! Excellent work!",
       "weeklyHabitsProgress": "Daily goal: {{progress}}% of habits completed",
       "goalTextAbnehmen": "{{lost}} kg lost out of {{target}} kg goal ({{percent}}%)",
-      "goalTextZunehmen": "{{gained}} kg gained out of {{target}} kg goal ({{percent}}%)"
+      "goalTextZunehmen": "{{gained}} kg gained out of {{target}} kg goal ({{percent}}%)",
+      "challengesTitle": "Daily Challenges",
+      "challengesSubtitle": "Keep your streak active!",
+      "streakTitle": "Daily Streak",
+      "streakDays": "{{count}}-Day Streak",
+      "taskWater": "Hydration Target ({{waterTarget}}L)",
+      "taskProtein": "Protein Target ({{proteinTarget}}g)",
+      "taskWorkouts": "Log at least 1 Activity",
+      "taskMeals": "Log at least 3 Meals",
+      "allCompleted": "All Challenges Completed! 🏆"
     }
   }
 }

@@ -1725,3 +1725,49 @@ body.light-mode .toggle-switch-slider {
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
 }
 
+/* Daily Challenges & Streaks Style */
+.streak-badge {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #f59e0b;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.challenge-item-checkbox {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.challenge-item-checkbox.completed {
+    transform: translateX(4px);
+}
+
+.challenge-item-checkbox:hover {
+    border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+body.light-mode .challenge-item-checkbox {
+    background-color: #f9fafb !important;
+    border-color: #e5e7eb !important;
+}
+
+body.light-mode .challenge-item-checkbox.completed {
+    background-color: rgba(16, 185, 129, 0.05) !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+body.light-mode .challenge-item-checkbox .challenge-text {
+    color: #374151 !important;
+}
+
+body.light-mode .challenge-item-checkbox.completed .challenge-text {
+    color: #10b981 !important;
+}
+
+

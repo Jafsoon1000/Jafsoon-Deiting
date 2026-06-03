@@ -249,7 +249,16 @@
       "weightGoalReached": "Gewichtsziel erreicht! Ausgezeichnet!",
       "weeklyHabitsProgress": "Tagesziel: {{progress}}% der täglichen Gewohnheiten abgeschlossen",
       "goalTextAbnehmen": "{{lost}} kg abgenommen von {{target}} kg Ziel ({{percent}}%)",
-      "goalTextZunehmen": "{{gained}} kg zugenommen von {{target}} kg Ziel ({{percent}}%)"
+      "goalTextZunehmen": "{{gained}} kg zugenommen von {{target}} kg Ziel ({{percent}}%)",
+      "challengesTitle": "Tägliche Aufgaben",
+      "challengesSubtitle": "Halte deine Strähne aktiv!",
+      "streakTitle": "Tägliche Strähne",
+      "streakDays": "{{count}}-Tage-Strähne",
+      "taskWater": "Wasserziel ({{waterTarget}}L)",
+      "taskProtein": "Protein-Ziel ({{proteinTarget}}g)",
+      "taskWorkouts": "Mind. 1 Aktivität loggen",
+      "taskMeals": "Mind. 3 Mahlzeiten loggen",
+      "allCompleted": "Alle Aufgaben erledigt! 🏆"
     }
   }
 }

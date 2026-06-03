@@ -126,6 +126,12 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
     const [settingsMetric, setSettingsMetric] = useState(() => localStorage.getItem('settingsMetric') !== 'false');
     const [settingsAlerts, setSettingsAlerts] = useState(() => localStorage.getItem('settingsAlerts') !== 'false');
 
+    // Streak & Daily Challenges state
+    const [streakCount, setStreakCount] = useState(() => {
+        const stored = localStorage.getItem('userStreakCount');
+        return stored !== null ? parseInt(stored) || 0 : 3;
+    });
+
     const triggerConfetti = (title = 'Ziel erreicht!', text = 'Du hast dein tägliches Wasserziel geschafft!') => {
         setToastTitle(title);
         setToastText(text);
@@ -303,6 +309,9 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
             setCarbsTarget(200);
             setFatTarget(75);
             setCurrentWater(1.5);
+            setStreakCount(3);
+            localStorage.setItem('challengesCompletedToday', 'false');
+            localStorage.setItem('userStreakCount', '3');
             setMeals([
                 { id: 1, type: 'Frühstück', name: 'Haferflocken mit Beeren', calories: 450, protein: 25, carbs: 65, fat: 8 },
                 { id: 2, type: 'Mittagessen', name: 'Hähnchen-Quinoa-Bowl', calories: 620, protein: 45, carbs: 55, fat: 18 },
@@ -437,6 +446,37 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
     const totalFat = meals.reduce((sum, m) => sum + m.fat, 0);
     const totalBurnedCalories = workouts.reduce((sum, w) => sum + w.calories, 0);
     const netCalories = Math.max(0, totalCalories - totalBurnedCalories);
+
+    const isWaterChallengeDone = currentWater >= waterTarget;
+    const isProteinChallengeDone = totalProtein >= proteinTarget;
+    const isWorkoutChallengeDone = workouts.length >= 1;
+    const isMealChallengeDone = meals.length >= 3;
+
+    const completedChallengesCount = 
+        (isWaterChallengeDone ? 1 : 0) + 
+        (isProteinChallengeDone ? 1 : 0) + 
+        (isWorkoutChallengeDone ? 1 : 0) + 
+        (isMealChallengeDone ? 1 : 0);
+
+    useEffect(() => {
+        const allDone = isWaterChallengeDone && isProteinChallengeDone && isWorkoutChallengeDone && isMealChallengeDone;
+        const storedCompleted = localStorage.getItem('challengesCompletedToday') === 'true';
+        
+        if (allDone && !storedCompleted) {
+            localStorage.setItem('challengesCompletedToday', 'true');
+            setStreakCount(prev => {
+                const nextStreak = prev + 1;
+                localStorage.setItem('userStreakCount', nextStreak.toString());
+                return nextStreak;
+            });
+            triggerConfetti(
+                t('dashboard.allCompleted'), 
+                t('dashboard.challengesSubtitle')
+            );
+        } else if (!allDone && storedCompleted) {
+            localStorage.setItem('challengesCompletedToday', 'false');
+        }
+    }, [isWaterChallengeDone, isProteinChallengeDone, isWorkoutChallengeDone, isMealChallengeDone, t]);
 
     const [newWeight, setNewWeight] = useState('');
     const [newWeightDate, setNewWeightDate] = useState('');
@@ -1048,6 +1088,43 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                             <p style={{ fontSize: '13px', margin: '0 0 10px 0', color: '#888' }}>{goalText}</p>
                             <div className="progress-bar-placeholder" style={{ height: '10px', borderRadius: '5px' }}>
                                 <div className="fill" style={{ width: `${goalProgress}%`, height: '100%', backgroundColor: '#10b981', borderRadius: '5px', transition: 'width 0.5s ease-out' }}></div>
+                            </div>
+                        </section>
+
+                        <section className="dash-card daily-challenges-card">
+                            <div className="card-header" style={{ marginBottom: '12px' }}>
+                                <h2>{t('dashboard.challengesTitle')}</h2>
+                                <span className="streak-badge">🔥 {t('dashboard.streakDays', { count: streakCount })}</span>
+                            </div>
+                            <p style={{ fontSize: '12px', margin: '0 0 15px 0', color: '#888' }}>{t('dashboard.challengesSubtitle')}</p>
+                            
+                            <div className="challenges-progress-wrapper" style={{ marginBottom: '15px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '6px', fontWeight: 'bold' }}>
+                                    <span>{completedChallengesCount} / 4 {i18n.language === 'en' ? 'Completed' : 'Erledigt'}</span>
+                                    <span>{Math.round((completedChallengesCount / 4) * 100)}%</span>
+                                </div>
+                                <div className="progress-bar-placeholder" style={{ height: '8px', borderRadius: '4px' }}>
+                                    <div className="fill" style={{ width: `${(completedChallengesCount / 4) * 100}%`, height: '100%', backgroundColor: completedChallengesCount === 4 ? '#10b981' : '#3b82f6', borderRadius: '4px', transition: 'width 0.5s ease-out' }}></div>
+                                </div>
+                            </div>
+
+                            <div className="challenges-checkbox-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '15px' }}>
+                                <div className={`challenge-item-checkbox ${isWaterChallengeDone ? 'completed' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', borderRadius: '8px', background: isWaterChallengeDone ? 'rgba(16, 185, 129, 0.08)' : 'rgba(255, 255, 255, 0.02)', border: isWaterChallengeDone ? '1px solid rgba(16, 185, 129, 0.2)' : '1px solid rgba(255, 255, 255, 0.05)', transition: 'all 0.3s ease' }}>
+                                    <span className="checkbox-icon" style={{ fontSize: '14px' }}>{isWaterChallengeDone ? '✅' : '⏳'}</span>
+                                    <span className="challenge-text" style={{ fontSize: '12px', fontWeight: '500', color: isWaterChallengeDone ? '#10b981' : '#ccc' }}>{t('dashboard.taskWater', { waterTarget })}</span>
+                                </div>
+                                <div className={`challenge-item-checkbox ${isProteinChallengeDone ? 'completed' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', borderRadius: '8px', background: isProteinChallengeDone ? 'rgba(16, 185, 129, 0.08)' : 'rgba(255, 255, 255, 0.02)', border: isProteinChallengeDone ? '1px solid rgba(16, 185, 129, 0.2)' : '1px solid rgba(255, 255, 255, 0.05)', transition: 'all 0.3s ease' }}>
+                                    <span className="checkbox-icon" style={{ fontSize: '14px' }}>{isProteinChallengeDone ? '✅' : '⏳'}</span>
+                                    <span className="challenge-text" style={{ fontSize: '12px', fontWeight: '500', color: isProteinChallengeDone ? '#10b981' : '#ccc' }}>{t('dashboard.taskProtein', { proteinTarget })}</span>
+                                </div>
+                                <div className={`challenge-item-checkbox ${isMealChallengeDone ? 'completed' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', borderRadius: '8px', background: isMealChallengeDone ? 'rgba(16, 185, 129, 0.08)' : 'rgba(255, 255, 255, 0.02)', border: isMealChallengeDone ? '1px solid rgba(16, 185, 129, 0.2)' : '1px solid rgba(255, 255, 255, 0.05)', transition: 'all 0.3s ease' }}>
+                                    <span className="checkbox-icon" style={{ fontSize: '14px' }}>{isMealChallengeDone ? '✅' : '⏳'}</span>
+                                    <span className="challenge-text" style={{ fontSize: '12px', fontWeight: '500', color: isMealChallengeDone ? '#10b981' : '#ccc' }}>{t('dashboard.taskMeals')}</span>
+                                </div>
+                                <div className={`challenge-item-checkbox ${isWorkoutChallengeDone ? 'completed' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', borderRadius: '8px', background: isWorkoutChallengeDone ? 'rgba(16, 185, 129, 0.08)' : 'rgba(255, 255, 255, 0.02)', border: isWorkoutChallengeDone ? '1px solid rgba(16, 185, 129, 0.2)' : '1px solid rgba(255, 255, 255, 0.05)', transition: 'all 0.3s ease' }}>
+                                    <span className="checkbox-icon" style={{ fontSize: '14px' }}>{isWorkoutChallengeDone ? '✅' : '⏳'}</span>
+                                    <span className="challenge-text" style={{ fontSize: '12px', fontWeight: '500', color: isWorkoutChallengeDone ? '#10b981' : '#ccc' }}>{t('dashboard.taskWorkouts')}</span>
+                                </div>
                             </div>
                         </section>
                         
