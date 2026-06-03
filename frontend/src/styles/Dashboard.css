@@ -1770,4 +1770,38 @@ body.light-mode .challenge-item-checkbox.completed .challenge-text {
     color: #10b981 !important;
 }
 
+.dashboard-lang-select {
+    background-color: #222;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.dashboard-lang-select:focus {
+    border-color: #10b981;
+}
+
+.dashboard-lang-select option {
+    background-color: #1a1a1a;
+    color: #fff;
+}
+
+body.light-mode .dashboard-lang-select {
+    background-color: #ffffff;
+    border-color: #d1d5db;
+    color: #111827;
+}
+
+body.light-mode .dashboard-lang-select option {
+    background-color: #ffffff;
+    color: #111827;
+}
+
+
 

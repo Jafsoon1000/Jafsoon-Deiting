@@ -692,6 +692,16 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                         <button onClick={onToggleTheme} title="Toggle Theme" style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '18px', padding: '0 5px', color: 'inherit' }}>
                             {theme === 'dark' ? '☀️' : '🌙'}
                         </button>
+                        <select 
+                            value={i18n.language} 
+                            onChange={(e) => i18n.changeLanguage(e.target.value)}
+                            className="dashboard-lang-select"
+                            title="Select Language"
+                            style={{ margin: '0 5px' }}
+                        >
+                            <option value="de">Deutsch (DE)</option>
+                            <option value="en">English (EN)</option>
+                        </select>
                         <span>❓</span>
                         <span>🔔</span>
                         <span>{name || userName || 'Max M.'}</span>
