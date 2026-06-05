@@ -1,0 +1,10 @@
+[
+  {
+    "_id": "mock_lw9gsfi3c",
+    "name": "Test User",
+    "email": "test@example.com",
+    "password": "$2b$10$Wt3PDrUSnVjlpbN2zpChgONnFWOZ94BGQkt1u/dmPW9vhIqNzNJC.",
+    "createdAt": "2026-06-05T20:48:20.638Z",
+    "updatedAt": "2026-06-05T20:48:20.645Z"
+  }
+]

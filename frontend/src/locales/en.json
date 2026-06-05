@@ -135,6 +135,13 @@
       "ctaBtn": "Get Started Now"
     },
     "dashboard": {
+      "tabDashboard": "Dashboard",
+      "tabMealPlan": "Meal Plan",
+      "tabProgress": "Progress",
+      "tabRecipes": "Recipes",
+      "tabCommunity": "Community",
+      "tabSettings": "Settings",
+      "tabProfile": "Profile",
       "title": "Your Progress",
       "subtitle": "Macro Tracking",
       "calorieGoal": "Calorie Goal",
