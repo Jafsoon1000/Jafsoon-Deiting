@@ -702,7 +702,6 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                             <option value="de">Deutsch (DE)</option>
                             <option value="en">English (EN)</option>
                         </select>
-                        <span>❓</span>
                         <span>🔔</span>
                         <span>{name || userName || 'Max M.'}</span>
                         <button onClick={onSignOut} className="btn-outline-small" style={{marginLeft: '15px'}}>Sign Out</button>
