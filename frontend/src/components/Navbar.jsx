@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import '../styles/Navbar.css';
 
 const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail, onSignOut }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [scrolled, setScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -33,6 +33,29 @@ const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail, onSignOut }) => {
                 <li><Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.contact')}</Link></li>
                 <li><a href="/#tracker" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.tracker')}</a></li>
                 <li className="mobile-nav-actions">
+                    <select 
+                        className="language-selector-nav" 
+                        aria-label="Select Language" 
+                        onChange={(e) => { i18n.changeLanguage(e.target.value); setIsMobileMenuOpen(false); }} 
+                        value={i18n.language}
+                        style={{ 
+                            width: '100%',
+                            marginBottom: '10px',
+                            background: 'var(--surface-color)',
+                            color: 'var(--text-main)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '24px',
+                            padding: '12px 20px',
+                            fontSize: '16px',
+                            cursor: 'pointer',
+                            outline: 'none',
+                            textAlign: 'center',
+                            textAlignLast: 'center'
+                        }}
+                    >
+                        <option value="en" style={{ background: 'var(--bg-color)' }}>🇬🇧 English</option>
+                        <option value="de" style={{ background: 'var(--bg-color)' }}>🇩🇪 Deutsch</option>
+                    </select>
                     <button 
                         className="btn btn-outline" 
                         onClick={() => { onToggleTheme(); setIsMobileMenuOpen(false); }}
@@ -54,10 +77,31 @@ const Navbar = ({ onOpenAuth, theme, onToggleTheme, userEmail, onSignOut }) => {
                 </li>
             </ul>
             <div className="nav-actions">
+                <select 
+                    className="language-selector-nav" 
+                    aria-label="Select Language" 
+                    onChange={(e) => i18n.changeLanguage(e.target.value)} 
+                    value={i18n.language}
+                    style={{ 
+                        background: 'var(--surface-color)',
+                        color: 'var(--text-main)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '20px',
+                        padding: '8px 12px',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        marginRight: '10px',
+                        outline: 'none',
+                        transition: 'all 0.3s ease'
+                    }}
+                >
+                    <option value="en" style={{ background: 'var(--bg-color)' }}>EN</option>
+                    <option value="de" style={{ background: 'var(--bg-color)' }}>DE</option>
+                </select>
                 <button 
                     id="theme-toggle" 
                     className="btn btn-outline" 
-                    style={{ padding: '10px', fontSize: '18px', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    style={{ padding: '10px', fontSize: '18px', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '10px' }}
                     onClick={onToggleTheme}
                 >
                     {theme === 'dark' ? '☀️' : '🌙'}

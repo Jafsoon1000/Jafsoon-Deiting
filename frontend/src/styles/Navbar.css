@@ -104,3 +104,7 @@ nav.scrolled {
         border-top: 1px solid var(--border-color);
     }
 }
+
+.language-selector-nav:hover {
+    border-color: var(--text-main) !important;
+}
