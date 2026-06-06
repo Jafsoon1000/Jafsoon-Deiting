@@ -111,7 +111,8 @@
       "title": "Daily Hydration Tracker",
       "goal": "Goal: 8 Glasses (2L)",
       "reached": "Goal Reached! 💧 Stay hydrated!",
-      "logged": "{{count}} / 8 glasses logged"
+      "logged": "{{count}} / 8 glasses logged",
+      "reset": "Reset Tracker"
     },
     "about": {
       "badge": "Our Mission",

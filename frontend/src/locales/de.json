@@ -111,7 +111,8 @@
       "title": "Täglicher Hydratations-Tracker",
       "goal": "Ziel: 8 Gläser (2L)",
       "reached": "Ziel erreicht! 💧 Bleib hydratisiert!",
-      "logged": "{{count}} / 8 Gläser protokolliert"
+      "logged": "{{count}} / 8 Gläser protokolliert",
+      "reset": "Tracker zurücksetzen"
     },
     "about": {
       "badge": "Unsere Mission",

@@ -13,13 +13,17 @@ const TDEECalculator = () => {
     const [meals, setMeals] = useState([]);
 
     const calculate = () => {
-        if (!weight || !height || !age) {
+        const weightNum = parseFloat(weight);
+        const heightNum = parseFloat(height);
+        const ageNum = parseFloat(age);
+
+        if (!weightNum || !heightNum || !ageNum || weightNum <= 0 || heightNum <= 0 || ageNum <= 0) {
             alert(t('calculator.errorMsg'));
             return;
         }
 
         const bmrOffset = gender === 'male' ? 5 : -161;
-        const bmr = (10 * weight) + (6.25 * height) - (5 * age) + bmrOffset;
+        const bmr = (10 * weightNum) + (6.25 * heightNum) - (5 * ageNum) + bmrOffset;
         const tdee = Math.round(bmr * activity);
 
         const carbs = Math.round((tdee * 0.40) / 4);
@@ -43,11 +47,11 @@ const TDEECalculator = () => {
             <h3>{t('calculator.title')}</h3>
             <div className="input-group">
                 <label>{t('calculator.weight')}</label>
-                <input type="number" value={weight} onChange={(e) => setWeight(e.target.value)} />
+                <input type="number" min="1" value={weight} onChange={(e) => setWeight(e.target.value)} />
             </div>
             <div className="input-group">
                 <label>{t('calculator.height')}</label>
-                <input type="number" value={height} onChange={(e) => setHeight(e.target.value)} />
+                <input type="number" min="1" value={height} onChange={(e) => setHeight(e.target.value)} />
             </div>
             <div className="input-group">
                 <label>{t('calculator.gender')}</label>
@@ -58,7 +62,7 @@ const TDEECalculator = () => {
             </div>
             <div className="input-group">
                 <label>{t('calculator.age')}</label>
-                <input type="number" value={age} onChange={(e) => setAge(e.target.value)} />
+                <input type="number" min="1" value={age} onChange={(e) => setAge(e.target.value)} />
             </div>
             <div className="input-group">
                 <label>{t('calculator.activity')}</label>
