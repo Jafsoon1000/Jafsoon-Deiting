@@ -512,6 +512,35 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
     const initialWeight = weightHistory.length > 0 ? weightHistory[0].weight : 0;
     const netWeightChange = latestWeight - initialWeight;
 
+    // Weight Goal progress calculation
+    let weightGoalPercent = 0;
+    if (goal === 'Gewichtsverlust') {
+        const totalToLose = initialWeight - weightTarget;
+        const lostSoFar = initialWeight - latestWeight;
+        if (totalToLose > 0) {
+            weightGoalPercent = Math.max(0, Math.min(Math.round((lostSoFar / totalToLose) * 100), 100));
+        } else {
+            weightGoalPercent = 100;
+        }
+    } else if (goal === 'Muskelaufbau') {
+        const totalToGain = weightTarget - initialWeight;
+        const gainedSoFar = latestWeight - initialWeight;
+        if (totalToGain > 0) {
+            weightGoalPercent = Math.max(0, Math.min(Math.round((gainedSoFar / totalToGain) * 100), 100));
+        } else {
+            weightGoalPercent = 100;
+        }
+    }
+
+    const getDailyQuote = () => {
+        const day = new Date().getDate();
+        const index = day % 3;
+        let goalKey = 'Healthy';
+        if (goal === 'Muskelaufbau') goalKey = 'Muscle';
+        else if (goal === 'Gewichtsverlust') goalKey = 'Lose';
+        return t(`dashboard.quote${goalKey}_${index}`);
+    };
+
     // SVG coordinates setup
     const svgWidth = 500;
     const svgHeight = 120;

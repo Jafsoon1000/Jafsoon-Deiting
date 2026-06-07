@@ -266,7 +266,21 @@
       "taskProtein": "Protein-Ziel ({{proteinTarget}}g)",
       "taskWorkouts": "Mind. 1 Aktivität loggen",
       "taskMeals": "Mind. 3 Mahlzeiten loggen",
-      "allCompleted": "Alle Aufgaben erledigt! 🏆"
+      "allCompleted": "Alle Aufgaben erledigt! 🏆",
+      "weightProgressTitle": "Fortschritt des Gewichtsziels",
+      "weightProgressDesc": "Du hast {{percent}}% deines Gewichtsziels erreicht!",
+      "weightGoalDiff": "Noch {{diff}} kg bis zu deinem Ziel von {{target}} kg",
+      "weightGoalSteady": "Halte dein Gewicht stabil bei {{target}} kg",
+      "quoteTitle": "Tägliche Motivation",
+      "quoteMuscle_0": "Stärke kommt nicht von dem, was du tun kannst. Sie kommt aus dem Überwinden der Dinge, von denen du dachtest, du schaffst sie nicht.",
+      "quoteMuscle_1": "Dein Körper hält fast alles aus. Es ist dein Geist, den du überzeugen musst.",
+      "quoteMuscle_2": "Das einzige schlechte Training ist das, das nicht stattgefunden hat. Baue Muskeln auf!",
+      "quoteLose_0": "Erfolg ist die Summe kleiner Anstrengungen, die Tag für Tag wiederholt werden.",
+      "quoteLose_1": "Es ist keine kurzfristige Diät. Es ist eine langfristige Änderung des Lebensstils.",
+      "quoteLose_2": "Glaube daran, dass du es kannst, und du hast den halben Weg geschafft.",
+      "quoteHealthy_0": "Achte auf deinen Körper. Es ist der einzige Ort, an dem du leben musst.",
+      "quoteHealthy_1": "Ein gesundes Äußeres beginnt mit einem gesunden Inneren.",
+      "quoteHealthy_2": "Bei Gesundheit geht es nicht um das Gewicht, das du verlierst, sondern um das Leben, das du gewinnst."
     }
   }
 }

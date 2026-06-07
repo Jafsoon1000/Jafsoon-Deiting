@@ -265,7 +265,21 @@
       "taskProtein": "Protein Target ({{proteinTarget}}g)",
       "taskWorkouts": "Log at least 1 Activity",
       "taskMeals": "Log at least 3 Meals",
-      "allCompleted": "All Challenges Completed! 🏆"
+      "allCompleted": "All Challenges Completed! 🏆",
+      "weightProgressTitle": "Weight Goal Progress",
+      "weightProgressDesc": "You have achieved {{percent}}% of your weight goal!",
+      "weightGoalDiff": "{{diff}} kg left to reach your target of {{target}} kg",
+      "weightGoalSteady": "Maintain stable weight at {{target}} kg",
+      "quoteTitle": "Daily Motivation",
+      "quoteMuscle_0": "Strength does not come from what you can do. It comes from overcoming the things you once thought you couldn't.",
+      "quoteMuscle_1": "Your body can stand almost anything. It's your mind that you have to convince.",
+      "quoteMuscle_2": "The only bad workout is the one that didn't happen. Build that muscle!",
+      "quoteLose_0": "Success is the sum of small efforts, repeated day in and day out.",
+      "quoteLose_1": "It's not a short-term diet. It's a long-term lifestyle change.",
+      "quoteLose_2": "Believe you can and you're halfway there.",
+      "quoteHealthy_0": "Take care of your body. It's the only place you have to live.",
+      "quoteHealthy_1": "A healthy outside starts from the inside.",
+      "quoteHealthy_2": "Health is not about the weight you lose, but the life you gain."
     }
   }
 }
