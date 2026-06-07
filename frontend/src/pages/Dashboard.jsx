@@ -932,6 +932,64 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
                                     {i18n.language === 'en' ? 'Log' : 'Eintragen'}
                                 </button>
                             </form>
+
+                            {/* Weight Goal Progress Visualizer */}
+                            <div className="weight-progress-container" style={{ marginTop: '20px', paddingTop: '15px', borderTop: '1px solid #2a2a2a' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                    <h4 style={{ margin: 0, fontSize: '13px', fontWeight: '600', color: 'var(--text-color, #aaa)' }}>
+                                        {t('dashboard.weightProgressTitle')}
+                                    </h4>
+                                    <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#10b981' }}>
+                                        {goal === 'Gesunder Lebensstil' ? '' : `${weightGoalPercent}%`}
+                                    </span>
+                                </div>
+                                
+                                {goal !== 'Gesunder Lebensstil' ? (
+                                    <>
+                                        <div className="progress-bar-placeholder" style={{ height: '8px', borderRadius: '4px', marginBottom: '8px' }}>
+                                            <div 
+                                                className="fill" 
+                                                style={{ 
+                                                    width: `${weightGoalPercent}%`, 
+                                                    height: '100%', 
+                                                    backgroundColor: '#10b981', 
+                                                    borderRadius: '4px', 
+                                                    transition: 'width 0.5s ease-out' 
+                                                }}
+                                            ></div>
+                                        </div>
+                                        <p style={{ margin: 0, fontSize: '11px', color: '#888' }}>
+                                            {t('dashboard.weightGoalDiff', { 
+                                                diff: Math.abs(weightTarget - latestWeight).toFixed(1), 
+                                                target: weightTarget 
+                                            })}
+                                        </p>
+                                    </>
+                                ) : (
+                                    <p style={{ margin: 0, fontSize: '11px', color: '#888' }}>
+                                        {t('dashboard.weightGoalSteady', { target: weightTarget })}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Daily Motivational Quote */}
+                            <div className="motivational-quote-box" style={{ 
+                                marginTop: '15px', 
+                                padding: '12px 15px', 
+                                borderRadius: '12px', 
+                                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(59, 130, 246, 0.08) 100%)',
+                                border: '1px solid rgba(255, 255, 255, 0.05)',
+                                position: 'relative',
+                                overflow: 'hidden'
+                            }}>
+                                <span style={{ position: 'absolute', right: '10px', bottom: '-10px', fontSize: '50px', opacity: 0.05, pointerEvents: 'none', fontFamily: 'serif' }}>”</span>
+                                <h5 style={{ margin: '0 0 5px 0', fontSize: '11px', textTransform: 'uppercase', color: '#10b981', letterSpacing: '1px', fontWeight: '700' }}>
+                                    {t('dashboard.quoteTitle')}
+                                </h5>
+                                <p style={{ margin: 0, fontSize: '12px', fontStyle: 'italic', lineHeight: '1.4', color: '#ddd' }}>
+                                    "{getDailyQuote()}"
+                                </p>
+                            </div>
                         </section>
                     </div>
 

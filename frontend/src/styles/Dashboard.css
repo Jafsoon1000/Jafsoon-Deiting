@@ -1803,5 +1803,23 @@ body.light-mode .dashboard-lang-select option {
     color: #111827;
 }
 
+/* Motivational Quote Box styling & Light mode overrides */
+.motivational-quote-box {
+    transition: all 0.3s ease;
+}
+
+body.light-mode .motivational-quote-box {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%) !important;
+    border-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+body.light-mode .motivational-quote-box p {
+    color: #374151 !important;
+}
+
+body.light-mode .weight-progress-container h4 {
+    color: #4b5563 !important;
+}
+
 
 
