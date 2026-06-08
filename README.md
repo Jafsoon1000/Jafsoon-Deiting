@@ -1,21 +1,9 @@
 <div align="center">
-  <table>
-    <tr>
-      <td><img src="./docs/assets/dashboard_preview.png" alt="Dark Mode" width="100%" /></td>
-      <td><img src="./docs/assets/dashboard_preview_light.png" alt="Light Mode" width="100%" /></td>
-    </tr>
-    <tr>
-      <td align="center"><b>Dark Mode</b></td>
-      <td align="center"><b>Light Mode</b></td>
-    </tr>
-  </table>
+  <img src="./docs/assets/dashboard_mockup.png" alt="Jafsoon Dashboard Mockup" width="100%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);" />
   <br />
   <br />
   <h1>Jafsoon</h1>
   <p><strong>Your Ultimate Personalized Dieting and Nutrition Platform</strong></p>
-  
-  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 </div>
 
 <br />
@@ -180,9 +168,9 @@ Please ensure your code adheres to the existing styling guidelines and lint rule
 
 ---
 
-## 📄 License
+## 🔒 Copyright & License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+This project is proprietary and confidential. All rights reserved. Unauthorized copying, distribution, or modifications of this codebase via any medium is strictly prohibited.
 
 ---
 <div align="center">
