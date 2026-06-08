@@ -22,19 +22,23 @@
 
 ## 🥗 Overview
 
-**Jafsoon** is a modern, comprehensive dieting and health tracking application designed to help users achieve their wellness goals. Featuring personalized meal plans, detailed macro tracking, and an intuitive dashboard, Jafsoon makes healthy living accessible and engaging.
+**Jafsoon** is a modern, comprehensive dieting, fitness, and health tracking application designed to help users achieve their wellness goals. Featuring personalized meal plans, detailed macro tracking, interactive fitness logging, gamified achievements, and a localized user interface, Jafsoon makes healthy living accessible, intuitive, and engaging.
 
-Whether your goal is weight loss, muscle gain, or simply maintaining a balanced lifestyle, Jafsoon provides the tools and insights you need to succeed.
+Whether your goal is weight loss, muscle gain, or simply maintaining a balanced and healthy lifestyle, Jafsoon provides the precise tools and data-driven insights you need to succeed.
 
 ---
 
 ## ✨ Key Features
 
-- **📊 Comprehensive Nutrition Tracking:** Log meals effortlessly and monitor your daily caloric and macronutrient intake with beautiful visual charts.
-- **🥑 Personalized Meal Plans:** Generate tailored dietary recommendations based on your unique health goals and preferences.
-- **🔒 Secure Authentication:** Private and secure user profiles to keep your health data protected.
-- **📱 Responsive & Accessible:** A fresh, vibrant UI that looks stunning and works perfectly across desktops, tablets, and mobile devices.
-- **📈 Progress Monitoring:** Track your weight, body metrics, and overall progress over time.
+- **📊 Comprehensive Nutrition & Macro Tracking:** Log meals effortlessly and monitor your daily caloric, protein, carbohydrate, and fat intake with interactive, responsive visual charts.
+- **💧 Smart Hydration Tracker:** Stay on top of your water intake with an interactive logger. Track progress against custom target targets with glass-by-glass interactive state updates.
+- **🏋️‍♂️ Activity & Workout Log:** Track physical activities, duration, and calories burned to offset your net caloric intake dynamically.
+- **🏆 Gamified Achievements & Badges:** Stay motivated with an automated trophy system! Unlock achievements (like *Water Master*, *Calorie Pioneer*, or *Activity Champion*) as you hit your daily goals.
+- **🥑 Meal Plans & Recipe Library:** Browse tailored, fitness-oriented recipes (Protein-Rich, Low-Carb, Vegan) with prep times and ingredients, and log them directly to your diary with a single click.
+- **🧮 Interactive BMI & TDEE Calculators:** Calculate your Body Mass Index and estimate your Total Daily Energy Expenditure to determine recommended target macro structures.
+- **💬 Jafsoon Feed (Community Space):** Share your fitness progress, recipes, and motivational updates with a built-in community feed.
+- **🌐 Localization (Multi-language):** Seamless translation and UI toggling between **English (EN)** and **German (DE)** supported globally throughout the application.
+- **🔒 Secure Authentication:** Private and secure user profiles to keep your health data protected, utilizing JWT-based tokens.
 
 ---
 
@@ -43,22 +47,46 @@ Whether your goal is weight loss, muscle gain, or simply maintaining a balanced 
 Jafsoon is engineered using a modern, scalable full-stack ecosystem:
 
 ### Frontend
-- **Framework:** [React 18+](https://reactjs.org/) powered by [Vite](https://vitejs.dev/) for lightning-fast HMR and optimized builds.
-- **Styling:** Vanilla CSS / Tailwind CSS for a highly customizable and responsive design system.
-- **State Management:** Context API / Redux Toolkit
+- **Framework:** [React 19](https://react.dev/) powered by [Vite](https://vite.dev/) for high-performance HMR and optimized builds.
+- **Routing:** [React Router DOM 7](https://reactrouter.com/) for page navigation.
+- **Localization:** [i18next](https://www.i18next.com/) & [react-i18next](https://react.i18next.com/) for translation management.
+- **Styling:** Custom Vanilla CSS with custom CSS variables to ensure a sleek, responsive design system.
 
 ### Backend
 - **Runtime Environment:** [Node.js](https://nodejs.org/)
-- **Framework:** [Express.js](https://expressjs.com/) for scalable API routing.
-- **Database:** [MongoDB](https://www.mongodb.com/) using Mongoose (Ideal for flexible nutrition and user profiles).
-- **Authentication:** Custom JWT-based authentication with `bcryptjs` for secure password hashing.
+- **Framework:** [Express.js](https://expressjs.com/) for API routing.
+- **Database:** [MongoDB](https://www.mongodb.com/) using [Mongoose ODM](https://mongoosejs.com/) for schema modeling.
+- **Authentication:** JWT-based user session handling with `bcryptjs` encryption.
 
 ---
 
 ## 📂 Project Structure
 
-- `frontend/` - A modern React application built with Vite. Contains the UI components, pages, and routing.
-- `backend/` - Contains the Node.js Express server to handle API requests, authentication, and database connections.
+The project follows a clean repository layout separating client and server components:
+
+```
+├── backend/                  # Node.js/Express Server
+│   ├── src/
+│   │   ├── config/           # Database connections (db.js)
+│   │   ├── controllers/      # Route controllers and business logic
+│   │   ├── models/           # Mongoose schemas (User, etc.)
+│   │   ├── routes/           # Express routes and endpoints
+│   │   └── app.js            # App middleware and setup
+│   ├── server.js             # Main server execution script
+│   └── package.json          # Backend dependencies
+│
+├── frontend/                 # React SPA Client
+│   ├── src/
+│   │   ├── components/       # Reusable UI widgets (Navbar, Footer, Calculators, etc.)
+│   │   ├── locales/          # Localization resources (en.json, de.json)
+│   │   ├── pages/            # View pages (Dashboard, Home, Plans, About, etc.)
+│   │   ├── styles/           # Component stylesheet modules
+│   │   ├── App.jsx           # Root layout and routes
+│   │   └── main.jsx          # Vite entrypoint
+│   └── package.json          # Frontend dependencies
+```
+
+---
 
 ## 🚀 Getting Started
 
@@ -76,27 +104,23 @@ Ensure you have the following installed on your local machine:
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/Jafsoon1000/Jafsoon-Deiting.git
-   ```
-
-2. **Navigate to the project directory:**
-   ```bash
    cd Jafsoon-Deiting
    ```
 
-3. **Install backend dependencies:**
+2. **Install backend dependencies:**
    ```bash
    cd backend
    npm install
    ```
 
-4. **Install frontend dependencies:**
+3. **Install frontend dependencies:**
    ```bash
    cd ../frontend
    npm install
    ```
 
-5. **Environment Variables:**
-   Create a `.env` file in the `backend` directory and configure your environment variables:
+4. **Environment Variables:**
+   Create a `.env` file in the `backend` directory and configure your credentials:
    ```env
    PORT=3000
    MONGODB_URI=your_mongodb_connection_string
@@ -105,31 +129,40 @@ Ensure you have the following installed on your local machine:
 
 ### Running the Development Servers
 
-You will need two terminal windows to run both the frontend and backend simultaneously.
+You will need two terminal windows to run both services simultaneously.
 
-**Terminal 1 (Backend):**
+**Terminal 1 (Backend Server):**
 ```bash
 cd backend
 npm run dev
 ```
 
-**Terminal 2 (Frontend):**
+**Terminal 2 (Frontend Client):**
 ```bash
 cd frontend
-npm install
 npm run dev
 ```
-The application will be accessible at `http://localhost:5173` (or the port Vite provides).
+The application will be accessible locally at `http://localhost:5173`.
+
+---
+
+## 🌐 Localization (i18n)
+
+Localization configurations are structured in `frontend/src/locales/`. 
+- **English Translations:** Found in [`frontend/src/locales/en.json`](./frontend/src/locales/en.json).
+- **German Translations:** Found in [`frontend/src/locales/de.json`](./frontend/src/locales/de.json).
+
+To add a new translation string, ensure you update both locale files with matching JSON keys.
 
 ---
 
 ## 📡 API Endpoints
 
-Here are the primary API routes available in the backend:
+The primary API routes available on the backend server include:
 
-- `POST /api/auth/signup` - Register a new user (Requires: `name`, `email`, `password`)
-- `POST /api/auth/signin` - Authenticate an existing user (Requires: `email`, `password`)
-- `GET /api/health` - Check if the backend server is running
+- `POST /api/auth/signup` - Register a new user (Body: `name`, `email`, `password`)
+- `POST /api/auth/signin` - Authenticate an existing user (Body: `email`, `password`)
+- `GET /api/health` - Health check status report for verification
 
 ---
 
@@ -143,7 +176,7 @@ We welcome contributions to make Jafsoon even better! If you'd like to help:
 4. Push to the branch (`git push origin feature/AmazingFeature`).
 5. Open a Pull Request.
 
-Please ensure your code adheres to the existing style guidelines and passes all tests.
+Please ensure your code adheres to the existing styling guidelines and lint rules.
 
 ---
 
