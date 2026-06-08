@@ -6,5 +6,13 @@
     "password": "$2b$10$Wt3PDrUSnVjlpbN2zpChgONnFWOZ94BGQkt1u/dmPW9vhIqNzNJC.",
     "createdAt": "2026-06-05T20:48:20.638Z",
     "updatedAt": "2026-06-05T20:48:20.645Z"
+  },
+  {
+    "_id": "mock_7ln8i4nja",
+    "name": "Alex Health",
+    "email": "alex@jafsoon.com",
+    "password": "$2b$10$Tl05f9retzWJEvYL/TVg1ekpYfhEZXOGSSiSzVx5/pNAabBruxrSa",
+    "createdAt": "2026-06-08T21:12:54.072Z",
+    "updatedAt": "2026-06-08T21:12:54.075Z"
   }
 ]
