@@ -156,6 +156,147 @@ To add a new translation string, ensure you update both locale files with matchi
 
 ---
 
+## 🖥️ User Dashboard — Technical Deep Dive
+
+The **User Dashboard** is the heart of Jafsoon, a feature-rich, single-page control center built as a monolithic React component (`Dashboard.jsx`, ~2100 lines). It provides a desktop-grade experience with **real-time interactivity**, **persistent state**, and **full bilingual support (EN/DE)**.
+
+### 🏗️ Architecture & Layout
+
+The dashboard follows a **sidebar + main content** split layout:
+
+| Element | Description |
+|---|---|
+| **Icon Sidebar** (`dashboard-sidebar-icons`) | Fixed vertical navigation rail with emoji-based tab icons for Dashboard, Meal Plan, Progress, Recipes, Community, Settings, and Profile. |
+| **Top Navigation Bar** (`dashboard-top-nav`) | Horizontal tab links, language switcher (`<select>` dropdown), theme toggle (☀️/🌙), notification bell, and sign-out button. |
+| **3-Column Grid** (`dashboard-grid`) | Responsive CSS grid with Left (overview + weight chart), Middle (meal plan), and Right (goals + challenges + achievements) columns. |
+
+Each tab (`Dashboard`, `Ernährungsplan`, `Fortschritt`, `Rezepte`, `Community`, `Settings`, `Profile`) renders a **conditionally displayed section** controlled by the `activeTab` state variable.
+
+---
+
+### 📊 Interactive Modules
+
+#### 1. Circular Progress Rings (`CircularProgress`)
+A reusable SVG-based radial progress indicator used for Calories, Protein, Carbs, and Fat tracking. Renders two `<circle>` elements — a background track and a foreground arc controlled by `strokeDashoffset`, animated via CSS `transition: stroke-dashoffset 0.4s cubic-bezier(...)`.
+
+#### 2. Weight History Chart (Custom SVG Line Chart)
+A fully custom-built SVG line chart (no external charting library):
+- Dynamically computes `viewBox`, axis ranges (`minW`, `maxW`), and point coordinates.
+- Renders a gradient-filled `<path>` area and a stroke line with `strokeLinecap="round"`.
+- Data point nodes (`<circle>`) show hover tooltips via CSS `:hover` opacity transitions.
+- Includes an inline form to log new weight entries with date labels.
+
+#### 3. Hydration Tracker (Water Intake)
+An interactive water intake logger with **glass-by-glass increments**:
+- Buttons for `-250ml`, `+250ml`, `+500ml` adjustments.
+- Real-time progress bar (`progress-mini`) with percentage fill.
+- Triggers confetti animation + toast notification when the daily target is reached.
+
+#### 4. Meal Plan Manager
+Full CRUD (Create, Read, Update, Delete) for daily meals:
+- Each meal entry stores `type`, `name`, `calories`, `protein`, `carbs`, and `fat`.
+- Inline form with dropdown (Breakfast/Lunch/Dinner/Snack) and macro input fields.
+- One-click logging from the Recipe Library via `handleAddMealFromPlan()`.
+
+#### 5. Activity & Workout Logger
+- Add workouts with `type` (Running, Strength Training, Yoga, etc.), `duration`, `calories burned`, and `time`.
+- Burned calories are dynamically subtracted from total intake to compute **net calories**.
+- Deletable entries with `handleDeleteWorkout()`.
+
+#### 6. BMI Calculator
+An inline calculator that computes Body Mass Index from height (cm) and weight (kg):
+- Classification into `Untergewicht`, `Normal`, `Übergewicht`, `Adipositas`.
+- Result displayed with color-coded status indicators.
+
+#### 7. Community Feed (`Jafsoon Feed`)
+A social-media-style post feed:
+- Pre-seeded with sample posts (avatars, timestamps, like counts).
+- Users can create new posts, and like/unlike existing posts.
+- All post data persisted in `localStorage`.
+
+---
+
+### 💾 State Management & Persistence
+
+All user data is managed through React `useState` hooks and **fully persisted in `localStorage`**:
+
+| Data | Storage Key | Type |
+|---|---|---|
+| User name | `userName` | `string` |
+| Fitness goal | `userGoal` | `string` |
+| Calorie target | `userCalorieTarget` | `int` |
+| Water target | `userWaterTarget` | `float` |
+| Weight target | `userWeightTarget` | `float` |
+| Macro targets | `userProteinTarget`, `userCarbsTarget`, `userFatTarget` | `int` |
+| Current water | `userCurrentWater` | `float` |
+| Weight history | `userWeightHistory` | `JSON array` |
+| Meals | `userMeals` | `JSON array` |
+| Workouts | `userWorkouts` | `JSON array` |
+| Community posts | `userCommunityPosts` | `JSON array` |
+| Streak count | `userStreakCount` | `int` |
+| Settings (sound, metric, alerts) | `settingsSound`, `settingsMetric`, `settingsAlerts` | `boolean` |
+
+State is initialized with a **lazy initializer pattern** (`useState(() => { ... })`) that reads from `localStorage` on mount, falling back to sensible defaults.
+
+---
+
+### 🏆 Gamification System
+
+#### Achievements & Trophies
+Six unlockable achievements dynamically computed from real user data:
+
+| Trophy | Condition |
+|---|---|
+| 💧 Water Master | Daily water target reached |
+| 🔥 Calorie Pioneer | 1000+ kcal logged |
+| 🏃 Activity Champion | At least 1 workout logged |
+| ⚖️ Weight Tracker | 3+ weight entries recorded |
+| 🍳 Gourmet Chef | All 4 meal types logged (Breakfast, Lunch, Dinner, Snack) |
+| 🏆 Willpower | Overall goal progress reaches 100% |
+
+#### Daily Challenges & Streak System
+- Four daily challenges tracked: water goal, protein goal, workout logged, 3+ meals.
+- Completing all four increments a **streak counter** (persisted across sessions).
+- A `useEffect` hook monitors challenge completion and auto-awards streaks.
+
+#### Confetti Celebration Engine
+A custom confetti particle system triggers on milestone achievements:
+- Generates 65 randomized particles with varied colors (`#10b981`, `#3b82f6`, `#f59e0b`, etc.), sizes, positions, and shapes (circles + squares).
+- Accompanied by a toast notification with customizable title and text.
+- Auto-clears after 4 seconds (confetti) / 4.5 seconds (toast).
+
+---
+
+### 🌐 Localization Integration
+
+The dashboard is fully localized using **i18next** + **react-i18next**:
+- All visible strings use `t('dashboard.keyName')` translation keys.
+- Language toggle (`DE`/`EN`) in the top nav instantly re-renders the entire UI.
+- Date formats, placeholder texts, alert messages, and motivational quotes are all locale-aware.
+- Dynamic motivational quotes rotate daily based on the selected fitness goal (`Muscle`, `Lose`, `Healthy`).
+
+---
+
+### 🎨 Theming & Visual Design
+
+- **Dark/Light mode** toggling via `theme` prop and CSS class `dark-theme-override`.
+- CSS custom properties (`--card-bg`, `--text-color`) enable seamless theme switching.
+- Glassmorphism-inspired card designs with subtle borders and gradient backgrounds.
+- Smooth micro-animations on progress rings, chart nodes, buttons, and tab transitions.
+- A **Settings panel** allows toggling sound effects, metric units, and alert notifications.
+
+---
+
+### ⚙️ Profile Management
+
+Users can edit their profile inline with a modal-style form:
+- Editable fields: Name, Fitness Goal (Muscle Gain / Weight Loss / Healthy Lifestyle), Calorie Target, Water Target, Weight Target, and all Macro Targets.
+- Validation ensures non-empty name and positive target values.
+- Saving updates both `localStorage` and parent component state via `onUpdateProfileName` callback.
+- A **Reset All Data** action clears all persisted data and restores factory defaults after user confirmation.
+
+---
+
 ## 📡 API Endpoints
 
 The primary API routes available on the backend server include:
