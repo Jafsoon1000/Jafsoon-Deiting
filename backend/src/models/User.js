@@ -17,11 +17,69 @@ const userSchema = new mongoose.Schema({
     },
     dateOfBirth: {
         type: Date,
-        required: [true, 'Please add a date of birth'],
     },
     gender: {
         type: String,
-        required: [true, 'Please add a gender'],
+    },
+    userGoal: {
+        type: String,
+        default: 'Healthy'
+    },
+    userCalorieTarget: {
+        type: Number,
+        default: 2000
+    },
+    userWaterTarget: {
+        type: Number,
+        default: 2.5
+    },
+    userWeightTarget: {
+        type: Number,
+        default: 70
+    },
+    userProteinTarget: {
+        type: Number,
+        default: 150
+    },
+    userCarbsTarget: {
+        type: Number,
+        default: 200
+    },
+    userFatTarget: {
+        type: Number,
+        default: 70
+    },
+    userCurrentWater: {
+        type: Number,
+        default: 0
+    },
+    userWeightHistory: {
+        type: Array,
+        default: []
+    },
+    userMeals: {
+        type: Array,
+        default: []
+    },
+    userWorkouts: {
+        type: Array,
+        default: []
+    },
+    userStreakCount: {
+        type: Number,
+        default: 0
+    },
+    settingsSound: {
+        type: Boolean,
+        default: true
+    },
+    settingsMetric: {
+        type: Boolean,
+        default: true
+    },
+    settingsAlerts: {
+        type: Boolean,
+        default: true
     }
 }, {
     timestamps: true

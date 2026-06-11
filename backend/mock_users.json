@@ -1,0 +1,34 @@
+[
+  {
+    "_id": "mock_xx13wjn9u",
+    "name": "Test User",
+    "email": "test_1781209965964@example.com",
+    "password": "$2b$10$6UdK3xIdaKnQE.M2o.g8Q.Yu7ShrzyDpJVWn8OaFz0S6RKmbdMd/O",
+    "createdAt": "2026-06-11T20:32:46.119Z",
+    "updatedAt": "2026-06-11T20:32:46.120Z"
+  },
+  {
+    "_id": "mock_twyfhwbay",
+    "name": "Test User",
+    "email": "test_1781209994172@example.com",
+    "password": "$2b$10$0910qn69WD.Aa5X8RewhaO.qedZe1YkD8ppOaul12e2QBpq/nLiH6",
+    "createdAt": "2026-06-11T20:33:14.278Z",
+    "updatedAt": "2026-06-11T20:33:14.278Z"
+  },
+  {
+    "_id": "mock_gxkafudsy",
+    "name": "Test User",
+    "email": "test_1781210019890@example.com",
+    "password": "$2b$10$8WgWSLelC5LukfQZEbYfJ.bekhRC3NY4QOohRyDNYHiTJJ1za9JSW",
+    "createdAt": "2026-06-11T20:33:40.053Z",
+    "updatedAt": "2026-06-11T20:33:40.084Z",
+    "userGoal": "Lose Weight",
+    "userCalorieTarget": 1800,
+    "userMeals": [
+      {
+        "name": "Salad",
+        "calories": 350
+      }
+    ]
+  }
+]
