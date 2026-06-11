@@ -310,7 +310,7 @@
 .btn-outline-small:hover { border-color: #10b981; color: #10b981; }
 .btn-outline-small.right { margin-left: auto; }
 
-.meals-list { display: flex; flex-direction: column; gap: 15px; }
+.meals-list { display: flex; flex-direction: column; gap: 15px; max-height: 420px; overflow-y: auto; padding-right: 5px; }
 
 .meal-card {
     display: flex;
