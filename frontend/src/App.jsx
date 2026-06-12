@@ -79,7 +79,7 @@ function AppContent() {
                     <Route path="/careers" element={<Careers />} />
                     <Route path="/health-tips" element={<HealthTips />} />
                     <Route 
-                        path="/dashboard" 
+                        path="/dashboard/*" 
                         element={
                             <ProtectedRoute userEmail={userEmail}>
                                 <Dashboard 

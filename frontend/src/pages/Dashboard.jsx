@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../styles/Dashboard.css';
 
@@ -46,7 +47,33 @@ const CircularProgress = ({ value, target, color, size = 80, strokeWidth = 6, la
 
 const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpdateProfileName }) => {
     const { t, i18n } = useTranslation();
-    const [activeTab, setActiveTab] = useState('Dashboard');
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Map of pathnames to activeTab names
+    const tabPaths = {
+        'mealplan': 'Ernährungsplan',
+        'ernaehrungsplan': 'Ernährungsplan',
+        'progress': 'Fortschritt',
+        'fortschritt': 'Fortschritt',
+        'recipes': 'Rezepte',
+        'rezepte': 'Rezepte',
+        'community': 'Community',
+        'settings': 'Settings',
+        'profile': 'Profile'
+    };
+
+    // Determine the active tab based on the current URL path
+    const getActiveTabFromPath = (path) => {
+        const parts = path.toLowerCase().split('/');
+        const lastPart = parts[parts.length - 1];
+        if (tabPaths[lastPart]) {
+            return tabPaths[lastPart];
+        }
+        return 'Dashboard';
+    };
+
+    const activeTab = getActiveTabFromPath(location.pathname);
 
     // Profile targets and information state (persisted in localStorage)
     const [name, setName] = useState(userName || localStorage.getItem('userName') || 'Max Mustermann');
@@ -347,7 +374,7 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
             setSettingsAlerts(true);
             
             alert(i18n.language === 'en' ? 'All app data has been successfully reset!' : 'Alle App-Daten wurden erfolgreich zurückgesetzt!');
-            setActiveTab('Dashboard');
+            navigate('/dashboard');
         }
     };
 
@@ -588,7 +615,16 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
     }, [userName]);
 
     const handleTabClick = (tabName) => {
-        setActiveTab(tabName);
+        const reverseTabPaths = {
+            'Ernährungsplan': '/dashboard/mealplan',
+            'Fortschritt': '/dashboard/progress',
+            'Rezepte': '/dashboard/recipes',
+            'Community': '/dashboard/community',
+            'Settings': '/dashboard/settings',
+            'Profile': '/dashboard/profile',
+            'Dashboard': '/dashboard'
+        };
+        navigate(reverseTabPaths[tabName] || '/dashboard');
     };
 
     const handleActionClick = (actionName) => {
