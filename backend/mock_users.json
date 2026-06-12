@@ -30,5 +30,13 @@
         "calories": 350
       }
     ]
+  },
+  {
+    "_id": "mock_hn3idkjff",
+    "name": "ten",
+    "email": "ten@gamil.com",
+    "password": "$2b$10$Do8sedJrdDQVlHmYHQQeh.ZYx7oPJw1ZeUtErSJafe2nBxd.w7BAK",
+    "createdAt": "2026-06-12T19:55:13.573Z",
+    "updatedAt": "2026-06-12T19:55:13.573Z"
   }
 ]

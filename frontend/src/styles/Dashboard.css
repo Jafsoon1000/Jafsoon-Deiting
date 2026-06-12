@@ -708,6 +708,8 @@ body.light-mode .top-nav-profile button {
     font-size: 14px;
     transition: all 0.3s ease;
     font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .profile-input:focus, .profile-select:focus {
