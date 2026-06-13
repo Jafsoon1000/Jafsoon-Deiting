@@ -29,4 +29,8 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
+// Centralized Error Handler
+const { errorHandler } = require('./middleware/errorMiddleware');
+app.use(errorHandler);
+
 module.exports = app;
