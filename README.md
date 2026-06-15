@@ -54,8 +54,9 @@ Jafsoon is engineered using a modern, scalable full-stack ecosystem:
 
 ### Backend
 - **Runtime Environment:** [Node.js](https://nodejs.org/)
-- **Framework:** [Express.js](https://expressjs.com/) for API routing.
+- **Framework:** [Express.js](https://expressjs.com/)
 - **Database:** [MongoDB](https://www.mongodb.com/) using [Mongoose ODM](https://mongoosejs.com/) for schema modeling.
+- **Repository Architecture:** Unified Repository Pattern (`userRepository.js`) to support seamless switching between MongoDB and a local JSON-based Mock DB with full schema default parity.
 - **Authentication:** JWT-based user session handling with `bcryptjs` encryption.
 
 ---
@@ -69,7 +70,9 @@ The project follows a clean repository layout separating client and server compo
 │   ├── src/
 │   │   ├── config/           # Database connections (db.js)
 │   │   ├── controllers/      # Route controllers and business logic
+│   │   ├── middleware/       # App middlewares (auth, validation, etc.)
 │   │   ├── models/           # Mongoose schemas (User, etc.)
+│   │   ├── repositories/     # Data access layer (userRepository.js)
 │   │   ├── routes/           # Express routes and endpoints
 │   │   └── app.js            # App middleware and setup
 │   ├── server.js             # Main server execution script
@@ -303,6 +306,8 @@ The primary API routes available on the backend server include:
 
 - `POST /api/auth/signup` - Register a new user (Body: `name`, `email`, `password`)
 - `POST /api/auth/signin` - Authenticate an existing user (Body: `email`, `password`)
+- `GET /api/user/sync` - Fetch authenticated user's profile and tracked data (Private)
+- `PUT /api/user/sync` - Update/sync user metrics, meals, workouts, etc. (Private)
 - `GET /api/health` - Health check status report for verification
 
 ---
