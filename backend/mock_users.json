@@ -38,5 +38,33 @@
     "password": "$2b$10$Do8sedJrdDQVlHmYHQQeh.ZYx7oPJw1ZeUtErSJafe2nBxd.w7BAK",
     "createdAt": "2026-06-12T19:55:13.573Z",
     "updatedAt": "2026-06-12T19:55:13.573Z"
+  },
+  {
+    "_id": "mock_i2vrn8716",
+    "userGoal": "Lose Weight",
+    "userCalorieTarget": 1800,
+    "userWaterTarget": 2.5,
+    "userWeightTarget": 70,
+    "userProteinTarget": 150,
+    "userCarbsTarget": 200,
+    "userFatTarget": 70,
+    "userCurrentWater": 0,
+    "userWeightHistory": [],
+    "userMeals": [
+      {
+        "name": "Salad",
+        "calories": 350
+      }
+    ],
+    "userWorkouts": [],
+    "userStreakCount": 0,
+    "settingsSound": true,
+    "settingsMetric": true,
+    "settingsAlerts": true,
+    "name": "Test User",
+    "email": "test_1781512628015@example.com",
+    "password": "$2b$10$qk0FlhQRR7Md5t31lUfG9OXT8rYUbfX.3ujnKIAtqjMdpnqeAYkQW",
+    "createdAt": "2026-06-15T08:37:08.162Z",
+    "updatedAt": "2026-06-15T08:37:08.192Z"
   }
 ]
