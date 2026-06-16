@@ -27,7 +27,24 @@ function calculateBMI(weightKg, heightCm) {
     return Math.round(bmi * 10) / 10;
 }
 
+/**
+ * Calculate Basal Metabolic Rate (BMR) using Mifflin-St Jeor Equation.
+ * @param {number} weightKg - Weight in kilograms.
+ * @param {number} heightCm - Height in centimeters.
+ * @param {number} ageYears - Age in years.
+ * @param {boolean} isMale - True if male, false if female.
+ * @returns {number} Estimated BMR in calories.
+ */
+function calculateBMR(weightKg, heightCm, ageYears, isMale = true) {
+    if (!weightKg || !heightCm || !ageYears) return 0;
+    const genderOffset = isMale ? 5 : -161;
+    const bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * ageYears) + genderOffset;
+    return Math.round(bmr);
+}
+
 module.exports = {
     calculatePercentage,
-    calculateBMI
+    calculateBMI,
+    calculateBMR
 };
+
