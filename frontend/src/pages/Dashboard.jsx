@@ -715,6 +715,13 @@ const Dashboard = ({ userEmail, userName, onSignOut, theme, onToggleTheme, onUpd
         goalText = t('dashboard.weeklyHabitsProgress', { progress: goalProgress });
     }
 
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return t('dashboard.goodMorning', { defaultValue: 'Guten Morgen' });
+        if (hour < 18) return t('dashboard.goodAfternoon', { defaultValue: 'Guten Tag' });
+        return t('dashboard.goodEvening', { defaultValue: 'Guten Abend' });
+    };
+
     const achievementsList = [
         { id: 'water', icon: '💧', title: t('dashboard.trophyWaterTitle'), desc: t('dashboard.trophyWaterDesc'), unlocked: currentWater >= waterTarget },
         { id: 'calories', icon: '🔥', title: t('dashboard.trophyCalsTitle'), desc: t('dashboard.trophyCalsDesc'), unlocked: totalCalories >= 1000 },
