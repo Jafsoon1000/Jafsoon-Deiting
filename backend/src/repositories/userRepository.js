@@ -2,7 +2,7 @@ const User = require('../models/User');
 const fs = require('fs');
 const path = require('path');
 
-const MOCK_DB_PATH = path.join(__dirname, '../../mock_users.json');
+const MOCK_DB_PATH = path.join(__dirname, '../data/mock_users.json');
 
 const getMockUsers = () => {
     try {
