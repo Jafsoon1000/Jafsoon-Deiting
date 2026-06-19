@@ -5,7 +5,7 @@ const connectDB = async () => {
     
     if (!uri || uri.includes('your_mongodb') || uri.includes('connection_string')) {
         console.log('\n⚠️  No valid MONGODB_URI found in environment variables.');
-        console.log('🔄 Running in MOCK DATABASE mode (saves to mock_users.json local file).\n');
+        console.log('🔄 Running in MOCK DATABASE mode (saves to src/data/mock_users.json local file).\n');
         process.env.USE_MOCK_DB = 'true';
         return;
     }
@@ -15,7 +15,7 @@ const connectDB = async () => {
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
         console.error(`Error connecting to MongoDB: ${error.message}`);
-        console.log('🔄 Falling back to MOCK DATABASE mode (saves to mock_users.json local file).\n');
+        console.log('🔄 Falling back to MOCK DATABASE mode (saves to src/data/mock_users.json local file).\n');
         process.env.USE_MOCK_DB = 'true';
     }
 };
